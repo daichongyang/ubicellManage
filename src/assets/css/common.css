@@ -1,0 +1,51 @@
+.cont_box {
+    width: 100%;
+    display: flex;
+}
+
+.cont_box_left,
+.cont_box_right {
+    flex: 1;
+    background: transparent;
+    padding: 10px;
+}
+
+.cont_box_left {
+    margin-right: 10px;
+}
+
+.margin10 {
+    margin-bottom: 10px;
+}
+
+.marginRight {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.cont_box_right .el-form-item {
+    margin-bottom: 20px;
+}
+
+.table_row {
+    color: #a1d6f4;
+    width: 100%;
+    font-size: 16px;
+}
+
+.show_father {
+    height: 50px;
+    color: #a1d6f4;
+    border: 1px solid #a1d6f4;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.show_father_box {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}

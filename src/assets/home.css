@@ -1,0 +1,259 @@
+.addHome{
+  min-width:1200px;
+  position:relative;
+}
+.addTopa{
+  height:10px;
+  background:#ecebeb;
+  padding:0;
+  margin:0;
+}
+.step{
+  display:flex;
+  padding-left:20px;
+  border-bottom:2px solid #ecebeb;
+  line-height:50px;
+}
+.cliiii{
+  display:inline;
+  vertical-align: text-bottom;
+}
+.stepCantent{
+  padding:0 10px;
+}
+.cil{
+  display:inline-block;
+  height:10px;
+  width:10px;
+  border-radius:50%;
+  background: #507bea;
+  margin-right:20px;
+  vertical-align: middle;
+}
+.cliTextOne{
+  font-size:18px;
+  margin-right:10px;
+}
+.cliTextTwo{
+  font-size:15px;
+}
+.czButton{
+  margin-left:20px;
+}
+.el-form-item .el-form-item__label{
+    float: left !important;
+}
+.sousuo{
+  vertical-align: middle;  
+  margin-left:10px;
+  margin-top:2px;
+}
+.stepDeiles{
+  padding:0 38px;
+}
+.choiseHomeCli{
+  padding:20px 0;
+}
+.el-form-item{
+  vertical-align:middle;
+  margin-bottom:0px;
+}
+
+.locationText{
+  margin-left:40px;
+  margin-top:4px;
+}
+.baidumap{
+  height:330px;
+  width:100%;
+}
+.cliAddress{
+  padding:20px 0;
+}
+.BinessText{
+  margin-left:40px;
+}
+.roomCli{
+  margin-left:40px;
+}
+.louchen{
+  width:70px;
+}
+.opra{
+  margin-left:68px;
+  margin-bottom:20px;
+}
+.roomNum{
+  margin:0 20px;
+  vertical-align: top;
+}
+.roomss{
+  width:60px;
+}
+.allLou{
+  vertical-align: top;
+  margin-bottom:20px;
+}
+.roomTop{
+  line-height:50px;
+  margin-top:10px;
+}
+.roomWrap {
+  display: inline-block;
+  vertical-align: middle;
+  position:relative;
+  max-width:880px;
+}
+.roomItem{
+  width: 130px;
+  border: 1px solid #bfc3d9;
+  border-radius: 4px;
+  clear: both;
+  display: inline-block;
+  position: relative;
+  margin-right: 10px;
+  margin-bottom:10px;
+}
+.opra .roomWrap .roomItem input{
+  border: 0 ;
+  padding: 3px 0;
+  padding-right: 5px;
+  outline:none;
+  width:60px;
+  text-align: center;
+  background:#fff;
+}
+.green{
+  color: #4ec096;
+}
+.zuyue{
+  position:relative;
+}
+.zuyue input{
+  cursor: pointer;
+}
+.fudong{
+  background:rgba(0,0,0,0);
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  cursor: pointer;
+}
+.deleteBut{
+  vertical-align: top;
+  margin-top:5px;
+}
+.deleteImg{
+  width:18px;
+  position:absolute;
+  top:-9px;
+  right:-7px;
+  cursor: pointer;
+}
+.plusBut{
+  vertical-align: top;
+  margin-top:5px;
+}
+.keepLouItem {
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  margin-top:50px;
+}
+.getNm{
+  position:relative;
+}
+.getApartName{
+  position:absolute;
+  top:9px;
+  left:8px;
+  line-height: 24px;
+  z-index: 10;
+  border:0;
+  outline: none;
+}
+.opra .roomWrap .roomItem .aaa{
+  width:59px;
+  border-right:1px solid #bfc3d9;
+}
+
+.editApartment{
+  min-height:100%;
+  background: #fff;
+}
+.layout{
+  padding:20px;
+}
+.editApartment .layout .inputCommon-title {
+  position: relative;
+  font-size: 16px;
+  padding: 7px 8px;
+  border-bottom: 1px dashed #e9e9e9;
+  margin-bottom: 21px;
+}
+.editApartment .layout .inputCommon-title:before {
+  content: " ";
+  display: block;
+  position: absolute;
+  width: 4px;
+  height: 20px;
+  background: #e9e9e9;
+  left: 0;
+  top: 8px;
+}
+.marginTop20{
+  margin-top:20px;
+}
+.AddressText{
+  margin-left:20px;
+}
+.ggPicture{
+  margin-top:20px;
+}
+.photoFlag {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  width: 600px;
+  padding: 5px;
+  border: 1px solid #7ad5ff;
+  border-radius: 4px;
+  background-color: #e6f9ff;
+  margin-top:30px;
+  margin-bottom:30px;
+}
+.el-icon-information{
+  font-size: 20px;
+  line-height: 23px;
+  color: #527ce7;
+}
+.font-block {
+  margin-left: 7px;
+}
+.caozuo{
+  margin-tOP:20px;
+}
+.elRowH{
+  position:relative;
+}
+.hiddend{
+  width:100%;
+  height:100%;
+  position:absolute;
+  top:0;
+  left:0;
+  background:rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+.isCover{
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:100px;
+  background:red;
+  z-index:100;
+}

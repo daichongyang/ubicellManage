@@ -1,0 +1,21 @@
+.contText {
+    border-bottom: 1px solid #1271b4;
+    padding-bottom: 20px;
+}
+
+.dialogBox {
+    width: 100%;
+    border: 1px solid #1271b4;
+    display: flex;
+}
+
+.boxLeft {
+    width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.general7 {
+    padding: 20px;
+}

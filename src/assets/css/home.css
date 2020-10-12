@@ -1,0 +1,266 @@
+section {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.el-header {
+    height: 100px;
+    background-color: #0a1a2b;
+    color: #2e78d3;
+    padding: 0 34px 0 62px;
+    margin: -100px 0 0;
+    position: relative;
+}
+
+.go_index {
+    position: absolute;
+    background: rgba(0, 0, 0, 0);
+    width: 400px;
+    height: 100%;
+    left: 50%;
+    top: 0;
+    margin-left: -200px;
+    cursor: pointer;
+}
+
+.header_infor {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    /* background: url('../img/index/fanzaijiayuanht_3.png') no-repeat center; */
+    /* background: url('../img/index/fanzaijiayuanht_5.png') no-repeat center; */
+    /* background: url('../img/index/fanzaijiayuanht_1.png') no-repeat center; */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: auto 90px;
+    font-size: 16px;
+}
+
+.header_left_infor {
+    border: 1px solid #1bacd2;
+    padding: 5px 10px 4px 8px;
+    cursor: pointer;
+    position: relative;
+}
+
+.header_left_infor img {
+    margin-right: 10px;
+}
+
+.active_color {
+    color: #1bacd2;
+}
+
+.header_left,
+.header_right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.header_right {
+    flex-direction: row-reverse;
+}
+
+.header_right_item1 {
+    border: 1px solid #1bacd2;
+    border-radius: 2px;
+    color: #0a1a2b;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 5px;
+    width: 204px;
+    height: 30px;
+}
+
+.header_right_item1 input {
+    line-height: 30px;
+    width: 180px;
+}
+
+.header_right_item1 img {
+    cursor: pointer;
+    padding-left: 5px;
+}
+
+.header_right_item2 {
+    cursor: pointer;
+    justify-content: center;
+    line-height: 0px;
+}
+
+.header_right_item2 img {
+    margin-right: 5px;
+}
+
+.header_right_item2 {
+    width: 74px;
+    height: 32px;
+    margin-right: 5px;
+    margin-left: 15px;
+}
+
+.header_right_item2:hover {
+    background: #0e3152;
+}
+
+.header_right_item3 {
+    margin-left: 10px;
+    color: #2e78d3;
+    position: relative;
+    cursor: pointer;
+}
+
+.header_right_item3 .group_ul {
+    bottom: -280px;
+    width: 110px;
+}
+
+.header_right_item3 .group_ul_li {
+    width: 100%;
+    text-align: center;
+    padding: 0;
+}
+
+.header_right_item3 .group_ul_li_item {
+    margin: 0px;
+    padding: 5px 0;
+}
+
+.header_right_item3 .group_ul_li_item:hover {
+    background: #12497b;
+    color: #1fc9f3;
+}
+
+.header_right_item3 .el-avatar {
+    margin-right: 10px;
+}
+
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+    width: 200px;
+    min-height: 400px;
+}
+
+.el-aside {
+    color: #333;
+    max-height: 100%;
+    overflow: hidden;
+    overflow-y: scroll;
+    position: absolute;
+    top: 10px;
+    left: 0px;
+    z-index: 100;
+}
+
+.el-aside::-webkit-scrollbar {
+    display: none
+}
+
+.el-main {
+    padding: 0px;
+    background-color: rgba(0, 0, 0, 0);
+    height: 100%;
+}
+
+.contant_view {
+    /* background: #f8f8f8;
+    padding: 10px; */
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+}
+
+.contant_view::-webkit-scrollbar {
+    display: none;
+}
+
+.group_ul {
+    position: absolute;
+    bottom: -260px;
+    left: 0px;
+    min-width: 75px;
+    font-size: 14px;
+    z-index: 999;
+    margin-top: 500px;
+    display: flex;
+}
+
+.group_ul_li {
+    border-right: 1px solid #0c376c;
+    height: 100%;
+    padding: 0 10px;
+    min-width: 55px;
+    overflow: hidden;
+    overflow-y: auto;
+    background: #051a35;
+    flex-shrink: 0;
+}
+
+.group_ul_li::-webkit-scrollbar {
+    display: none
+}
+
+.group_ul_li::-o-scrollbar {
+    display: none
+}
+
+.group_ul_li::-ms-scrollbar {
+    display: none
+}
+
+.group_ul_li_item {
+    display: block;
+    margin-top: 17px;
+    min-width: 55px;
+}
+
+.group_ul_li_item:hover {
+    color: #1fc9f3;
+}
+
+.group_ul_li_item:first-child {
+    margin-top: 15px;
+}
+
+.group_ul_li:last-child {
+    border: 0px
+}
+
+.left_nav {
+    width: 160px;
+    height: 52px;
+    color: #66baea;
+    font-size: 14px;
+    display: flex;
+    position: relative;
+    align-items: center;
+}
+
+.left_nav:hover {
+    background: url('../img/index/fanzaijiayuanht_sbdj_1.png') no-repeat;
+    background-size: cover;
+}
+
+.el-aside {
+    background-image: linear-gradient(to right, #081226, #0a4366);
+}
+
+.left_nav_img {
+    /* margin-left: 22px;
+    margin-right: 5px; */
+    width: 40px;
+    text-align: right;
+    margin-right: 10px;
+}
+
+.container {
+    position: relative;
+    height: 100%;
+}
+
+.nav_li_name {
+    width: 50px !important;
+    height: 100% !important;
+}
