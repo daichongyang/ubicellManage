@@ -491,9 +491,9 @@ export default {
       this.formPush.imageNames = ''
       this.fileList.forEach(item=>{
         if(item.response){
-          this.formUpdate.imageNames = item.response.data[0]+","+this.formUpdate.picture
+          this.formPush.imageNames = item.response.data[0]+","+this.formPush.picture
         }else{
-          this.formUpdate.imageNames = item.url+","+this.formUpdate.imageNames
+          this.formPush.imageNames = item.url+","+this.formPush.imageNames
           
         }
       })
