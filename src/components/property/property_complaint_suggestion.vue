@@ -45,9 +45,9 @@
       <el-table-column prop="title"label="标题"></el-table-column>
       <el-table-column prop="desc"label="内容"></el-table-column>
       <el-table-column label="图片">
-        <template slot-scope="scope" v-if="scope.row.picture">
-          <div style="display:flex;">
-           <img v-for="item in scope.row.picture.split(',')" :src="item" alt="" style="height:35px;">
+        <template slot-scope="scope" v-if="scope.row.pictures">
+          <div style="display:flex;cursor: pointer;" @click="checkImg(scope.row.pictures.split(','))">
+           <img v-for="item in scope.row.pictures.split(',')" :src="item" alt="" style="height:35px;">
           </div>
         </template>
       </el-table-column>
@@ -84,6 +84,12 @@
         <el-button size="medium " @click="deleInfor()">回 复</el-button>
       </div>
     </el-dialog>
+    <!-- 查看多张图片 -->
+    <el-dialog title="图片查看" :visible.sync="showimgs">
+      <div class="cont_box_right">
+        <el-image v-for="(item,index) in showImage" :key="index" style="width: 200px;" :src="item" fit="cover"></el-image>
+      </div>
+    </el-dialog>
   </section>  
 </template>
 
@@ -94,6 +100,7 @@ export default {
   data(){
     return{
       checkStrictly:false,
+      showimgs:false,
       bindRole:{},
       showmenuList:[],
       menuList:[],
@@ -132,7 +139,8 @@ export default {
         type:[{ required: true, message: '该项不能为空',trigger: 'blur'}],
         xqId:[{ required: true, message: '该项不能为空',trigger: 'blur'}],
       },
-      imageUrl:''
+      imageUrl:'',
+      showImage:[]
     }
   },
   methods:{
@@ -267,6 +275,10 @@ export default {
       this.formSearch.current=val
       this.getList()
     },
+    checkImg(item){//点击查看多张图片
+      this.showImage=item
+      this.showimgs=true
+    }
   },
   mounted(){
     this.getInit()

@@ -87,7 +87,7 @@
       <el-table-column prop="address" label="申请地址"></el-table-column>
       <el-table-column prop="" label="图片">
         <template slot-scope="scope">
-          <img :src="scope.row.picture" alt="" style="height:35px;">
+          <img :src="scope.row.picture" alt="" style="height:35px;cursor: pointer;" @click="checkImg(scope.row.picture)">
         </template>
       </el-table-column>
       <el-table-column prop="" label="创建时间">
@@ -154,6 +154,12 @@
         <el-button size="medium " @click="updateList('formUpdate')">修 改</el-button>
       </div>
     </el-dialog>
+    <!-- 查看多张图片 -->
+    <el-dialog title="图片查看" :visible.sync="showimgs">
+      <div class="cont_box_right">
+        <el-image style="width: 200px;" :src="showImage" fit="cover"></el-image>
+      </div>
+    </el-dialog>
     </section>
 </template>
 
@@ -165,6 +171,7 @@ export default {
   data(){
     return{
       option1:[],
+      showImage:'',
       xqTree:[],
       getnamr:[],
       isAddorUpdate:1,//1添加、2修改
@@ -178,6 +185,7 @@ export default {
       formUpdate:{},//修改表单
       total: 0,//数据总数
       pages:0,//页面总数
+      showimgs:false,
       addDialog:false,
       updateDialog:false,
       detailsDialog:false,
@@ -406,6 +414,10 @@ export default {
       this.formSearch.current=val
       this.getList()
     },
+    checkImg(item){//点击查看多张图片
+      this.showImage=item
+      this.showimgs=true
+    }
   },
   mounted(){
     this.getInit()

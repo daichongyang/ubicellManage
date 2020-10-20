@@ -7,16 +7,16 @@ import ElementUI from 'element-ui'
 import { Loading, Message, MessageBox } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
 import VueRouter from 'vue-router'
-import Vuex from 'vuex'
 import axios from 'axios';
 import md5 from 'js-md5';
 import base64 from 'js-base64';
 import { getDateArray } from './assets/js/util';
+import store from './assets/js/store';
 
 // Vue.$getDateArray = getDateArray
 Vue.config.productionTip = false
 Vue.use(ElementUI)
-Vue.use(Vuex)
+
 Vue.use(VueRouter)
     // 捕捉异常信息
 Vue.config.errorHandler = function(err, vm, info) {
@@ -60,6 +60,7 @@ router.beforeEach((to, from, next) => {
 new Vue({
         el: '#app',
         router,
+        store,
         data: () => {
             return {
                 getDateArray: getDateArray

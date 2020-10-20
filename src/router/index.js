@@ -122,14 +122,20 @@ const intercom_tradition_server = () =>
     import ('@/components/duijiang/intercom_tradition_server');
 
 // 云智能系统
-const iot_project_cofig = () =>
-    import ('@/components/yunzhineng/iot_project_cofig');
-const iot_depot = () =>
-    import ('@/components/yunzhineng/iot_depot');
-const iot_global_cofig = () =>
-    import ('@/components/yunzhineng/iot_global_cofig');
+const iot_project_param = () =>
+    import ('@/components/yunzhineng/iot_project_param');
+const iot_hardware = () =>
+    import ('@/components/yunzhineng/iot_hardware');
+const iot_global_param = () =>
+    import ('@/components/yunzhineng/iot_global_param');
 const iot_smart_home = () =>
     import ('@/components/yunzhineng/iot_smart_home');
+const iot_security_user = () =>
+    import ('@/components/yunzhineng/iot_security_user');
+const iot_security_monitor_device = () =>
+    import ('@/components/yunzhineng/iot_security_monitor_device');
+const iot_security_alarm = () =>
+    import ('@/components/yunzhineng/iot_security_alarm');
 
 // 物业服务
 const property_type = () =>
@@ -780,31 +786,55 @@ export default new Router({
                             name: '智能家庭',
                             component: iot_smart_home,
                             meta: {
-                                id: 56
+                                id: 135
                             }
                         },
                         {
-                            path: '/iot_global_cofig',
+                            path: '/iot_security_user',
+                            name: '用户管理',
+                            component: iot_security_user,
+                            meta: {
+                                id: 137
+                            }
+                        },
+                        {
+                            path: '/iot_security_alarm',
+                            name: '推送记录',
+                            component: iot_security_alarm,
+                            meta: {
+                                id: 140
+                            }
+                        },
+                        {
+                            path: '/iot_security_monitor_device',
+                            name: '监控设备',
+                            component: iot_security_monitor_device,
+                            meta: {
+                                id: 139
+                            }
+                        },
+                        {
+                            path: '/iot_global_param',
                             name: '全局参数',
-                            component: iot_global_cofig,
+                            component: iot_global_param,
                             meta: {
-                                id: 55
+                                id: 134
                             }
                         },
                         {
-                            path: '/iot_depot',
+                            path: '/iot_hardware',
                             name: '硬件入库',
-                            component: iot_depot,
+                            component: iot_hardware,
                             meta: {
-                                id: 61
+                                id: 132
                             }
                         },
                         {
-                            path: '/iot_project_cofig',
+                            path: '/iot_project_param',
                             name: '工程参数',
-                            component: iot_project_cofig,
+                            component: iot_project_param,
                             meta: {
-                                id: 54
+                                id: 133
                             }
                         },
                         {

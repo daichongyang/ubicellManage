@@ -257,3 +257,13 @@ export const visitorDel = (params) => { return axios.post('/intellmanagerV3.0/dn
 export const getCarMonthFee = (params) => { return axios.post('/intellmanagerV3.0/dnakeCar/getCarMonthFee/' + params.xqid) } // 获取月租费
 export const addMonthFee = (params) => { return axios.post('/intellmanagerV3.0/dnakeCar/addMonthFee', params) } // 添加月租费
 export const updateMonthFee = (params) => { return axios.post('/intellmanagerV3.0/dnakeCar/updateMonthFee', params) } // 月租车月费用编辑
+
+export const ysUserList = (params) => { return axios.post('/intellmanagerV3.0/ys/user/list', params) } // 获取用户信息，查看设备信息
+export const ysaccountList = (params) => { return axios.post('/intellmanagerV3.0/ys/account/get', params) } // 获取用户对应的设备信息
+export const ysalarmpushList = (params) => { return axios.post('/intellmanagerV3.0/ys/alarm/push/list', params) } // 获取推送记录
+export const deleteysalarmpush = (params) => { return axios.post('/intellmanagerV3.0/ys/alarm/push/delete/' + params.idStr) } // 移除记录
+export const yslocaldeviceList = (params) => { return axios.post('/intellmanagerV3.0/ys/local/device/list', params) } // 获取本地设备信息
+export const ysdeviceList = (params) => { return axios.post('/intellmanagerV3.0/ys/device/list', params) } // 获取萤石设备列表
+export const ysadddevice = (params) => { return axios.post('/intellmanagerV3.0/ys/device/add', params) } // 管理员添加设备
+export const ysdeletedevice = (params) => { return axios.post('/intellmanagerV3.0/ys/device/statement/delete', params) } // 用户删除设备
+export const ysaupdatedevice = (params) => { return axios.post('/intellmanagerV3.0/ys/device/name/update/' + params.deviceName + "/" + params.deviceSerial) } // 设备名称修改

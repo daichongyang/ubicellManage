@@ -46,7 +46,7 @@ input {
 
 input::placeholder {
     color: #a1d6f4;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .el-submenu .el-submenu__title:hover {
