@@ -4,6 +4,14 @@ let config = {
     headers: { 'Content-Type': 'multipart/form-data' }
 }
 let config1 = {
+    transformRequest: [function(params) { //表单提交配置
+        // Do whatever you want to transform the data
+        let ret = ''
+        for (let it in params) {
+            ret += encodeURIComponent(it) + '=' + encodeURIComponent(params[it]) + '&'
+        }
+        return ret
+    }],
     headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
     }
@@ -265,5 +273,12 @@ export const deleteysalarmpush = (params) => { return axios.post('/intellmanager
 export const yslocaldeviceList = (params) => { return axios.post('/intellmanagerV3.0/ys/local/device/list', params) } // 获取本地设备信息
 export const ysdeviceList = (params) => { return axios.post('/intellmanagerV3.0/ys/device/list', params) } // 获取萤石设备列表
 export const ysadddevice = (params) => { return axios.post('/intellmanagerV3.0/ys/device/add', params) } // 管理员添加设备
-export const ysdeletedevice = (params) => { return axios.post('/intellmanagerV3.0/ys/device/statement/delete', params) } // 用户删除设备
-export const ysaupdatedevice = (params) => { return axios.post('/intellmanagerV3.0/ys/device/name/update/' + params.deviceName + "/" + params.deviceSerial) } // 设备名称修改
+export const ysdeletedevice = (params) => { return axios.post('/intellmanagerV3.0/ys/manager/delete/' + params.arrDevice) } // 管理员删除设备
+export const ysaupdatedevice = (params) => { return axios.post('/intellmanagerV3.0/ys/device/name/update', params, config1) } // 设备名称修改
+
+export const iotUpLoadJsonFile = (params) => { return axios.post('/intellmanagerV3.0/iot/upLoadJsonFile', params) } // 上传工程配置文件并解析存储(mainId 区域或房间id, mainType 1区域2房间)
+export const delProjectConfig = (params) => { return axios.post('/intellmanagerV3.0/iot/delProjectConfig/' + params.projectConfigId) } // 删除工程配置(mainId 区域或房间id, mainType 1区域2房间)
+export const pushThisConfig = (params) => { return axios.post('/intellmanagerV3.0/iot/pushThisConfig/' + params.configId) } // 推送更新至用户
+export const setNameToEntity = (params) => { return axios.post('/intellmanagerV3.0/iot/setNameToEntity', params) } // 设置iot中设备/房间的名称
+export const delDeviceOne = (params) => { return axios.post('/intellmanagerV3.0/iot/delDevice/' + params.typeCode + "/" + params.id) } // 删除单个设备
+export const delModule = (params) => { return axios.post('/intellmanagerV3.0/iot/delModule/' + params.roomId + "/" + params.typeCode) } // 删除房间module

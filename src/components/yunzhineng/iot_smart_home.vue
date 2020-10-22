@@ -51,7 +51,7 @@
             :headers='headers'
             :data="updataData"
             name="jsonFile"
-            action="/intellmanagerV3.0/intellmanagerV3.0/iot/upLoadJsonFile"
+            action="/intellmanagerV3.0/iot/upLoadJsonFile"
             :on-success="handleAvatarSuccess"
             :on-remove="handleRemove"
             :limit="1">
@@ -63,7 +63,7 @@
             :headers='headers'
             :data="updataData"
             name="jsonFile"
-            action="/intellmanagerV3.0/intellmanagerV3.0/iot/upLoadJsonFile"
+            action="/intellmanagerV3.0/iot/upLoadJsonFile"
             :on-success="handleAvatarSuccess"
             :on-remove="handleRemove"
             :limit="1">
@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import {getIotDetailData,housePasscardGetSectionHouse,xqSelectList,orgTree } from '../../url/api';
+import {getIotDetailData,housePasscardGetSectionHouse,iotUpLoadJsonFile,xqSelectList,orgTree } from '../../url/api';
 export default {
   data(){
     return{
@@ -109,7 +109,12 @@ export default {
     }
   },
   methods:{
-    getdata(obj,index){
+    getiotUpLoadJsonFile(){
+      iotUpLoadJsonFile().then(res=>{
+        console.log(res)
+      })
+    },
+    getdata(obj,index){//点击上传
       this.updataData={
         mainId:obj.id,
         xqId:obj.xqId,
@@ -131,15 +136,10 @@ export default {
         mainId:data.id,
         mainType:index,
       }
-      getIotDetailData(params).then((res)=>{
-        console.log(res)
-        if(res.data.code == 200){
-            this.$message({
-              message: '操作成功',
-              type: 'success'
-            });
-        }else{
-          this.$message(res.data.msg);
+      this.$router.push({
+        path:'/iot_smart_home1',
+        query:{
+          configInfor:JSON.stringify(params) 
         }
       })
 
@@ -211,10 +211,10 @@ export default {
       if(obj){
         this.formSearch = obj
       }
-      housePasscardGetSectionHouse(this.formSearch).then((res)=>{
+      housePasscardGetSectionHouse(this.formSearch).then((res)=>{//获取区域/房间
         console.log(res)
         if(res.data.code == 200){
-          this.formData = res.data.data.filter((item)=>{
+          this.formData = res.data.data.records.filter((item)=>{
             if(item.gmtCreate){
               item.gmtCreate = this.$root.getDateArray(item.gmtCreate)[9]
             }
@@ -253,7 +253,7 @@ export default {
       this.formSearch.current=val
       this.getInit()
     },
-    handleChange(value){
+    handleChange(value){//修改组织
       if(value.length!=0){
         console.log(value)
         this.formSearch.orgId=this.$refs.cascader.getCheckedNodes()[0].data.id

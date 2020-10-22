@@ -20,6 +20,7 @@
       </el-form-item>
     </el-form>
     <el-table :data="formData" style="width: 100%" stripe @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="xqName" label="小区名称"></el-table-column>
       <el-table-column prop="showName" label="用户家园号"></el-table-column>
       <el-table-column prop="deviceSerial" label="设备系列号"></el-table-column>
@@ -258,7 +259,7 @@ export default {
       }else{
         if(this.deleBatch.length!=0){
           this.deleBatch.forEach((item)=>{
-            arrId=arrId+"_"+item.id
+            arrId=item.id+"_"+arrId
           })
         }
       }

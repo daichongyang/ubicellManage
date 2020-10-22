@@ -16,11 +16,15 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item>
-        <el-button size="medium " @click="getlist">查 询</el-button>
-        <el-button size="medium " @click="addDialog = true">新 增</el-button>
+        <el-button size="small " @click="getlist">查 询</el-button>
+        <el-button size="small " @click="addDialog = true">新 增</el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-button size="small" type="danger" @click="deleInfor(false)">批量删除</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="formData" style="width: 100%" stripe>
+    <el-table :data="formData" style="width: 100%" stripe @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="deviceName" label="设备名称"></el-table-column>
       <el-table-column prop="deviceModel" label="设备型号" v-if="typeradio==1"></el-table-column>
       <el-table-column prop="deviceSerial" label="设备序列号"></el-table-column>
@@ -49,7 +53,7 @@
 					<el-button type="primary" size="small" @click="getysaccountList(scope.row.id)">查看设备</el-button>
 				</template>
 				<template slot-scope="scope" v-if="typeradio==1">
-          <el-button type="danger" size="small" @click="deleInfor(scope.row)">删 除</el-button>
+          <el-button type="danger" size="small" @click="deleInfor(scope.row.deviceSerial)">删 除</el-button>
 				</template>
 			</el-table-column>
     </el-table>
@@ -177,6 +181,7 @@ export default {
         xqId:[{ required: true, message: '该项不能为空',trigger: 'blur'}],
       },
       ysaccount:[],
+      deleBatch:[],
       imageUrl:''
     }
   },
@@ -314,21 +319,28 @@ export default {
       this.updateDialog = true
       console.log(item)
     },
-    deleInfor(item){
-      let params = {
-        accountId :item.id,
-        deviceSerial :item.deviceSerial,
+    deleInfor(ids){
+      let arrId =''
+      if(ids){
+        arrId=ids
+      }else{
+        if(this.deleBatch.length!=0){
+          this.deleBatch.forEach((item)=>{
+            arrId=item.deviceSerial+"_"+arrId
+          })
+        }
       }
-        
       this.$confirm('确认删除吗？')
       .then(_ => {
-        ysdeletedevice(params).then((res)=>{
+          let parmas={
+            arrDevice:arrId
+          }
+          console.log(parmas)
+        ysdeletedevice(parmas).then((res)=>{
           console.log(res)
           if(res.data.code == 200){
             this.$message('删除成功');
-            this.getlist()
-          }else{
-            this.$message(res.data.msg);
+            this.getInit()
           }
         })
       })
@@ -346,6 +358,10 @@ export default {
       handleCurrentPage2(val){//页码改变
       this.ysaccountpush.current=val
       this.getysaccountList(this.ysaccountpush.accountId)
+    },
+    handleSelectionChange(val,self) {//多选
+      console.log(val,self)
+      this.deleBatch = val
     },
   },
   mounted(){

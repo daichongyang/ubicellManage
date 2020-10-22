@@ -130,6 +130,8 @@ const iot_global_param = () =>
     import ('@/components/yunzhineng/iot_global_param');
 const iot_smart_home = () =>
     import ('@/components/yunzhineng/iot_smart_home');
+const iot_smart_home1 = () =>
+    import ('@/components/yunzhineng/iot_smart_home1');
 const iot_security_user = () =>
     import ('@/components/yunzhineng/iot_security_user');
 const iot_security_monitor_device = () =>
@@ -812,6 +814,12 @@ export default new Router({
                             meta: {
                                 id: 139
                             }
+                        },
+                        {
+                            path: '/iot_smart_home1',
+                            name: '智能家庭详情',
+                            component: iot_smart_home1,
+                            meta: {}
                         },
                         {
                             path: '/iot_global_param',
