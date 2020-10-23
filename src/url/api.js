@@ -138,9 +138,13 @@ export const housePasscardGetSectionHouse = (params) => { return axios.post('/in
 export const getAcPasscardUsers = (params) => { return axios.post('/intellmanagerV3.0/housePasscard/getAcPasscardUsers', params) } //获取业主成员列表
 export const updateSectionHousePasscard = (params) => { return axios.post('/intellmanagerV3.0/housePasscard/updateSectionHousePasscard', params) } //统一修改多个区域/多个房间通行证/多个用户通行证
 
-export const exportTemplateHouse = (params) => { return axios.post('/intellmanagerV3.0/export/template/house', params) } //导出房间模板
+export const exportTemplateHouse = '/intellmanagerV3.0/export/template/house' //导出房间模板
+    // export const exportTemplateHouse = (params) => { return axios.post('/intellmanagerV3.0/export/template/house', params) } //导出房间模板
 export const exportHouse = (params) => { return axios.post('/intellmanagerV3.0/export/house', params) } //导出房间信息
 export const importHouse = (params) => { return axios.post('/intellmanagerV3.0/import/house/' + params.xqId + '/' + params.houseType) } //导入房间信息
+export const importUser = (params) => { return axios.post('/intellmanagerV3.0/import/user/' + params.xqId + '/' + params.userType) } //导入业主物业用户模板
+    // export const exportUser = (params) => { return axios.post('/intellmanagerV3.0/export/template/user', params) } //导出业主/成员模板
+export const exportUser = '/intellmanagerV3.0/export/template/user' //导出业主/成员模板
 
 export const temporaryPasscard = (params) => { return axios.post('/intellmanagerV3.0/housePasscard/temporaryPasscard', params) } //临时授权/实体卡授权
 export const restoreUsersPasscard = (params) => { return axios.post('/intellmanagerV3.0/housePasscard/restoreUsersPasscard', params) } //一键还原用户通行证
@@ -282,3 +286,5 @@ export const pushThisConfig = (params) => { return axios.post('/intellmanagerV3.
 export const setNameToEntity = (params) => { return axios.post('/intellmanagerV3.0/iot/setNameToEntity', params) } // 设置iot中设备/房间的名称
 export const delDeviceOne = (params) => { return axios.post('/intellmanagerV3.0/iot/delDevice/' + params.typeCode + "/" + params.id) } // 删除单个设备
 export const delModule = (params) => { return axios.post('/intellmanagerV3.0/iot/delModule/' + params.roomId + "/" + params.typeCode) } // 删除房间module
+export const bindUserForConfig = (params) => { return axios.post('/intellmanagerV3.0/iot/bindUserForConfig', params) } // 添加用户
+export const toSelectUsers = (params) => { return axios.post('/intellmanagerV3.0/iot/toSelectUsers', params) } // 获取可选用户

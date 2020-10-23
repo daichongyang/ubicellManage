@@ -48,6 +48,7 @@
           <el-radio @change='pname = scope.row.name,isGetFather = true' :disabled="scope.row.id==formUpdate.id" v-model="formUpdate.pid" :label="scope.row.id" style="color:transparent;"></el-radio>
 				</template>
 			</el-table-column> -->
+      <el-table-column prop="id" label="区域编号"></el-table-column>
       <el-table-column prop="name" label="区域">
         <template slot-scope="scope">
           <div style="cursor: pointer;" @click="handleclick(scope.row)">{{scope.row.name}}</div>

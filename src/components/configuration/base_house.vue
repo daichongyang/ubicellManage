@@ -254,18 +254,17 @@
           <el-upload
             class="upload-demo"
             :headers='headers'
-            :data="ExportImportInfor"
             name="importFile"
-            action="/intellmanagerV3.0/intellmanagerV3.0/iot/upLoadJsonFile"
+            :action="'/intellmanagerV3.0/import/house/'+ExportImportInfor.xqId+'/'+ExportImportInfor.type"
             :on-success="handleAvatarSuccess"
             :on-remove="handleRemove"
             :limit="1">
-            <el-button size="small" type="text" @click="getdata(data,2)">点击上传</el-button>
+            <el-button size="small" type="text">点击上传</el-button>
           </el-upload>
         </el-form-item>
         <el-form-item>
-          <el-button size="small" @click="showImport=false">取 消</el-button>
-          <el-button size="small" @click="addDialog=true">确 定</el-button>
+          <!-- <el-button size="small" @click="showImport=false">取 消</el-button> -->
+          <!-- <el-button size="small" @click="addDialog=true">确 定</el-button> -->
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -335,7 +334,9 @@ export default {
       option1:[],
       showImport:false,//控制导入弹框
       showExport:false,//控制导出弹框
-      ExportImportInfor:{},//导入导出信息
+      ExportImportInfor:{
+        get:[]
+      },//导入导出信息
       pname:'',//当前选中的父级
       isGetFather:false,//是否已经选中父级
       fatherId:0,
@@ -662,7 +663,7 @@ export default {
       })
     },
     exportTemplate(){//导出模板
-    window.self.location="http://192.168.0.172:8081/intellmanagerV3.0/export/template/house"
+    window.self.location=exportTemplateHouse
       // exportTemplateHouse().then((res)=>{
       //   console.log(res)
       //   if(res.data.code == 200){

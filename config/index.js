@@ -11,9 +11,9 @@ module.exports = {
         assetsPublicPath: '/',
         proxyTable: {
             '/intellmanagerV3.0': {
-                // target: 'http://192.168.0.245:8081/intellmanagerV3.0',
+                target: 'http://192.168.0.245:8082/intellmanagerV3.0',
                 // target: 'http://192.168.0.196:8081/intellmanagerV3.0',
-                target: 'http://192.168.0.143:8081/intellmanagerV3.0',
+                // target: 'http://192.168.0.143:8081/intellmanagerV3.0',
                 // target: 'http://192.168.0.101:8081/intellmanagerV3.0',
                 // target: 'http://117.78.42.182:8080/intellmanagerV3.0',
                 // target: 'http://www.ubicell.cn:8080/intellmanagerV3.0',

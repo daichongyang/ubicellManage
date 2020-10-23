@@ -47,7 +47,7 @@
       </el-form-item>
     </el-form>
     <el-table ref="multipleTable" :data="formData" style="width: 100%" stripe @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55"></el-table-column>
+      <!-- <el-table-column type="selection" width="55"></el-table-column> -->
       <el-table-column prop="title" label="标题"></el-table-column>
       <el-table-column prop="gmtCreate" label="发送时间"></el-table-column>
       <el-table-column label="发送状态">
@@ -57,7 +57,7 @@
       </el-table-column>
       <el-table-column label="操作" fixed="right" width=250>
 				<template slot-scope="scope">
-					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删 除</el-button>
+					<el-button type="danger" size="small" @click="deleInfor(scope.row.tid)">删 除</el-button>
 					<el-button type="primary" size="small" @click="updateShowBox(scope.row)">详 情</el-button>
         </template>
 			</el-table-column>
@@ -380,6 +380,7 @@ export default {
       this.updateDialog = false
     },
     deleInfor(ids){//删除
+      console.log(ids)
       let arrId = []
       if(ids){
         arrId.push(ids)

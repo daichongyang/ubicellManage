@@ -179,7 +179,7 @@
     </el-dialog>
     
     <!-- 修改 -->
-    <el-dialog title="修改" :visible.sync="updateDialog" :close-on-click-modal="false">
+    <el-dialog title="" :visible.sync="updateDialog" :close-on-click-modal="false">
       <div class="cont_box_left">
         <el-form label-position="right" label-width="110px" :model="formUpdate" :rules="rules"  ref='addList'>
           <el-form-item label="选择小区" size="small" prop="xqId">

@@ -41,7 +41,10 @@
         <div style="color:#999;" v-else>暂无数据</div>
       </div>
       <div class="iot_smart_module">
-        <div>用户列表</div>
+        <div>用户列表 
+          <el-button type="danger" size="small" style="float:right;margin-left:20px;" @click="deletedelModule">删除</el-button>
+          <el-button type="primary" size="small" style="float:right;" @click="addDialog=true">添加</el-button>
+        </div>
         <div class="module_cont" v-if="item.users">
           <el-table :data="item.users" style="width: 100%">
             <el-table-column prop="nickname" label="昵称"></el-table-column>
@@ -120,21 +123,53 @@
         <div style="color:#999;" v-else>暂无数据</div>
       </div>
     </div>
+    <!-- 添加 -->
+    <el-dialog title="新增用户" :visible.sync="addDialog" @selection-change="handleSelectionChange">
+      <el-table :data="formData" style="width: 100%" stripe>
+        <el-table-column prop="name" label="姓名"></el-table-column>
+        <el-table-column prop="nickname" label="昵称"></el-table-column>
+        <el-table-column prop="phone" label="手机号"></el-table-column>
+        <el-table-column prop="sectionName" label="区域名称"></el-table-column>
+        <el-table-column prop="houseName" label="房间名称"></el-table-column>
+      </el-table>
+      <paging @changePage = handleCurrentPage :get-total='total'></paging>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="medium " @click="addDialog = false">取 消</el-button>
+        <el-button size="medium " @click="addList('addList')">新 增</el-button>
+      </div>
+    </el-dialog>
   </section>
 </template>
 
 <script>
-import {delProjectConfig,pushThisConfig,setNameToEntity,getIotDetailData,delDeviceOne,delModule} from "../../url/api"
+import {toSelectUsers,bindUserForConfig,delProjectConfig,pushThisConfig,setNameToEntity,getIotDetailData,delDeviceOne,delModule} from "../../url/api"
 export default {
   data(){
     return{
       screensType:1,
       devicesType:1,
+      total:0,
+      addDialog:false,
       dataInfor:JSON.parse(this.$route.query.configInfor) ,
-      configInfor:[]
+      configInfor:[],
+      formData:[],
+      seach:{
+        current:1,
+        size:10,
+      }
     }
   },
   methods:{
+    showAddUsers(){
+      this.addDialog = true
+      toSelectUsers(this.seach).then(res=>{//获取可选用户
+        console.log(res)
+        if(res.data.code == 200){
+          this.formData=res.data.data
+          this.total = res.data.data.total
+        }
+      })
+    },
     deletedelDeviceOne(id,typeCode){//删除单个设备
       // this.$confirm('确认删除吗？')
       // .then(_ => {
@@ -235,7 +270,11 @@ export default {
           this.$message("推送失败")
         }
       })
-    }
+    },
+    handleCurrentPage(val){//页码改变
+      this.seach.current=val
+      this.showAddUsers()
+    },
   },
   mounted(){
     this.getList()

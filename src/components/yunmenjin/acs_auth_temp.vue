@@ -186,12 +186,18 @@ export default {
             { validator: checkAge, trigger: 'blur' }
           ]
       },
-      imageUrl:''
+      imageUrl:'',
+      qrcode:null
     }
   },
   methods:{
     creatQrCode(pass) {
-        var qrcode = new QRCode(this.$refs.qrCodeUrl, {
+        if(this.qrcode){
+          this.qrcode.clear(); // 清除代码
+          this.qrcode.makeCode(pass); // 生成另外一个二维码
+          return
+        }
+        this.qrcode = new QRCode(this.$refs.qrCodeUrl, {
             text: pass, // 需要转换为二维码的内容
             width: 200,
             height: 200,

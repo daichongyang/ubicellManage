@@ -85,7 +85,11 @@
       </el-pagination>
     </div> -->
     <paging @changePage = handleCurrentPage :get-total='total'></paging>
-
+      <div class="export_template" style="margin-bottom:20px;">
+        <el-button size="small" @click="exportTemplate" type="primary" round>导出模板</el-button>
+        <!-- <el-button size="small" @click="getLabel" type="warning" round>导出数据</el-button> -->
+        <el-button size="small" @click="showImport=true" type="success" round>导入数据</el-button>
+      </div>
     <!-- 添加 -->
     <el-dialog title="新增" :visible.sync="addDialog" :close-on-click-modal="false">
       <div class="cont_box_left">
@@ -269,15 +273,49 @@
         <el-button size="medium" @click="updateList">确定</el-button>
       </div>
     </el-dialog>
+    <!-- 导入数据 -->
+    <el-dialog title="导入" :visible.sync="showImport">
+      <el-form :model="ExportImportInfor" class="form_inline">
+        <el-form-item label="选择小区" size="small" prop="xqId">
+          <el-select v-model="ExportImportInfor.xqId" placeholder="请选择小区">
+            <el-option v-for="item in xqTree" :label="item.name" :value="item.id" :key="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item size="small">
+          <el-upload
+            class="upload-demo"
+            :headers='headers'
+            name="importFile"
+            :action="'/intellmanagerV3.0/import/user/'+ExportImportInfor.xqId+'/1'"
+            :on-success="handleAvatarSuccess"
+            :on-remove="handleRemove"
+            :limit="1">
+            <el-button size="small" type="text">点击上传</el-button>
+          </el-upload>
+        </el-form-item>
+        <el-form-item>
+          <el-button size="small" @click="showImport=false">取 消</el-button>
+          <!-- <el-button size="small" @click="addDialog=true">确 定</el-button> -->
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </section>  
 </template>
 
 <script>
 import paging from '../paging'
-import { userhouselist,adduserhouselist,updateuserhouselist,deleteuserhouselist,orgTree,xqSelectList,houseList } from '../../url/api';
+import { exportUser,importUser,userhouselist,adduserhouselist,updateuserhouselist,deleteuserhouselist,orgTree,xqSelectList,houseList } from '../../url/api';
 export default {
   data(){
     return{
+      headers:{
+        Authorization:sessionStorage.getItem('Authorization'),
+        token:sessionStorage.getItem('token')
+      },
+      showImport:false,
+      ExportImportInfor:{
+        geta:[]
+      },//导入导出信息
       allSelect:[],
       option1:[],
       deleBatch:[],
@@ -331,6 +369,33 @@ export default {
     }
   },
   methods:{
+    exportTemplate(){//导出模板
+    window.self.location=exportUser
+      // exportUser().then((res)=>{
+      //   console.log(res)
+      //   if(res.data.code == 200){
+      //     this.$message({
+      //       message: '导出成功',
+      //       type: 'success'
+      //     });
+      //   }
+      // })
+    },
+    importInfor(){//导入信息
+      let params = {
+        userType:1,
+        xqId:1,
+      }
+      importHouse().then((res)=>{
+        console.log(res)
+        if(res.data.code == 200){
+          this.$message({
+            message: '导入成功',
+            type: 'success'
+          });
+        }
+      })
+    },
     gethouseLIst(){
       houseList(this.formSearch1).then((res)=>{//房间列表
         console.log(res)
@@ -391,6 +456,7 @@ export default {
           this.xqTree = res.data.data
           if(this.xqTree.length!=0){
             this.formSearch.xqId = this.xqTree[0].id
+            this.ExportImportInfor.xqId = this.xqTree[0].id
           }
         }
       })
@@ -561,7 +627,18 @@ export default {
           this.$message(res.data.msg);
         }
       })
-    }
+    },
+    handleAvatarSuccess(file,fileList) {
+      console.log(file,fileList);
+      if(file.code !=200){
+        this.$message(file.msg);
+      }else{
+        this.$message(file.msg);
+      }
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
   },
   mounted(){
     this.getInit()
