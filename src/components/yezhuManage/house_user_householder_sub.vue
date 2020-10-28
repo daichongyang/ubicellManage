@@ -73,7 +73,11 @@
 			</el-table-column>
     </el-table>
     <paging @changePage = handleCurrentPage :get-total='total'></paging>
-
+      <div class="export_template" style="margin-bottom:20px;">
+        <el-button size="small" @click="exportTemplate" type="primary" round>导出模板</el-button>
+        <!-- <el-button size="small" @click="getLabel" type="warning" round>导出数据</el-button> -->
+        <el-button size="small" @click="showImport=true" type="success" round>导入数据</el-button>
+      </div>
 
     <!-- 添加 -->
     <el-dialog title="新增" :visible.sync="addDialog" :close-on-click-modal="false">
@@ -289,7 +293,7 @@
 
 <script>
 import paging from '../paging'
-import { userhouselist,adduserhouselist,updateuserhouselist,deleteuserhouselist,orgTree,xqSelectList,houseList } from '../../url/api';
+import {exportUser , userhouselist,adduserhouselist,updateuserhouselist,deleteuserhouselist,orgTree,xqSelectList,houseList } from '../../url/api';
 export default {
   data(){
     return{
@@ -349,6 +353,18 @@ export default {
     }
   },
   methods:{
+    exportTemplate(){//导出模板
+    window.self.location=exportUser
+      // exportUser().then((res)=>{
+      //   console.log(res)
+      //   if(res.data.code == 200){
+      //     this.$message({
+      //       message: '导出成功',
+      //       type: 'success'
+      //     });
+      //   }
+      // })
+    },
     gethouseLIst(){
       houseList(this.formSearch1).then((res)=>{//房间列表
         console.log(res)

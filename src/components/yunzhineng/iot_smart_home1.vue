@@ -42,11 +42,13 @@
       </div>
       <div class="iot_smart_module">
         <div>用户列表 
-          <el-button type="danger" size="small" style="float:right;margin-left:20px;" @click="deletedelModule">删除</el-button>
-          <el-button type="primary" size="small" style="float:right;" @click="addDialog=true">添加</el-button>
+          <el-button type="danger" size="small" style="float:right;margin-left:20px;" @click="deleInfor">删除</el-button>
+          <el-button type="primary" size="small" style="float:right;" @click="showAddUsers(item.id,item.xqId),addDialog=true">添加</el-button>
         </div>
         <div class="module_cont" v-if="item.users">
-          <el-table :data="item.users" style="width: 100%">
+          <el-table :data="item.users" style="width: 100%" @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column prop="name" label="姓名"></el-table-column>
             <el-table-column prop="nickname" label="昵称"></el-table-column>
             <el-table-column prop="phone" label="手机号"></el-table-column>
             <el-table-column prop="showName" label="家园号"></el-table-column>
@@ -57,17 +59,17 @@
       <!--  -->
       <div class="iot_smart_module">
         <div>场景列表  
-          <el-select v-model="screensType" placeholder="请选择" size="small">
+          <el-select v-model="picInfor.tempImgMode" placeholder="请选择" size="small">
             <el-option label="激活图片" :value="1"></el-option>
-            <el-option label="未激活图片" :value="2"></el-option>
+            <el-option label="未激活图片" :value="0"></el-option>
           </el-select>
         </div>
         <div class="module_cont" v-if="item.screens">
             <div class="module_cont_screens">
               <div class="module_cont_screens_item" v-for="scItem in item.screens" :key="scItem.id">
                 <div>
-                  <img :src="scItem.img" alt="" v-if="screensType==1">
-                  <img :src="scItem.imgoff" alt="" v-if="screensType==2">
+                  <img :src="scItem.img" alt="" v-if="picInfor.tempImgMode==1" @click="gettoShowImgs(scItem.id,scItem.xqId,scItem.typeCode),picsDialog=true">
+                  <img :src="scItem.imgoff" alt="" v-if="picInfor.tempImgMode==0" @click="gettoShowImgs(scItem.id,scItem.xqId,scItem.typeCode),picsDialog=true">
                 </div>
                 <div style="margin-top:10px;">
                   <el-input size="small" v-model="scItem.name" placeholder="请输入内容" :value="scItem.name"></el-input>
@@ -84,7 +86,7 @@
       <!--  -->
       <div class="iot_smart_module">
         <div>Room列表  
-          <el-button type="warning" size="small">修改名称</el-button>
+          <!-- <el-button type="warning" size="small">修改名称</el-button> -->
         </div>
         <div class="module_cont" v-if="item.zones">
           <div class="module_cont_room">
@@ -101,7 +103,7 @@
                       <div class="module_cont_screens">
                         <div class="module_cont_screens_item" v-for="zmmoItemItem in zmmoItem.devices" :key="zmmoItemItem.id">
                           <div>
-                            <img :src="zmmoItemItem.img" alt="">
+                            <img :src="zmmoItemItem.img" alt="" @click="gettoShowImgs(zmmoItemItem.id,zmmoItemItem.xqId,zmmoItem.typeCode),picsDialog=true,picInfor.tempImgMode=1">
                           </div>
                           <div style="margin-top:10px;">
                             <el-input size="small" v-model="zmmoItemItem.name" placeholder="请输入内容" :value="zmmoItemItem.name"></el-input>
@@ -124,8 +126,9 @@
       </div>
     </div>
     <!-- 添加 -->
-    <el-dialog title="新增用户" :visible.sync="addDialog" @selection-change="handleSelectionChange">
-      <el-table :data="formData" style="width: 100%" stripe>
+    <el-dialog title="新增用户" :visible.sync="addDialog">
+      <el-table :data="formData" style="width: 100%" stripe @selection-change="handleSelectionChange1">
+        <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column prop="name" label="姓名"></el-table-column>
         <el-table-column prop="nickname" label="昵称"></el-table-column>
         <el-table-column prop="phone" label="手机号"></el-table-column>
@@ -135,37 +138,229 @@
       <paging @changePage = handleCurrentPage :get-total='total'></paging>
       <div slot="footer" class="dialog-footer">
         <el-button size="medium " @click="addDialog = false">取 消</el-button>
-        <el-button size="medium " @click="addList('addList')">新 增</el-button>
+        <el-button size="medium " @click="addbindUserForConfig">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!-- 图片组 -->
+    <el-dialog title="图片组" :visible.sync="picsDialog">
+      <el-form class="form_inline">
+        <el-form-item label="类别名称" size="small">
+          <el-input size="small" v-model="picInfor.imgTypeName" placeholder="请输入内容"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button size="small" @click="showImport=false">查询</el-button>
+          <el-button size="small" @click="addEntityImg">添加</el-button>
+        </el-form-item>
+      </el-form>
+      <div v-for="(item,index) in picsArr" :key="index">
+        <div class="picPot"><span class="" style="color:#a1d6f4;">{{item.imgTypeName}}</span> <el-button type="danger" size="small" @click="iotdelAllImg(item.id)">删除</el-button></div>
+        <div>
+          <!-- <el-upload
+            class="avatar-uploader"
+            action="/intellmanagerV3.0/iot/uploadImgFile"
+            :data="uploadImg"
+            :headers="headers"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            >
+            <img v-if="imageUrl&&uploadImg.entityImgId==item.id" :src="imageUrl" class="avatar" @click="getImgid(item.id)">
+            <i v-else class="el-icon-plus avatar-uploader-icon" @click="getImgid(item.id)"></i>
+          </el-upload> -->
+        <el-upload
+          action="/intellmanagerV3.0/iot/uploadImgFile"
+          :data="uploadImg"
+          :headers="headers"
+          list-type="picture-card"
+          :file-list="item.imgNames"
+          :on-success="handleAvatarSuccess">
+          <i slot="default" class="el-icon-plus" @click="getImgid(item.id)"></i>
+          <div slot="file" slot-scope="{file}">
+            <img
+              class="el-upload-list__item-thumbnail"
+              :src="file.url" alt=""
+            >
+            <span class="el-upload-list__item-actions">
+              <!-- <span
+                class="el-upload-list__item-preview"
+              >
+                <i class="el-icon-zoom-in"></i>
+              </span> -->
+              <span
+                v-if="!disabled"
+                class="el-upload-list__item-delete"
+                @click="setImgeToEntity(file,item.urll)"
+              >
+                <i class="el-icon-download"></i>
+              </span>
+              <span
+                v-if="!disabled"
+                class="el-upload-list__item-delete"
+                @click="iotdelImg(file,item.id)"
+              >
+                <i class="el-icon-delete"></i>
+              </span>
+            </span>
+          </div>
+        </el-upload>
+        </div>
       </div>
     </el-dialog>
   </section>
 </template>
 
 <script>
-import {toSelectUsers,bindUserForConfig,delProjectConfig,pushThisConfig,setNameToEntity,getIotDetailData,delDeviceOne,delModule} from "../../url/api"
+import paging from "../paging"
+import {setImgeToEntity,iotdelImg,iotdelAllImg,addEntityImg,toShowImgs,deleteunBindUserForConfig,toSelectUsers,bindUserForConfig,delProjectConfig,pushThisConfig,setNameToEntity,getIotDetailData,delDeviceOne,delModule} from "../../url/api"
 export default {
   data(){
     return{
+      headers:{
+        Authorization:sessionStorage.getItem('Authorization'),
+        token:sessionStorage.getItem('token')
+      },
+      disabled:false,
       screensType:1,
       devicesType:1,
+      projectConfigId:'',
+      uploadToRealPath:'',
+      picsDialog:false,
+      xqId:'',
       total:0,
       addDialog:false,
       dataInfor:JSON.parse(this.$route.query.configInfor) ,
       configInfor:[],
       formData:[],
+      deleBatch:[],
+      addBatch:[],
       seach:{
         current:1,
         size:10,
+      },
+      picSeach:{
+
+      },
+      picsArr:[],
+      imageUrl:'',
+      picInfor:{
+        tempImgMode:1
+      },
+      uploadImg:{//图片上传参数
+        entityImgId:''
       }
     }
   },
   methods:{
-    showAddUsers(){
-      this.addDialog = true
+    getImgid(id){
+      console.log(id)
+      this.uploadImg.entityImgId=id
+    },
+    setImgeToEntity(file,tempImgName){//设置设备的照片
+      let params = {
+        tempId:picInfor.tempId,
+        tempImgMode:picInfor.tempImgMode,
+        tempImgName:tempImgName,
+        tempTypeCode:picInfor.typeCode,
+      }
+      setImgeToEntity(params).then(res=>{
+        console.log(res)
+        if(res.data.code == 200){
+          this.getList()
+        }
+        this.picsDialog = false
+      })
+    },
+    iotdelImg(file,id){//删除某个照片
+
+      let params={
+        entityImgId:id,
+        imgName:file.urll
+      }
+      this.$confirm('确认删除吗？')
+      .then(_ => {
+        iotdelImg(params).then((res)=>{
+          console.log(res)
+          if(res.data.code == 200){
+            this.$message('删除成功');
+            this.gettoShowImgs(this.picSeach.id,this.picSeach.xqId)
+          }
+        })
+      })
+      .catch(_ => {});
+    },
+    iotdelAllImg(id){//删除照片组
+      let params={
+        entityImgId:id
+      }
+      // this.$confirm('确定要删除吗?', '提示', {
+      //   confirmButtonText: '确定',
+      //   cancelButtonText: '取消',
+      //   type: 'warning'
+      //   }).then(() => {
+      //   iotdelAllImg(parmas).then((res)=>{//
+      //     console.log(res)
+      //     if(res.data.code == 200){
+      //       this.gettoShowImgs(this.picSeach.id,this.picSeach.xqId)
+      //       this.$message("删除成功")
+      //     }else{
+      //       this.$message("删除失败")
+      //     }
+      //   })
+      //   }).catch(() => {});
+      this.$confirm('确认删除吗？')
+      .then(_ => {
+        iotdelAllImg(params).then((res)=>{
+          console.log(res)
+          if(res.data.code == 200){
+            this.$message('删除成功');
+            this.gettoShowImgs(this.picSeach.id,this.picSeach.xqId)
+          }
+        })
+      })
+      .catch(_ => {});
+    },
+    addEntityImg(){//添加照片组
+      let parmas = this.picInfor
+      console.log(parmas)
+      addEntityImg(parmas).then(res=>{
+        console.log(res)
+        if(res.data.code == 200){
+          this.gettoShowImgs(this.picSeach.id,this.picSeach.xqId)
+        }
+      })
+    },
+    gettoShowImgs(id,xqId,typeCode){//查看所有照片
+      this.picInfor.xqId=xqId
+      this.picInfor.tempId=id
+      this.picInfor.typeCode=typeCode
+      let params = {
+        xqId:xqId,
+      }
+      console.log(params)
+      toShowImgs(params).then(res=>{
+        console.log(res)
+        if(res.data.code == 200){
+          // this.picsArr = res.data.data
+          this.picsArr = res.data.data.filter(item=>{
+            if(item.imgNames){
+              item.imgNames.filter(itemm=>{
+                itemm.urll= itemm.url
+                itemm.url = item.url+itemm.url
+                return itemm
+              })
+            }
+            return item
+          })
+        }
+      })
+    },
+    showAddUsers(id,xqId){
+      console.log(id)
+      this.projectConfigId = id
+      this.xqId = xqId
       toSelectUsers(this.seach).then(res=>{//获取可选用户
         console.log(res)
         if(res.data.code == 200){
-          this.formData=res.data.data
+          this.formData=res.data.data.records
           this.total = res.data.data.total
         }
       })
@@ -221,6 +416,7 @@ export default {
         console.log(res)
         if(res.data.code == 200){
           this.configInfor = res.data.data
+          
         }else{
           this.$message(res.data.msg);
         }
@@ -231,7 +427,7 @@ export default {
       let params = {
         tempId:obj.id,
         tempImgName:obj.name,
-        tempTypeCode:typeCode||obj.typeCode,
+        tempImgMode:typeCode||obj.typeCode,
       }
       setNameToEntity(params).then(res=>{
         console.log(res)
@@ -271,14 +467,70 @@ export default {
         }
       })
     },
-    handleCurrentPage(val){//页码改变
+    handleCurrentPage(val){//新增用户页码改变
       this.seach.current=val
       this.showAddUsers()
     },
+    handleSelectionChange(val,self) {//删除用户选择
+      console.log(val)
+      this.deleBatch = val
+    },
+    handleSelectionChange1(val,self) {//新增用户选择
+      console.log(val,self)
+      this.addBatch = val
+    },
+    addbindUserForConfig(){//添加用户
+      let params = {
+        acHouseUserVoList:[],
+        projectConfigId:this.projectConfigId,
+        xqId:this.xqId
+      }
+      params.acHouseUserVoList = this.addBatch
+      bindUserForConfig(params).then(res=>{
+        console.log(res)
+        if(res.data.code == 200){
+          this.$message("添加成功")
+          this.getList()
+        }
+      })
+      this.addDialog = false
+    },
+    deleInfor(){//删除用户
+      let arrId = ''
+      if(this.deleBatch.length!=0){
+        this.deleBatch.forEach((item)=>{
+          arrId = item.id+"_"+arrId
+        })
+      }
+      console.log(arrId)
+      this.$confirm('确认删除吗？')
+      .then(_ => {
+        deleteunBindUserForConfig(arrId).then((res)=>{
+          console.log(res)
+          if(res.data.code == 200){
+            this.$message('删除成功');
+            this.getList()
+          }
+        })
+      })
+      .catch(_ => {});
+    },
+    handleAvatarSuccess(res, file) {
+      console.log(res)
+      this.imageUrl = URL.createObjectURL(file.raw);
+      // this.addEntityImg(res.data[0])
+      this.gettoShowImgs(this.picSeach.id,this.picSeach.xqId)
+    },
   },
   mounted(){
+    this.uploadToRealPath = this.$root.uploadToRealPath
+    // console.log(this.$root.uploadToRealPath)
     this.getList()
+    // this.showAddUsers()
     console.log(JSON.parse(this.$route.query.configInfor) )
+  },
+  components:{
+    paging
   }
 }
 </script>
@@ -323,5 +575,11 @@ export default {
   display: flex;
   justify-content: space-around;
   margin-top:10px;
+}
+.picPot{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom:10px;
 }
 </style>

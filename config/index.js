@@ -11,9 +11,9 @@ module.exports = {
         assetsPublicPath: '/',
         proxyTable: {
             '/intellmanagerV3.0': {
-                target: 'http://192.168.0.245:8082/intellmanagerV3.0',
+                // target: 'http://192.168.0.245:8082/intellmanagerV3.0',
                 // target: 'http://192.168.0.196:8081/intellmanagerV3.0',
-                // target: 'http://192.168.0.143:8081/intellmanagerV3.0',
+                target: 'http://192.168.0.143:8081/intellmanagerV3.0',
                 // target: 'http://192.168.0.101:8081/intellmanagerV3.0',
                 // target: 'http://117.78.42.182:8080/intellmanagerV3.0',
                 // target: 'http://www.ubicell.cn:8080/intellmanagerV3.0',
@@ -27,7 +27,7 @@ module.exports = {
         },
 
         // Various Dev Server settings
-        host: '192.168.0.172', // can be overwritten by process.env.HOST
+        host: '192.168.0.176', // can be overwritten by process.env.HOST
         port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
         autoOpenBrowser: false,
         errorOverlay: true,

@@ -63,7 +63,8 @@ new Vue({
         store,
         data: () => {
             return {
-                getDateArray: getDateArray
+                getDateArray: getDateArray,
+                uploadToRealPath: '/intellmanagerV3.0/upload/uploadfile'
             }
         },
         components: { App },

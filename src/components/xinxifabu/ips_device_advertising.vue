@@ -36,8 +36,9 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="发送状态">
-        <el-radio v-model="formPush.isDel" :label="1">已删除</el-radio>
-        <el-radio v-model="formPush.isDel" :label="0">投放中</el-radio>
+        <el-radio v-model="formSearch.isDel" :label="null">所有</el-radio>
+        <el-radio v-model="formSearch.isDel" :label="1">已删除</el-radio>
+        <el-radio v-model="formSearch.isDel" :label="0">投放中</el-radio>
       </el-form-item>
       <el-form-item>
         <el-button size="small" @click="getlist">查 询</el-button>

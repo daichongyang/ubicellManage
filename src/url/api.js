@@ -20,7 +20,7 @@ const instance = axios.create({
         withCredentials: true
     })
     // 图片上传
-export const uploadToRealPath = "/intellmanagerV3.0/upload/uploadfile"
+export const uploadToRealPath = () => "/intellmanagerV3.0/upload/uploadfile"
     // export const uploadToRealPath = (params) => { return instance.post(`/intellmanagerV3.0/upload/uploadfile`, params, config) }
 
 export const login = (params) => { return axios.post('/intellmanagerV3.0/anno/token', params) } //获取认证token
@@ -288,3 +288,10 @@ export const delDeviceOne = (params) => { return axios.post('/intellmanagerV3.0/
 export const delModule = (params) => { return axios.post('/intellmanagerV3.0/iot/delModule/' + params.roomId + "/" + params.typeCode) } // 删除房间module
 export const bindUserForConfig = (params) => { return axios.post('/intellmanagerV3.0/iot/bindUserForConfig', params) } // 添加用户
 export const toSelectUsers = (params) => { return axios.post('/intellmanagerV3.0/iot/toSelectUsers', params) } // 获取可选用户
+export const deleteunBindUserForConfig = (params) => { return axios.post('/intellmanagerV3.0/iot/unBindUserForConfig/' + params) } // 删除用户
+export const toShowImgs = (params) => { return axios.post('/intellmanagerV3.0/iot/toShowImgs', params) } // 查看所有照片
+export const addEntityImg = (params) => { return axios.post('/intellmanagerV3.0/iot/addEntityImg', params) } // 添加照片组
+export const iotdelAllImg = (params) => { return axios.post('/intellmanagerV3.0/iot/delAllImg/' + params.entityImgId) } // 删除照片组
+export const iotdelImg = (params) => { return axios.post('/intellmanagerV3.0/iot/delImg/' + params.entityImgId + "/" + params.imgName) } // 删除某个照片
+export const setImgeToEntity = (params) => { return axios.post('/intellmanagerV3.0/iot/setImgeToEntity', params) } // 设置设备的照片
+export const uploadImgFile = (params) => { return axios.post('/intellmanagerV3.0/iot/uploadImgFile', params) } // 文件上传
