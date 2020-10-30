@@ -3,92 +3,99 @@
     <!-- 导航栏 -->
     <p class="margintop"></p>
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-      <el-form :inline="true" class="gridContt">
-        <el-form :inline="true">
-          <el-form-item size="small" label="下载类型">
-          <el-select v-model="checkInfor.value" placeholder="请选择">
-            <el-option label="类型1" :value="1"></el-option>
-            <el-option label="类型2" :value="2"></el-option>
+      <el-form :inline="true" class="gridContt" label-width="100px">
+        <el-form-item label="选择小区" size="small">
+          <el-select v-model="checkInfor.xqId" placeholder="请选择小区">
+            <el-option v-for="(item,index) in xqTree" :label="item.name" :value="item.id" :key="index"></el-option>
           </el-select>
-          </el-form-item>
+        </el-form-item>
           <el-form-item size="small" label="导出类型">
-            <el-select v-model="checkInfor.value1" placeholder="请选择">
-              <el-option label="类型1" :value="1"></el-option>
-              <el-option label="类型2" :value="2"></el-option>
+            <el-select v-model="checkInfor.state" placeholder="请选择">
+              <el-option label="成功" :value="0"></el-option>
+              <el-option label="失败" :value="1"></el-option>
             </el-select>
           </el-form-item>
-        <el-form-item size="small" label="导出时间">
+          <el-form-item size="small" label="账号">
+            <el-input placeholder="请输入账号" v-model="checkInfor.account" size='small'></el-input>
+          </el-form-item>
+          <el-form-item size="small" label="转换服务器IP">
+            <el-input placeholder="请输入转换服务器IP" v-model="checkInfor.devip" size='small'></el-input>
+          </el-form-item>
+          <el-form-item size="small" label="门牌号">
+            <el-input placeholder="请输入门牌号" v-model="checkInfor.droorNum" size='small'></el-input>
+          </el-form-item>
+          <el-form-item size="small" label="业主手机号">
+            <el-input placeholder="请输入业主手机号" v-model="checkInfor.phone" size='small'></el-input>
+          </el-form-item>
+          <el-form-item size="small" label="操作结果">
+            <el-input placeholder="请输入操作结果" v-model="checkInfor.remark" size='small'></el-input>
+          </el-form-item>
+          <el-form-item size="small" label="单元号">
+            <el-input placeholder="请输入单元号" v-model="checkInfor.unitNumber" size='small'></el-input>
+          </el-form-item>
+          <el-form-item size="small" label="导入时间">
             <el-date-picker
-              v-model="checkInfor.liveStartTime"
+              v-model="checkInfor.gmtCreate"
               type="date"
               value-format="timestamp"
               placeholder="开始日期">
             </el-date-picker>
           </el-form-item>
-          <el-form-item size="small" label="-">
+          <!-- <el-form-item size="small" label="-">
             <el-date-picker
               v-model="checkInfor.liveEndTime	"
               type="date"
               value-format="timestamp"
               placeholder="结束时间">
             </el-date-picker>
-          </el-form-item>
-          <el-form-item size="small" label="操作人员">
-            <el-input placeholder="操作人员" v-model="checkInfor.nativePlace" size='small'></el-input>
-          </el-form-item>
-          <el-form-item size="small" label="操作人员角色">
-            <el-input placeholder="操作人员角色" v-model="checkInfor.nativePlace" size='small'></el-input>
-          </el-form-item>
-
-        </el-form>
+          </el-form-item> -->
       </el-form>
         <el-form class="marginTop20" :inline="true">
           <el-form-item label="查询结果" class="margin0">
-            <el-button type="primary" size='small'>报表导出</el-button>
             <el-button type="primary" size='small' @click="getList">查询</el-button>
-            <el-button type="primary" size='small' @click="reloadCon">重置</el-button>
           </el-form-item>
         </el-form>
     </el-col>
 
     <!-- 列表部分 -->
-    <el-table :data="inforList" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
-			<el-table-column class="ccc" type="selection" width="55" label="全选">
-			</el-table-column>  
-			<el-table-column prop="name" label="内容">
+    <el-table :data="inforList" style="width: 100%;">
+    <!-- <el-table :data="inforList" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;"> -->
+			<!-- <el-table-column class="ccc" type="selection" width="55" label="全选">
+			</el-table-column>   -->
+			<el-table-column prop="account" label="账号">
 			</el-table-column>
-			<el-table-column prop="sex" label="导出时间">
+			<el-table-column prop="" label="导入时间">
+        <template slot-scope="scope">
+          <div v-if="scope.row.gmtCreate">{{$root.getDateArray(scope.row.gmtCreate)[9]}}</div>
+        </template>
 			</el-table-column>
-			<el-table-column prop="duty" label="操作人">
+			<el-table-column prop="remark" label="操作结果">
 			</el-table-column>
-			<el-table-column prop="department" label="操作人角色">
+			<el-table-column prop="" label="状态">
+        <template slot-scope="scope">
+          {{scope.row.state==0?'成功':'失败'}}
+        </template>
 			</el-table-column>
-			<el-table-column label="操作" fixed="right" width=400>
+			<el-table-column label="操作" fixed="right" width=200>
 				<template slot-scope="scope">
-          <el-button size="small" >查看</el-button>
-          <el-button size="small" >下载</el-button>
-          <!-- <el-button size="small" >{{scope.row.isContactt}}</el-button> -->
+          <el-button size="small" @click="gohouseUserLogList(scope.row)">详情</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
-    <!-- 批量删除，下标页码 -->
-		<el-col :span="24" class="paginationt">
-			<el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="10" :page-count="total" class="pagination">
-			</el-pagination>
-		</el-col>
+    <paging @changePage = handleCurrentPage :get-total='total'></paging>
   </section>
 </template>
 <script>
-// import {getDateArray} from '../../util/util'
-// import {getYqfkPerson, deptaddList, selectOffice,locationHouse,deptupdateList,deptdeleteList} from '../../api/api'
+import paging from "../paging"
+import {getImportList,xqSelectList} from '../../url/api'
 export default {
   data(){
     return{
       headIcon:'',
       isActive:1,
       remark:'',//修改备注
-      total:1,
-      selectArr:[],
+      total:0,
+      xqTree:[],
       addFormVisible:false,
       addFormVisible1:false,
       updataVisible:false,
@@ -102,88 +109,48 @@ export default {
         houseIds:[],//房间id
         officeId:''
       },
-      inforList:[
-        {
-          name:'英达斯瑞公园总人员报表',
-          sex:'2020.06.12 12:12:10',
-          duty:'李经理',
-          department:'总经理',
-          isSplite:'010101',
-          temperature:'个',
-          health:'130',
-          isCross:'2号仓库',
-          isContact:'审核通过/未领用',
-          isContactt:"领用"
-        },
-        {
-          name:'英达斯瑞公园总人员报表',
-          sex:'2020.06.12 12:12:10',
-          duty:'李经理',
-          department:'总经理',
-          isSplite:'010101',
-          temperature:'个',
-          health:'30',
-          isCross:'3号仓库',
-          isContact:'未审核',
-          isContactt:"审核通过"
-        },
-        {
-          name:'英达斯瑞公园总人员报表',
-          sex:'2020.06.12 12:12:10',
-          duty:'李经理',
-          department:'总经理',
-          isSplite:'010101',
-          temperature:'个',
-          health:'10',
-          isCross:'4号仓库',
-          isContact:'审核通过/未领用',
-          isContactt:"领用"
-        }
-      ],
-      checkInfor:{
+      inforList:[],
+      checkInfor:{//条件查询
         current:1,
-        size:10,
-        type:1
-      },//条件查询
+        size:10
+      },
       updataForm:{},
       addForm:{},
       params:{}
     }
   },
   methods:{
-    reloadCon(){
-      location.reload()
-    },
-    getList1(item){
-      if(item == 1){
-        this.$router.push({
-          path:'./jcrManage'
-        })
-      }else if(item == 2){
-        this.$router.push({
-          path:'./txzsq'
+    gohouseUserLogList(obj){
+      if(obj.menuCode=='house_user'){
+        this.$router.push({//房间到出入记录
+          path:'/houseUserLogList',
+          query:{
+            sectionId:obj.id
+          }
         })
       }
+
     },
-    changexianmu(officeId){
-      this.houseAssign.officeId=officeId
+    getinit(){
+      this.getList()
+      xqSelectList({}).then((res)=>{//小区选择列表
+        console.log(res)
+        if(res.data.code == 200){
+          this.xqTree = res.data.data
+        }
+      })
     },
     getList(){//获取列表
       let params=this.checkInfor
       console.log(params)
-      getYqfkPerson(params).then(res=>{
+      getImportList(params).then(res=>{
         console.log(res)
-        // if(res.data.code===200){
-        //   this.inforList=res.data.data.filter(function(item){
-        //     if(item.isRent===0){
-        //       item.isRentName='否'
-        //     }else if(item.isRent===1){
-        //       item.isRentName='是'
-        //     }
-        //     return item
-        //   })
-        //   this.total=res.data.data.pages
-        // }
+        if(res.data.code===200){
+          this.inforList=res.data.data.records.filter(function(item){
+            return item
+          })
+          this.total=res.data.data.total
+        }
       })
     },
     changeItem(){//修改
@@ -275,10 +242,17 @@ export default {
             return sel
         }
       })
-    } 
+    },
+    handleCurrentPage(val){//页码改变
+      this.checkList.current=val
+      this.getList()
+    },
   },
   mounted(){
-    this.getList()
+    this.getinit()
+  },
+  components:{
+    paging
   }
 }
 </script>

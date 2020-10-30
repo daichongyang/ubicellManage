@@ -51,10 +51,10 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button size="small" @click="getInit">查 询</el-button>
+        <el-button size="small" @click="getlist">查 询</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button size="small" @click="addDialog=true">新 增</el-button>
+        <el-button size="small" @click="addDialog=true,checkList=[],formPush.shopImage=''">新 增</el-button>
       </el-form-item>
       <el-form-item>
         <el-button size="small" type="danger" @click="deleInfor(false)">批量删除</el-button>
@@ -101,7 +101,7 @@
           <el-form-item label="商家名称" size="small" prop="shopName">
             <el-input v-model="formPush.shopName"></el-input>
           </el-form-item>
-          <el-form-item label="商家头像" size="small">
+          <el-form-item label="商家头像" size="small" prop="shopName">
             <el-upload
               class="avatar-uploader"
               :action="uploadToRealPath"
@@ -118,9 +118,17 @@
             <el-input v-model="formPush.address"></el-input>
           </el-form-item>
           <el-form-item label="商家类型" size="small" prop="genreId">
-            <el-select v-model="formPush.genreId" placeholder="请选择商家类型">
+            <el-select v-model="formPush.genreId" placeholder="请选择商家类型" @change="getshoptype(formPush.genreId,formPush.xqId)">
               <el-option v-for="(item,index) in lishopinfo" :label="item.name" :value="item.id" :key="index"></el-option>
             </el-select>
+          </el-form-item>
+          <el-form-item label="服务类型" size="small" v-if="formPush.genreId&&formPush.genreId!=2">
+            <el-checkbox-group v-model="checkList">
+              <el-checkbox v-for="item in shoptype" :key="item.id" :label="item.id" :value="item.id">{{item.name}}</el-checkbox>
+            </el-checkbox-group>          
+          </el-form-item>
+          <el-form-item label="起送金额" size="small" v-if="formPush.genreId==2">
+            <el-input v-model="formPush.deliveryMoney" placeholder="请输入起送金额"></el-input>
           </el-form-item>
           <el-form-item label="商家距离" size="small" prop="distance">
             <el-input v-model="formPush.distance" placeholder="单位（km）"></el-input>
@@ -178,9 +186,17 @@
             <el-input v-model="formUpdate.address"></el-input>
           </el-form-item>
           <el-form-item label="商家类型" size="small" prop="genreId">
-            <el-select v-model="formUpdate.genreId" placeholder="请选择商家类型">
+            <el-select v-model="formUpdate.genreId" placeholder="请选择商家类型" @change="getshoptype(formUpdate.genreId,formUpdate.xqId)">
               <el-option v-for="(item,index) in lishopinfo" :label="item.name" :value="item.id" :key="index"></el-option>
             </el-select>
+          </el-form-item>
+          <el-form-item label="服务类型" size="small" v-if="formUpdate.genreId&&formUpdate.genreId!=2">
+            <el-checkbox-group v-model="checkList">
+              <el-checkbox v-for="item in shoptype" :key="item.id" :label="item.id" :value="item.id">{{item.name}}</el-checkbox>
+            </el-checkbox-group>          
+          </el-form-item>
+          <el-form-item label="起送金额" size="small" v-if="formUpdate.genreId==2">
+            <el-input v-model="formUpdate.deliveryMoney" placeholder="请输入起送金额"></el-input>
           </el-form-item>
           <el-form-item label="商家距离" size="small" prop="distance">
             <el-input v-model="formUpdate.distance" placeholder="单位（km）"></el-input>
@@ -219,13 +235,14 @@
 
 <script>
 import paging from "../paging"
-import {getlishopinfo,pmtypePhone,updshopinfo, merchantList,addshopinfo,updateMerchantList,deleteMerchantList,xqSelectList,orgTree } from '../../url/api';
+import {getshoptype,getlishopinfo,pmtypePhone,updshopinfo, merchantList,addshopinfo,updateMerchantList,deleteMerchantList,xqSelectList,orgTree } from '../../url/api';
 export default {
   data(){
     return{
       checkStrictly:false,
       bindRole:{},
       showmenuList:[],
+      checkList:[],
       menuList:[],
       option1:[],
       xqTree:[],
@@ -244,7 +261,9 @@ export default {
       updateDialog:false,
       detailsDialog:false,
       pictrueNum:0,
-      formPush:{},
+      formPush:{
+        deliveryMoney:0
+      },
       uploadToRealPath:'/intellmanagerV3.0/upload/file/upload',
       dataTree:[],
       defaultProps: {//树状图key定义
@@ -275,6 +294,7 @@ export default {
       imageUrl:'',
       dialogVisible:false,
       fileList: [],
+      shoptype:[],
       lishopinfo:[]
     }
   },
@@ -321,6 +341,18 @@ export default {
       console.log(file, fileList);
       this.fileList = fileList
     },
+    getshoptype(genreId,xqId){//商家信息添加时调用
+      let params = {
+        xqId:xqId,
+        classify:genreId
+      }
+      getshoptype(params).then(res=>{
+        console.log(res)
+        if(res.data.code == 200){
+          this.shoptype = res.data.data
+        }
+      })
+    },
     getInit(){
       this.getlist()
       xqSelectList({}).then((res)=>{//小区选择列表
@@ -347,7 +379,25 @@ export default {
       })
     },
     addList(addList){//添加树状图node节点
-      
+        console.log(this.checkList)
+        this.formPush.subdivide = ''
+        this.checkList.forEach(item=>{
+          this.formPush.subdivide = item+","+this.formPush.subdivide
+        })
+        if(this.formPush.genreId==2){
+          this.formPush.subdivide=''
+        }else{
+          this.formPush.deliveryMoney=0
+          if(!this.formPush.subdivide){
+            this.$message("请选择服务类型")
+            return
+          }
+        }
+        if(!this.formPush.shopImage){
+          this.$message("请上传头像")
+          return 
+        }
+        console.log(this.formPush)
         this.$refs[addList].validate((valid) => {
           if (valid) {
             if(this.fileList.length == 0){
@@ -360,7 +410,7 @@ export default {
                   addshopinfo(this.formPush).then((res)=>{
                     console.log(res)
                     if(res.data.code == 200){
-                      this.getInit()
+                      this.getlist()
                       this.$message({
                         message: '添加成功',
                         type: 'success'
@@ -392,6 +442,19 @@ export default {
 
     },
     updateList(formName){//修改
+       this.formUpdate.subdivide = ''
+        this.checkList.forEach(item=>{
+          this.formUpdate.subdivide = item+","+this.formUpdate.subdivide
+        })
+        if(this.formUpdate.genreId==2){
+          this.formUpdate.subdivide=''
+        }else{
+          this.formUpdate.deliveryMoney=0
+          if(!this.formUpdate.subdivide){
+            this.$message("请选择服务类型")
+            return
+          }
+        }
       this.$refs[formName].validate((valid) => {
         if (valid) {
             this.formUpdate.picture = ''
@@ -478,7 +541,20 @@ export default {
         address:item.address,
         picture:item.picture,
         shopImage:item.shopImage,
+        deliveryMoney:item.deliveryMoney,
+        xqId:item.xqId
       }
+      if(item.subdivideid){
+
+        let aa = item.subdivideid.substr(0,item.subdivideid.length-1).split(",").filter(iitem=>{
+          iitem = Number(iitem)
+          this.checkList.push(iitem)
+          return iitem
+        })
+        console.log(this.checkList)
+      }
+      
+      this.getshoptype(this.formUpdate.genreId,this.formUpdate.xqId)
       this.imageUrl = item.shopImage
       this.updateDialog = true
       if(item.picture){
@@ -493,7 +569,7 @@ export default {
         })
         
       }
-      console.log(this.formUpdate,this.fileList)
+      console.log(this.formUpdate,item)
       
     },
       deleInfor(ids){//删除

@@ -36,7 +36,7 @@
                   <div class="group_ul_li_item" @click="$router.push('/dbsx')">待办事项</div>
                   <div class="group_ul_li_item" @click="$router.push('/common_config')">通用配置</div>
                   <div class="group_ul_li_item" @click="$router.push('/zhbb')">综合报表</div>
-                  <div class="group_ul_li_item" @click="$router.push('/dcjl')">导出记录</div>
+                  <div class="group_ul_li_item" @click="$router.push('/dcjl')">导出入记录</div>
                   <div class="group_ul_li_item" @click="$router.push('/xtrz')">系统日志</div>
                   <div class="group_ul_li_item">帮助</div>
                   <div class="group_ul_li_item" @click="$router.push('/login')">切换账号</div>

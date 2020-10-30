@@ -101,14 +101,15 @@
           </el-form-item>
           <el-form-item label="图片" size="small" prop="picture">
             <el-upload
-              ref="addUpdata"
+              class="avatar-uploader"
               :action="uploadToRealPath"
-              list-type="picture-card"
+              :show-file-list="false"
               :headers='headers'
               :on-success="handleAvatarSuccess1"
-              :on-remove="handleRemove">
-              <i class="el-icon-plus"></i>
-            </el-upload> 
+              >
+              <img v-if="imageUrl" :src="imageUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
             <!-- <el-dialog :visible.sync="dialogVisible">
               <img width="100%" :src="dialogImageUrl" alt="">
             </el-dialog>          -->
@@ -197,7 +198,7 @@
             <el-input v-model="formUpdate.summary"></el-input>
           </el-form-item>
           <el-form-item label="图片" size="small" prop="picture">
-            <el-upload
+            <!-- <el-upload
               ref="addUpdata"
               :action="uploadToRealPath"
               list-type="picture-card"
@@ -206,7 +207,17 @@
               :on-success="handleAvatarSuccess1"
               :on-remove="handleRemove">
               <i class="el-icon-plus"></i>
-            </el-upload> 
+            </el-upload> -->
+            <el-upload
+              class="avatar-uploader"
+              :action="uploadToRealPath"
+              :show-file-list="false"
+              :headers='headers'
+              :on-success="handleAvatarSuccess1"
+              >
+              <img v-if="imageUrl" :src="imageUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
           </el-form-item>
           <el-form-item label="是否发送">
             <el-radio v-model="formUpdate.isSend" :label="1">是</el-radio>
@@ -254,16 +265,16 @@
 
           </el-form-item>
         <el-form-item label="用户">
-              <div class="tree_box_item">
-                <el-tree
-                  :data="formData2"
-                  node-key="id"
-                  :props='defaultProps'
-                  @check="checkTreeInfor1"
-                  show-checkbox
-                  :expand-on-click-node="false">
-                </el-tree>
-              </div>
+            <div class="tree_box_item">
+              <el-tree
+                :data="formData2"
+                node-key="id"
+                :props='defaultProps'
+                @check="checkTreeInfor1"
+                show-checkbox
+                :expand-on-click-node="false">
+              </el-tree>
+            </div>
           </el-form-item>
         </el-form>
       </div>
@@ -353,6 +364,7 @@ export default {
         devList:[{ type: 'array',required: true, message: '该项不能为空',trigger: 'change'}]
       },
       fileList:[],
+      imageUrl:'',
       selectedHouse:[]
     }
   },
@@ -363,7 +375,10 @@ export default {
         console.log(res)
         if(res.data.code == 200){
           this.$nextTick(()=>{
-            this.formData2 = res.data.data.userList
+            this.formData2 = res.data.data.userList.filter(item=>{
+              item.name = item.name||item.phone
+              return item
+            })
           })
         }
       })
@@ -396,7 +411,9 @@ export default {
     },
     handleAvatarSuccess1(res, file,fileList) {
       console.log(res, file)
-      this.fileList = fileList
+      this.imageUrl=URL.createObjectURL(file.raw);
+      this.formPush.imageNames= res.data[0]
+      // this.fileList = fileList
       // this.formPush.picture = res.data[0]+","+this.formPush.picture
     },
     handleRemove(file, fileList) {
@@ -488,15 +505,16 @@ export default {
       })
     },
     addList(addList){//添加
-      this.formPush.imageNames = ''
-      this.fileList.forEach(item=>{
-        if(item.response){
-          this.formPush.imageNames = item.response.data[0]+","+this.formPush.picture
-        }else{
-          this.formPush.imageNames = item.url+","+this.formPush.imageNames
+      // this.formPush.imageNames = ''
+      // this.fileList.forEach(item=>{
+      //   if(item.response){
+      //     this.formPush.imageNames = item.response.data[0]+","+this.formPush.picture
+      //   }else{
+      //     this.formPush.imageNames = item.url+","+this.formPush.imageNames
           
-        }
-      })
+      //   }
+      // })
+      console.log(this.formPush)
       this.$refs[addList].validate((valid) => {
         if (valid) {
 
@@ -631,7 +649,7 @@ export default {
       let obj = ev.checkedNodes
       // this.formPush.orgId = ev.checkedKeys[0]
       // this.formUpdate.orgId = ev.checkedKeys[0]
-      this.formPush.houseUserIds = [ev.checkedKeys]
+      this.formPush.houseUserIds = ev.checkedKeys
     },
     updateShowBox(item){//修改东西弹窗
       this.updateDialog1 = true
@@ -691,6 +709,7 @@ export default {
         xqId:item.xqId,
         id:item.id
       }
+      this.imageUrl = item.address
       this.formData2 = item.userList
       if(item.deviceList){
         item.deviceList.forEach((itemm)=>{

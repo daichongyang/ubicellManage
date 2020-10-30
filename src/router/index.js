@@ -37,6 +37,10 @@ const common_config = () =>
     import ('@/components/extraOptions/common_config');
 const zhangdan_config = () =>
     import ('@/components/extraOptions/zhangdan_config');
+const shuidianmeiConfig = () =>
+    import ('@/components/extraOptions/shuidianmeiConfig');
+const houseUserLogList = () =>
+    import ('@/components/extraOptions/houseUserLogList');
 
 // 系统配置
 const sys_log = () =>
@@ -449,9 +453,25 @@ export default new Router({
                             }
                         },
                         {
+                            path: '/shuidianmeiConfig',
+                            name: '水电煤配置',
+                            component: shuidianmeiConfig,
+                            meta: {
+
+                            }
+                        },
+                        {
                             path: '/dcjl',
-                            name: '导出记录',
+                            name: '导出入记录',
                             component: dcjl,
+                            meta: {
+
+                            }
+                        },
+                        {
+                            path: '/houseUserLogList',
+                            name: '房间导出入记录',
+                            component: houseUserLogList,
                             meta: {
 
                             }

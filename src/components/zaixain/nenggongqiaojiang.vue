@@ -13,11 +13,11 @@
           <el-option label="不通过" :value="2"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="出租类型" size="small">
-        <el-select v-model="formSearch.typeId	" placeholder="出租类型">
-          <el-option label="出租" :value="0"></el-option>
-          <el-option label="求租" :value="1"></el-option>
-          <el-option label="购置" :value="2"></el-option>
+      <el-form-item label="类型" size="small">
+        <el-select v-model="formSearch.typeId	" placeholder="类型">
+          <el-option label="能工巧匠" :value="0"></el-option>
+          <el-option label="求助" :value="1"></el-option>
+
         </el-select>
       </el-form-item>
       <el-form-item label="手机号" size="small">
@@ -52,7 +52,7 @@
       </el-table-column>
       <el-table-column prop="typeId" label="出租状态">
         <template slot-scope="scope">
-          {{scope.row.typeId==0?"出租":scope.row.typeId==1?"求租":"购置"}}
+          {{scope.row.typeId==0?"能工巧匠":"求助"}}
         </template>
       </el-table-column>
       <el-table-column prop="" label="审核时间" width="150">

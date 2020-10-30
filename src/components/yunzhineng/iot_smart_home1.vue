@@ -103,7 +103,7 @@
                       <div class="module_cont_screens">
                         <div class="module_cont_screens_item" v-for="zmmoItemItem in zmmoItem.devices" :key="zmmoItemItem.id">
                           <div>
-                            <img :src="zmmoItemItem.img" alt="" @click="gettoShowImgs(zmmoItemItem.id,zmmoItemItem.xqId,zmmoItem.typeCode),picsDialog=true,picInfor.tempImgMode=1">
+                            <img :src="zmmoItemItem.img" alt="" @click="gettoShowImgs(zmmoItemItem.id,zmmoItem.xqId,zmmoItem.typeCode),picsDialog=true,picInfor.tempImgMode=1">
                           </div>
                           <div style="margin-top:10px;">
                             <el-input size="small" v-model="zmmoItemItem.name" placeholder="请输入内容" :value="zmmoItemItem.name"></el-input>
@@ -188,7 +188,7 @@
               <span
                 v-if="!disabled"
                 class="el-upload-list__item-delete"
-                @click="setImgeToEntity(file,item.urll)"
+                @click="setImgeToEntity(file)"
               >
                 <i class="el-icon-download"></i>
               </span>
@@ -254,16 +254,19 @@ export default {
       console.log(id)
       this.uploadImg.entityImgId=id
     },
-    setImgeToEntity(file,tempImgName){//设置设备的照片
+    setImgeToEntity(file){//设置设备的照片
+      console.log(file)
       let params = {
-        tempId:picInfor.tempId,
-        tempImgMode:picInfor.tempImgMode,
-        tempImgName:tempImgName,
-        tempTypeCode:picInfor.typeCode,
+        tempId:this.picInfor.tempId,
+        tempImgMode:this.picInfor.tempImgMode,
+        tempImgName:file.urll,
+        tempTypeCode:this.picInfor.typeCode,
       }
+      console.log(params)
       setImgeToEntity(params).then(res=>{
         console.log(res)
         if(res.data.code == 200){
+          this.$message("修改成功")
           this.getList()
         }
         this.picsDialog = false
