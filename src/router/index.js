@@ -37,11 +37,14 @@ const common_config = () =>
     import ('@/components/extraOptions/common_config');
 const zhangdan_config = () =>
     import ('@/components/extraOptions/zhangdan_config');
-const shuidianmeiConfig = () =>
-    import ('@/components/extraOptions/shuidianmeiConfig');
+
 const houseUserLogList = () =>
     import ('@/components/extraOptions/houseUserLogList');
-
+// 收费管理
+const charging_config_price = () =>
+    import ('@/components/shoufeiManage/charging_config_price');
+const gudinfeiyon_config = () =>
+    import ('@/components/shoufeiManage/gudinfeiyon_config');
 // 系统配置
 const sys_log = () =>
     import ('@/components/sysManage/sys_log');
@@ -453,11 +456,19 @@ export default new Router({
                             }
                         },
                         {
-                            path: '/shuidianmeiConfig',
-                            name: '水电煤配置',
-                            component: shuidianmeiConfig,
+                            path: '/charging_config_price',
+                            name: '单价配置',
+                            component: charging_config_price,
                             meta: {
-
+                                id: 147
+                            }
+                        },
+                        {
+                            path: '/gudinfeiyon_config',
+                            name: '单价配置',
+                            component: gudinfeiyon_config,
+                            meta: {
+                                id: 147
                             }
                         },
                         {

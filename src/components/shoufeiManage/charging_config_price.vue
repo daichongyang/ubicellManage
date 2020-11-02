@@ -1,26 +1,11 @@
 <template>
   <section class="modlude">
     <div class="nav_options" style="margin-bottom:20px;">
-      <div class="nav_option" :class="{nav_option_active:isActive == 1}" @click="gocommon_config">
-        <span>支付配置</span>
-      </div>
-      <div class="nav_option" :class="{nav_option_active:isActive == 2}" @click="isActive=2">
-        <span>账单配置</span>
-      </div>
-      <div class="nav_option" :class="{nav_option_active:isActive == 3}" @click="isActive=3">
-        <span>考勤配置</span>
-      </div>
-      <div class="nav_option" :class="{nav_option_active:isActive == 4}" @click="isActive=4">
-        <span>保修类型配置</span>
-      </div>
-      <div class="nav_option" :class="{nav_option_active:isActive == 5}" @click="isActive=5">
-        <span>在线申请配置</span>
-      </div>
-      <div class="nav_option" :class="{nav_option_active:isActive == 6}" @click="isActive=6">
-        <span>内容可见范围配置</span>
-      </div>
-      <div class="nav_option" :class="{nav_option_active:isActive == 7}" @click="goshuidianmeiConfig">
+      <div class="nav_option" :class="{nav_option_active:isActive == 1}" @click="isActive=1">
         <span>水电煤配置</span>
+      </div>
+      <div class="nav_option" :class="{nav_option_active:isActive == 2}" @click="gogudinfeiyon_config">
+        <span>固定费用配置</span>
       </div>
     </div>
     <el-form :inline="true" :model="formSearch" class="form_inline">
@@ -52,41 +37,25 @@
               :data="formData"
               :props='defaultProps'
               :load="loadNode"
-              show-checkbox
               lazy
               node-key="id"
               :expand-on-click-node="false">
-              <div class="custom-tree-node" slot-scope="{ node, data }">
-                <span>{{ node.label }}</span>
-                <span v-if="data.xqName">
-                  -区域名称：{{ data.xqName }}
-                  <!-- <el-button type="text" size="mini" @click="() => append(data,1)"> 启用 </el-button>
-                  <el-button type="text" size="mini" @click="() => append(data,0)"> 停用 </el-button>
-                  配置区域代号：<el-input v-model="data.sectionNo" style="width:100px;" size="small"></el-input>
-                  <el-button type="text" size="mini" @click="() => srueDate(data)"> 保存 </el-button>
-                  <el-button type="text" size="mini" @click="() => append1(data)"> 一键配置对讲号 </el-button>  -->
-
-                </span>
-                <span v-if="data.houseNum">
-                  <!-- -房间号：{{ data.houseNum }} -->
-                  <!-- <el-button type="text" size="mini" @click="() => append(data,1)"> 启用 </el-button>
-                  <el-button type="text" size="mini" @click="() => append(data,0)"> 停用 </el-button>
-                  配置房间对讲号：<el-input v-model="data.callNum" style="width:100px;" size="small"></el-input>
-                  <el-button type="text" size="mini" @click="() => srueDate(data)"> 保存 </el-button>
-                  <span class="green" v-if="data.callState==1" style="font-size:12px;">已启用</span>
-                  <span class="red" v-else style="font-size:12px;">未启用</span> -->
-                </span>
-
-              </div>
+              
+                <div class="custom-tree-node" slot-scope="{ node, data }">
+                  <el-radio-group v-model="typeId.id" @change="changeRadio(data)">
+                    <el-radio :label="node.id"><span>{{ node.label }}</span></el-radio>
+                  </el-radio-group>
+                </div>
+              
             </el-tree>
           </div>
         </div>
       </div>
       <!-- 右边 -->
       <div class="settingsEle" style="position: static;">
-      <el-table ref="multipleTable" :data="inforList" highlight-current-row style="width: 100%;">
-        </el-table-column>
-        <el-table-column prop="name" label="分类">
+      <el-table ref="multipleTable" :data="inforList" highlight-current-row @selection-change="selsChange" style="width: 100%;">
+        <el-table-column class="ccc" type="selection" width="55" label="全选"></el-table-column>
+        <el-table-column prop="name" label="分类" width="200">
         </el-table-column>
         <el-table-column label="单价">
           <template slot-scope="scope">
@@ -98,9 +67,17 @@
             </el-form>
           </template>
         </el-table-column>
+        <el-table-column label="是否启用">
+          <template slot-scope="scope">
+            <el-radio-group v-model="scope.row.useAble">
+              <el-radio :label="1"><span>是</span></el-radio>
+              <el-radio :label="0"><span>否</span></el-radio>
+            </el-radio-group>
+          </template>
+        </el-table-column>
       </el-table>
         <div style="text-align:center;margin-top:20px;">
-          <el-button @click="">保存</el-button>
+          <el-button @click="updateMeterPriceConfig">保存</el-button>
         </div>
         <!-- 通用配置-水电煤配置-费用收款日设置数据 -->
         <!-- <div class="choise_data" style="margin-top:20px;">
@@ -124,16 +101,12 @@
 </template>
 <script>
 
-import {updateHouseCallState,updateSectionNo,housetree,xqSelectList,orgTree,setHouseCallNum,updateCallState,setOneHouseCallNum } from '../../url/api';
+import {updateHouseCallState,updateSectionNo,housetree,xqSelectList,orgTree,meterPriceConfig,updateMeterPriceConfig } from '../../url/api';
 export default {
   data(){
     return{
-      isActive:7,
-      inforList:[{
-        name:"起飞",
-        unit:'gk',
-        unitPrice:'wewq'
-      }],
+      isActive:1,
+      inforList:[],
       option1:[],
       xqTree:[],
       isAddorUpdate:1,//1添加、2修改
@@ -152,46 +125,53 @@ export default {
         value: 'id',
         expandTrigger: 'hover',checkStrictly: true
       },
+      typeId:{},
+      updata:[]
     }
   },
   methods:{
-    gocommon_config(){
+    gogudinfeiyon_config(){
       this.$router.push({
-        path:'./common_config'
+        path:'/gudinfeiyon_config'
       })
     },
-    goshuidianmeiConfig(){
-      this.$router.push({
-        path:'./shuidianmeiConfig'
-      })
-    },
-    srueDate(data){
-      console.log(data)
-      if(data.xqName){//配置区域代号
-        updateSectionNo(data).then((res)=>{
-          console.log(res)
-          if(res.data.code == 200){
-              this.$message({
-                message: '操作成功',
-                type: 'success'
-              });
-          }else{
-            this.$message(res.data.msg);
-          }
-        })
-      }else{//配置房间对讲号
-        setOneHouseCallNum(data).then((res)=>{
-          console.log(res)
-          if(res.data.code == 200){
-              this.$message({
-                message: '操作成功',
-                type: 'success'
-              });
-          }else{
-            this.$message(res.data.msg);
-          }
-        })
+    updateMeterPriceConfig(){//水电煤费用价格修改
+      if(this.updata.length==0){
+        this.$message("请勾选对象")
+        return 
       }
+      let params = this.updata
+      console.log(params)
+      updateMeterPriceConfig(params).then(res=>{
+        console.log(res)
+        if(res.data.code == 200){
+          this.$message("配置成功")
+        }else{
+          this.$message("配置失败")
+        }
+      })
+    },
+    changeRadio(obj){//勾选区域或者房间
+      console.log(obj)
+      this.typeId.type = obj.type
+      if(obj.type==1){//区域
+        this.getMeterPriceConfig(this.formSearch.xqId,null,obj.id)
+      }else{
+        this.getMeterPriceConfig(this.formSearch.xqId,obj.id,null)
+      }
+    },
+    getMeterPriceConfig(xqId,houseId,sectionId){//水电煤费用价格数据
+      let params = {
+        xqId:xqId,
+        houseId:houseId,
+        sectionId:sectionId
+      }
+      meterPriceConfig(params).then(res=>{
+        console.log(res)
+        if(res.data.code == 200){
+          this.inforList = res.data.data
+        }
+      })
     },
     loadNode(node, resolve) {
       // console.log(node, resolve)
@@ -205,58 +185,6 @@ export default {
         const data = data3;
         resolve(data);
       }, 500);
-    },
-    append1(data){//一键配置对讲号
-      console.log(data)
-      // if(!data.sectionNo){
-      //   this.$message('请先配置对讲号');
-      //   return
-      // }
-      setHouseCallNum(data.id).then((res)=>{
-        console.log(res)
-        if(res.data.code == 200){
-            this.$message({
-              message: '操作成功',
-              type: 'success'
-            });
-        this.getInit()
-        }else{
-          this.$message(res.data.msg);
-        }
-      })
-      
-    },
-    append(data,callState){//启用和关闭
-      console.log(data)
-      let params = {
-        id:data.id,
-        callState:callState
-      }
-      if(data.xqName){//启用/停用区域对讲号
-        updateCallState(params).then((res)=>{
-          console.log(res)
-          if(res.data.code == 200){
-              this.$message({
-                message: '操作成功',
-                type: 'success'
-              });
-          }else{
-            this.$message(res.data.msg);
-          }
-        })
-      }else{
-        updateHouseCallState(params).then((res)=>{
-          console.log(res)
-          if(res.data.code == 200){
-              this.$message({
-                message: '操作成功',
-                type: 'success'
-              });
-          }else{
-            this.$message(res.data.msg);
-          }
-        })
-      }
     },
     getlist(obj){
       if(obj.xqId){
@@ -303,9 +231,19 @@ export default {
         }
       })
     },
-    handleCurrentPage(val){//页码改变
-      this.formSearch.current=val
-      this.getInit()
+    selsChange: function (sels) {// 当选择项发生变化时会触发该事件
+      console.log(sels)
+      this.updata=[]
+      sels.forEach(item=>{
+        let newItem = {
+          id:item.id,
+          unitPrice:item.unitPrice,
+          useAble:item.useAble,
+          xqId:this.formSearch.xqId,
+          type:this.typeId.type
+        }
+        this.updata.push(newItem)
+      })
     },
     handleChange(value){
       if(value.length!=0){
@@ -340,8 +278,6 @@ export default {
 @import '../../assets/mySelf.css';
 
 .chooseCommunity {
-  margin-top: 20px;
-  padding-top: 10px;
   float: left;
   min-width: 280px;
   /* background: #f6f8fb;
@@ -350,7 +286,6 @@ export default {
 .chooseCommunity .communityContent {
   border: 1px solid #e6e6e6;
   height: 700px;
-  padding-left: 10px;
   margin-top: 10px;
 }
 .chooseCommunity .communityContent .list {

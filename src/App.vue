@@ -16,4 +16,13 @@ export default {
 
 <style>
   @import './assets/css/app.css';
+.gudinfeiyon .el-dialog{
+  width:1000px;
+}
+.gudinfeiyon_dialog .el-input__inner{
+  min-width: 100px;
+}
+.gudinfeiyon_dialog .el-input{
+  width: 120px;
+}
 </style>

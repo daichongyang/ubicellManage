@@ -19,9 +19,9 @@
       <div class="nav_option" :class="{nav_option_active:isActive == 6}" @click="isActive=6">
         <span>内容可见范围配置</span>
       </div>
-      <div class="nav_option" :class="{nav_option_active:isActive == 7}" @click="goshuidianmeiConfig">
+      <!-- <div class="nav_option" :class="{nav_option_active:isActive == 7}" @click="goshuidianmeiConfig">
         <span>水电煤配置</span>
-      </div>
+      </div> -->
     </div>
     <p class="margintop"></p>
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">

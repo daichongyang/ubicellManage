@@ -300,3 +300,10 @@ export const getshoptype = (params) => { return axios.post('/intellmanagerV3.0/s
 export const housetree = (params) => { return axios.post('/intellmanagerV3.0/house/tree', params) } // 区域-房间树状列表
 export const getImportList = (params) => { return axios.post('/intellmanagerV3.0/import/getImportList', params) } //基础配置批量导入列表
 export const getHouseUserLogList = (params) => { return axios.post('/intellmanagerV3.0/import/getHouseUserLogList', params) } // 基础配置批量导入列表查看详情房屋导入详情1
+
+export const meterPriceConfig = (params) => { return axios.post('/intellmanagerV3.0/meter/config/price', params) } // 水电煤费用价格数据
+export const updateMeterPriceConfig = (params) => { return axios.post('/intellmanagerV3.0/meter/config/price/update', params) } // 水电煤费用价格修改
+export const houseFixedFeeList = (params) => { return axios.post('/intellmanagerV3.0/house/fixed/fee/list', params) } // 房间固定费用列表
+export const updateHouseFixedFeeList = (params) => { return axios.post('/intellmanagerV3.0/house/fixed/fee/update', params) } // 修改房间固定费用
+export const houseFixedFeeInfo = (params) => { return axios.post('/intellmanagerV3.0/house/fixed/fee/info/' + params.houseId) } // 获取房间固定费用数据详情
+export const houseFixedFeeInfoSelect = (params) => { return axios.post('/intellmanagerV3.0/house/fixed/fee/list/item/select', params) } // 固定费用缴费项下拉列表
