@@ -47,9 +47,8 @@
     <el-table :data="formData" style="width: 100%" ref="table">
       <el-table-column prop="name" label="房间名称"></el-table-column>
       <el-table-column prop="houseNum" label="房间号" ></el-table-column>
-      <el-table-column prop="sectionName"label="区域名称"></el-table-column>
       <el-table-column prop="xqName"label="小区名称"></el-table-column>
-      <el-table-column prop="costOptions"label="固定缴费项"></el-table-column>
+      <el-table-column prop="costOptions"label="固定缴费项" width="550"></el-table-column>
       <el-table-column prop="type"label="房间类型">
         <template slot-scope="scope">
           {{scope.row.type==1?"物业中心":"业主房间"}}
@@ -57,7 +56,7 @@
       </el-table-column>
       <el-table-column label="操作" fixed="right" width='250'>
 				<template slot-scope="scope">
-					<el-button type="primary" size="small" @click="updateShowBox(scope.row)">查看详情</el-button>
+					<el-button type="primary" size="small" @click="getHouseFixedFeeInfo(scope.row)">查看详情</el-button>
 					<el-button type="warning" size="small" @click="updateShowBox(scope.row)">修 改</el-button>
 				</template>
 			</el-table-column>
@@ -69,7 +68,7 @@
       <el-table ref="multipleTable" :data="inforList" highlight-current-row style="width: 100%;">
         <el-table-column prop="name" label="类型">
           <template slot-scope="scope">
-            <el-select v-model="scope.row.optionName" placeholder="请选择类型" size="small" @change="changeSelect">
+            <el-select v-model="scope.row.optionName" placeholder="请选择类型" size="small" @change="changeSelect(scope.row)">
               <el-option v-for="(item,index) in houseFixed" :label="item.costName" :value="item.costName" :key="index" :disabled="item.disabled"></el-option>
             </el-select>
           </template>
@@ -87,8 +86,8 @@
         <el-table-column label="缴费周期" width="450">
           <template slot-scope="scope">
             <el-tag
-              :key="tag"
-              v-for="tag in scope.row.dynamicTags"
+              :key="index"
+              v-for="(tag,index) in scope.row.dynamicTags"
               closable
               :disable-transitions="false"
               @close="handleClose(tag,scope.row)">
@@ -116,6 +115,22 @@
         <el-button type="primary" @click="addUpdateHouseFixedFeeList">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog class="gudinfeiyon_define" title="详情" :visible.sync="defineDialog" :close-on-click-modal="false">
+      <el-form class="form_inline" style="margin-bottom:20px;" v-for="(item,index) in defineData" :key="index" label-width="100px">
+        <el-form-item label="费用项名称:" size="small">
+          <el-input v-model="item.optionName" placeholder=""></el-input>
+        </el-form-item>
+        <el-form-item label="数量:" size="small">
+          <el-input v-model="item.num" placeholder=""></el-input>
+        </el-form-item>
+        <el-form-item label="单价:" size="small">
+          <el-input v-model="item.price" placeholder=""></el-input>
+        </el-form-item>
+        <el-form-item label="每月需缴纳:" size="small">
+          <el-input v-model="item.cost" placeholder=""></el-input>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </section>
 </template>
 <script>
@@ -124,11 +139,9 @@ import {updateHouseFixedFeeList,houseFixedFeeInfo,houseFixedFeeList,xqSelectList
 export default {
   data(){
     return{
-      dynamicTags: ['标签一', '标签二', '标签三'],
-      inputVisible: false,
-      inputValue: '',
       isActive:2,
       updateDialog:false,
+      defineDialog:false,
       inforList:[],
       option1:[],
       xqTree:[],
@@ -150,10 +163,23 @@ export default {
       },
       typeId:{},
       formUpdate:[],
-      houseFixed:[]
+      houseFixed:[],
+      defineData:[],
     }
   },
   methods:{
+    getHouseFixedFeeInfo(row){//获取房间固定费用数据详情
+      let params ={
+        houseId:row.id
+      }
+      this.defineDialog = true
+      houseFixedFeeInfo(params).then(res=>{
+        console.log(res)
+        if(res.data.code == 200){
+          this.defineData = res.data.data
+        }
+      })
+    },
     addUpdateHouseFixedFeeList(){//修改房间固定费用
       let params = {
         houseId:this.formUpdate.houseId,
@@ -171,6 +197,10 @@ export default {
           num:item.num,
           optionName:item.optionName,
           price:item.price,
+        }
+        if(!item.optionName||!item.num||!item.price){
+          this.$message("请将信息填写完整")
+          return
         }
         params.saves.push(obj)
       })
@@ -207,12 +237,35 @@ export default {
         path:'/charging_config_price'
       })
     },
-    updateShowBox(item){//修改东西弹窗
+    updateShowBox(row){//修改东西弹窗
       this.updateDialog= true
-      console.log(item)
+      console.log(row)
+      let params ={
+        houseId:row.id
+      }
+      houseFixedFeeInfo(params).then(res=>{
+        console.log(res)
+        this.inforList=[]
+        if(res.data.code == 200){
+         res.data.data.forEach(item=>{
+            let obj = {
+              cost:'',
+              cycle:'',
+              num:item.num,
+              optionName:item.optionName,
+              price:item.price,
+              dynamicTags:item.cycle.substr(0,item.cycle.length-1).split("_"),
+              inputValue:'',
+              inputVisible:false
+            }
+            this.inforList.push(obj)
+         })
+         console.log(this.inforList)
+        }
+      })
       this.formUpdate={
-        xqId:item.xqId,
-        houseId:item.id,
+        xqId:row.xqId,
+        houseId:row.id,
       }
     },
     loadNode(node, resolve) {
@@ -309,10 +362,11 @@ export default {
       row.inputValue = '';
     },
     changeSelect(val){
-      console.log(val)
+      console.log(val,this.inforList)
       this.inforList.forEach(item=>{
-         if(item.optionName==val){
+         if(item.optionName==val.optionName&&item!=val){
            this.$message("收费项名称不能相同")
+           val.optionName = ""
            return
          }
 

@@ -99,11 +99,13 @@
             let menus = res.data.data.menus
             let userId = res.data.data.userId
             let tenantCode = res.data.data.tenantCode
+            let backgroundImg = res.data.data.img
             localStorage.setItem('phone',this.ruleForm2.account)
             sessionStorage.setItem('userId',userId)
             sessionStorage.setItem('name',res.data.data.name)
             sessionStorage.setItem('Authorization',token)
             sessionStorage.setItem('tenantCode',tenantCode)
+            sessionStorage.setItem('backgroundImg',backgroundImg)
             sessionStorage.setItem('menus',JSON.stringify(menus))
             if(this.$route.query.redirect){
               this.$router.push({

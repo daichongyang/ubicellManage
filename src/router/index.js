@@ -45,6 +45,8 @@ const charging_config_price = () =>
     import ('@/components/shoufeiManage/charging_config_price');
 const gudinfeiyon_config = () =>
     import ('@/components/shoufeiManage/gudinfeiyon_config');
+const charging_bill = () =>
+    import ('@/components/shoufeiManage/charging_bill');
 // 系统配置
 const sys_log = () =>
     import ('@/components/sysManage/sys_log');
@@ -469,6 +471,14 @@ export default new Router({
                             component: gudinfeiyon_config,
                             meta: {
                                 id: 147
+                            }
+                        },
+                        {
+                            path: '/charging_bill',
+                            name: '账单列表',
+                            component: charging_bill,
+                            meta: {
+                                id: 143
                             }
                         },
                         {

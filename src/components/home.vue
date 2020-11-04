@@ -172,8 +172,8 @@
 
     },
     mounted(){
-      let tenantCode = sessionStorage.getItem('tenantCode')
-      this.background1 = 	require('../assets/img/index/fanzaijiayuanht_'+tenantCode+'.png')
+      let backgroundImg = sessionStorage.getItem('backgroundImg')
+      this.background1 = 	backgroundImg
       this.menus = JSON.parse(sessionStorage.getItem('menus'))
       // if(this.phone == 18888888888){
       //   this.background1 = this.backgroundb[0]

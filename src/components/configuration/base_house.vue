@@ -81,7 +81,7 @@
           </div>
           <el-button size="small" @click="fatherName=[{id:0,name:'首级'}],clickmbx(0)">清楚记录</el-button>
         </div>
-        <el-form :inline="true" :model="formPush" class="form_inline" :rules="rules"  ref='addList'>
+        <el-form :inline="true" :model="formPush" class="form_inline" :rules="rules"  ref='addList' label-width="80px">
           <el-form-item label="所属组织" size="small">
           <el-cascader
               ref="cascader"
@@ -126,13 +126,13 @@
             :total="total1">
           </el-pagination>  
         </div>
-          <el-form-item label="房号" prop="houseNum">
+          <el-form-item label="房号" prop="houseNum" size="small">
             <el-input v-model="formPush.houseNum"></el-input>
           </el-form-item>
-          <el-form-item label="房间名称" prop="name">
+          <el-form-item label="房间名称" prop="name" size="small">
             <el-input v-model="formPush.name"></el-input>
           </el-form-item>
-          <el-form-item label="楼层" prop="floor">
+          <el-form-item label="楼层" prop="floor" size="small">
             <el-input v-model.number="formPush.floor"></el-input>
           </el-form-item>
           <el-form-item label="房间类型" size="small">
@@ -214,13 +214,13 @@
           </el-pagination>
         </div>
         <el-form label-position="right" label-width="80px" :model="formUpdate" :rules="rules">
-          <el-form-item label="房号" prop="houseNum">
+          <el-form-item label="房号" prop="houseNum" size="small">
             <el-input v-model="formUpdate.houseNum"></el-input>
           </el-form-item>
-          <el-form-item label="房间名称" prop="name">
+          <el-form-item label="房间名称" prop="name" size="small">
             <el-input v-model="formUpdate.name"></el-input>
           </el-form-item>
-          <el-form-item label="楼层" prop="floor">
+          <el-form-item label="楼层" prop="floor" size="small">
             <el-input v-model.number="formUpdate.floor"></el-input>
           </el-form-item>
           <el-form-item label="房间类型" size="small">

@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import {getIotDetailData,housePasscardGetSectionHouse,iotUpLoadJsonFile,xqSelectList,orgTree } from '../../url/api';
+import {getIotDetailData,iotGetSectionHouseList,iotUpLoadJsonFile,xqSelectList,orgTree } from '../../url/api';
 export default {
   data(){
     return{
@@ -207,14 +207,11 @@ export default {
         })
       }
     },
-    getlist(obj){
-      if(obj){
-        this.formSearch = obj
-      }
-      housePasscardGetSectionHouse(this.formSearch).then((res)=>{//获取区域/房间
+    getlist(){
+      iotGetSectionHouseList(this.formSearch).then((res)=>{//获取区域/房间
         console.log(res)
         if(res.data.code == 200){
-          this.formData = res.data.data.records.filter((item)=>{
+          this.formData = res.data.data.filter((item)=>{
             if(item.gmtCreate){
               item.gmtCreate = this.$root.getDateArray(item.gmtCreate)[9]
             }
@@ -243,7 +240,8 @@ export default {
                 orgId:this.dataTree[0].id,
                 xqId:this.xqTree[0].id,
               }
-              this.getlist(obj)
+              this.formSearch.xqId=this.xqTree[0].id
+              this.getlist()
             }
           })
         }
@@ -260,7 +258,7 @@ export default {
       }else{
         this.formSearch.orgId = ''
       }
-      housePasscardGetSectionHouse(this.formSearch).then((res)=>{
+      iotGetSectionHouseList(this.formSearch).then((res)=>{
         console.log(res)
         if(res.data.code == 200){
           this.formData = res.data.data.filter((item)=>{

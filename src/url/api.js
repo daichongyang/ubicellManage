@@ -295,6 +295,7 @@ export const iotdelAllImg = (params) => { return axios.post('/intellmanagerV3.0/
 export const iotdelImg = (params) => { return axios.post('/intellmanagerV3.0/iot/delImg/' + params.entityImgId + "/" + params.imgName) } // 删除某个照片
 export const setImgeToEntity = (params) => { return axios.post('/intellmanagerV3.0/iot/setImgeToEntity', params) } // 设置设备的照片
 export const uploadImgFile = (params) => { return axios.post('/intellmanagerV3.0/iot/uploadImgFile', params) } // 文件上传
+export const iotGetSectionHouseList = (params) => { return axios.post('/intellmanagerV3.0/iot/getSectionHouseList', params) } // 区域房间列表
 
 export const getshoptype = (params) => { return axios.post('/intellmanagerV3.0/shop/type/shoptype/getshoptype', params) } // 商家信息添加时调用
 export const housetree = (params) => { return axios.post('/intellmanagerV3.0/house/tree', params) } // 区域-房间树状列表
@@ -307,3 +308,5 @@ export const houseFixedFeeList = (params) => { return axios.post('/intellmanager
 export const updateHouseFixedFeeList = (params) => { return axios.post('/intellmanagerV3.0/house/fixed/fee/update', params) } // 修改房间固定费用
 export const houseFixedFeeInfo = (params) => { return axios.post('/intellmanagerV3.0/house/fixed/fee/info/' + params.houseId) } // 获取房间固定费用数据详情
 export const houseFixedFeeInfoSelect = (params) => { return axios.post('/intellmanagerV3.0/house/fixed/fee/list/item/select', params) } // 固定费用缴费项下拉列表
+export const propertyCostList = (params) => { return axios.post('/intellmanagerV3.0/property/cost/list/page', params) } // 获取物业缴费账单分页列表
+export const propertySaveCost = (params) => { return axios.post('/intellmanagerV3.0/property/cost/save', params) } // 添加物业缴费账单

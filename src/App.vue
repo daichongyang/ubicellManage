@@ -25,4 +25,7 @@ export default {
 .gudinfeiyon_dialog .el-input{
   width: 120px;
 }
+.gudinfeiyon_define .el-input{
+  width:200px;
+}
 </style>
