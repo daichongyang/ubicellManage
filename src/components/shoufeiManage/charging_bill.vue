@@ -26,15 +26,20 @@
       <el-form-item>
         <el-button size="small" @click="getlist">查 询</el-button>
         <el-button type="primary" size="small" @click="addDialog=true">添 加</el-button>
+        <el-button size="small" type="danger" @click="deleInfor(false)">批量删除</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="formData" style="width: 100%" ref="table">
-      <el-table-column prop="id" label="编号"></el-table-column>
+
+    <div style="margin-bottom:20px;">进出账合计:<span>{{TotalAmount.inOutTotal}}（元）</span></div>
+
+    <el-table :data="formData" style="width: 100%" ref="table" stripe @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55"></el-table-column>
+      <el-table-column prop="id" label="编号" width="50px"></el-table-column>
       <el-table-column prop="houseName" label="房间" ></el-table-column>
       <el-table-column prop="xqName"label="小区名称"></el-table-column>
       <el-table-column prop=""label="账单生成">
         <template slot-scope="scope">
-          {{scope.row.generaWay==1?"线上":"线下"}}
+          {{scope.row.generaWay==1?"app支付":"后台录入"}}
         </template>
       </el-table-column>
       <el-table-column prop=""label="周期">
@@ -46,22 +51,32 @@
       <el-table-column prop="remark"label="备注"></el-table-column>
       <el-table-column prop="payStatus"label="支付状态">
         <template slot-scope="scope">
-          {{scope.row.payStatus==1?"已支付":"未支付"}}
+          <div v-if="scope.row.isCancel==1" class="red">已作废</div>
+          <div v-else>{{scope.row.payStatus==1?"已支付":"未支付"}}</div>
         </template>
       </el-table-column>
       <el-table-column prop="payUser"label="支付人员"></el-table-column>
       <el-table-column prop="optionName"label="缴费项"></el-table-column>
       <el-table-column prop="costTotal"label="费用(元)"></el-table-column>
       <el-table-column prop="gmtCreate"label="创建时间"></el-table-column>
-      <el-table-column prop="type"label="通知推送">
+      <el-table-column prop="creator"label="创建人"></el-table-column>
+      <!-- <el-table-column prop="type"label="通知推送">
         <template slot-scope="scope">
           {{scope.row.type==1?"业主":scope.row.type==0?"业主和成员":"自定义"}}
         </template>
-      </el-table-column>
-      <el-table-column label="操作" fixed="right" width='250'>
+      </el-table-column> -->
+      <el-table-column label="操作" fixed="right">
 				<template slot-scope="scope">
-					<el-button type="primary" size="small" @click="getHouseFixedFeeInfo(scope.row)">查看详情</el-button>
-					<el-button type="warning" size="small" @click="updateShowBox(scope.row)">作废</el-button>
+          <el-dropdown>
+            <el-button size="mini" type="primary">操 作</el-button>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item @click.native="updateShowBox(scope.row)">查看详情</el-dropdown-item>
+            <el-dropdown-item @click.native="costCancel(scope.row)">作废</el-dropdown-item>
+            <el-dropdown-item @click.native="costPush(scope.row)">催缴</el-dropdown-item>
+            <el-dropdown-item @click.native="costManualPay(scope.row)">手动收款</el-dropdown-item>
+            <el-dropdown-item @click.native="costPrint(scope.row)">打印收据</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
 				</template>
 			</el-table-column>
     </el-table>
@@ -154,18 +169,40 @@
     </el-dialog>
     <!-- 详情  -->
     <el-dialog class="gudinfeiyon_define" title="详情" :visible.sync="defineDialog" :close-on-click-modal="false">
-      <el-form class="form_inline" style="margin-bottom:20px;" v-for="(item,index) in defineData" :key="index" label-width="100px">
-        <el-form-item label="费用项名称:" size="small">
+      <el-form class="form_inline" style="margin-bottom:20px;">
+        <el-form-item label="小区:" size="small">
           <el-input v-model="item.optionName"></el-input>
         </el-form-item>
-        <el-form-item label="数量:" size="small">
+        <el-form-item label="房间:" size="small">
           <el-input v-model="item.num"></el-input>
         </el-form-item>
-        <el-form-item label="单价:" size="small">
+        <el-form-item label="年份:" size="small">
           <el-input v-model="item.price"></el-input>
         </el-form-item>
-        <el-form-item label="每月需缴纳:" size="small">
+        <el-form-item label="周期:" size="small">
           <el-input v-model="item.cost"></el-input>
+        </el-form-item>
+        <el-form-item label="备注:" size="small">
+          <el-input v-model="item.cost"></el-input>
+        </el-form-item>
+        <div style="margin:20px 0; text-align:center;">缴费明细</div>
+        <el-form-item label="空调费:" size="small">
+          <el-input v-model="item.cost"></el-input>
+        </el-form-item>   
+        <el-form-item label="通知权限:" size="small">
+          <el-input v-model="item.cost"></el-input>
+        </el-form-item>   
+        <el-form-item label="总费用:" size="small">
+          <el-input v-model="item.cost"></el-input>
+        </el-form-item>   
+        <el-form-item label="创建时间:" size="small">
+          <el-input v-model="item.cost"></el-input>
+        </el-form-item>   
+        <el-form-item label="支付状态:" size="small">
+          <el-input v-model="item.cost"></el-input>
+        </el-form-item>   
+        <el-form-item label="通知用户:" size="small">
+          <el-input type="textarea" :rows="2" v-model="houseUsers" :disabled="true"></el-input>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -175,7 +212,7 @@
 import paging from "../paging"
 import paging1 from "../paging"
 import houseListModule from "../houseListModule"
-import {xqSelectList,orgTree,propertyCostList,toSelectUsers,houseFixedFeeInfoSelect,propertySaveCost  } from '../../url/api';
+import {xqSelectList,orgTree,propertyCostList,toSelectUsers,houseFixedFeeInfoSelect,propertySaveCost ,deleteproperty,costTotalAmount,costManualPay,costCancel,costPrint,costPush } from '../../url/api';
 export default {
   data(){
     return{
@@ -214,15 +251,107 @@ export default {
         notify:0
       },//添加表单提交
       houseInfor:{},
+      defineInfor:{},
       seach:{
         current:1,
         size:10,
       },
       houseFixed:[],
+      deleBatch:[],
+      TotalAmount:'',//物业缴费账单总额
       formData1:[]//可选人员信息列表
     }
   },
   methods:{
+    getcostTotalAmount(){//获取物业缴费账单总额
+      let params = this.formSearch
+      costTotalAmount(params).then(res=>{
+        console.log(res)
+        if(res.data.code == 200){
+          this.TotalAmount = res.data.data
+        }
+      })
+    },
+    costManualPay(row){//物业缴费账单手动收款
+      let params = {
+        id:row.id
+      }
+      this.$confirm('确认已支付吗？')
+      .then(_ => {
+        costManualPay(params).then((res)=>{
+          console.log(res)
+          if(res.data.code == 200){
+            this.$message('操作成功');
+            this.getlist()
+          }
+        })
+      })
+      .catch(_ => {});
+    },
+    costCancel(row){//作废物业缴费账单
+      let params = {
+        id:row.id
+      }
+      this.$confirm('确定要作废吗？')
+      .then(_ => {
+        costCancel(params).then((res)=>{
+          console.log(res)
+          if(res.data.code == 200){
+            this.$message('操作成功');
+            this.getlist()
+          }
+        })
+      })
+      .catch(_ => {});
+    },
+    costPrint(row){//物业缴费账单打印收据
+      costPrint().then(res=>{
+        console.log(res)
+        if(res.data.code == 200){
+          this.TotalAmount = res.data.data
+        }
+      })
+    },
+    costPush(row){//物业缴费账单催缴
+      let params = {
+        id:row.id
+      }
+      this.$confirm('确定要催缴吗？')
+      .then(_ => {
+        costPush(params).then((res)=>{
+          console.log(res)
+          if(res.data.code == 200){
+            this.$message('操作成功');
+            this.getlist()
+          }
+        })
+      })
+      .catch(_ => {});
+    },
+    deleInfor(ids){//删除
+      let arrId = []
+      if(ids){
+        arrId.push(ids)
+      }else{
+        if(this.deleBatch.length!=0){
+          this.deleBatch.filter((item)=>{
+            arrId.push(item.id)
+            return item
+          })
+        }
+      }
+      this.$confirm('确认删除吗？')
+      .then(_ => {
+        deleteproperty(arrId).then((res)=>{
+          console.log(res)
+          if(res.data.code == 200){
+            this.$message('删除成功');
+            this.getlist()
+          }
+        })
+      })
+      .catch(_ => {});
+    },
     pushData(){//表单提交
       this.pushInfor.houseId = this.houseInfor.id
       this.pushInfor.xqId = this.houseInfor.xqId
@@ -270,11 +399,9 @@ export default {
       this.inforList.push(obj)
     },
     updateShowBox(row){//修改东西弹窗
-      this.updateDialog= true
+      this.defineDialog= true
       console.log(row)
-      let params ={
-        houseId:row.id
-      }
+      this.defineInfor = row
     },
     getlist(){
       let params =this.formSearch
@@ -293,6 +420,7 @@ export default {
           this.$message(res.data.msg);
         }
       })
+      this.getcostTotalAmount()
     },
     getInit(){//初始化列表
       let org_tree={
@@ -313,6 +441,7 @@ export default {
           })
         }
       })
+      
       houseFixedFeeInfoSelect({}).then(res=>{//固定费用缴费项下拉列表
         console.log(res)
         if(res.data.code == 200){
@@ -343,6 +472,10 @@ export default {
         this.formSearch.orgId = ''
       }
       this.getlist()
+    },
+    handleSelectionChange(val,self) {//勾选账单
+      console.log(val,self)
+      this.deleBatch = val
     },
     handleSelectionChange1(val,self) {//选择可选人员
       console.log(val,self)

@@ -28,4 +28,7 @@ export default {
 .gudinfeiyon_define .el-input{
   width:200px;
 }
+.login .el-input{
+  width: 100%;
+}
 </style>

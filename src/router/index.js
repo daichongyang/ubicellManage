@@ -47,6 +47,8 @@ const gudinfeiyon_config = () =>
     import ('@/components/shoufeiManage/gudinfeiyon_config');
 const charging_bill = () =>
     import ('@/components/shoufeiManage/charging_bill');
+const charging_meter_reading = () =>
+    import ('@/components/shoufeiManage/charging_meter_reading');
 // 系统配置
 const sys_log = () =>
     import ('@/components/sysManage/sys_log');
@@ -241,6 +243,22 @@ import parking_dnake_payment_record from '@/components/tingchechang/parking_dnak
 import parking_dnake_payment_statistics from '@/components/tingchechang/parking_dnake_payment_statistics'
 import parking_dnake_reservation from '@/components/tingchechang/parking_dnake_reservation'
 import parking_dnake_rental_fee from '@/components/tingchechang/parking_dnake_rental_fee'
+
+// 社区动态
+import community_dynamics from '@/components/community_dynamics/community_dynamics'
+import community_dynamics1 from '@/components/community_dynamics/community_dynamics1'
+import community_dynamics2 from '@/components/community_dynamics/community_dynamics2'
+
+// 兴趣部落系统
+import interest_tribe from '@/components/xingqubuluo/interest_tribe'
+import interest_tribe_post1 from '@/components/xingqubuluo/interest_tribe_post1'
+import interest_tribe_post2 from '@/components/xingqubuluo/interest_tribe_post2'
+import interest_tribe_post from '@/components/xingqubuluo/interest_tribe_post'
+// import interest_tribe_post1 from '@/components/xingqubuluo/interest_tribe_post1'
+// import interest_tribe_post2 from '@/components/xingqubuluo/interest_tribe_post2'
+
+// 
+
 Vue.use(Router)
 
 export default new Router({
@@ -474,6 +492,14 @@ export default new Router({
                             }
                         },
                         {
+                            path: '/charging_meter_reading',
+                            name: '水电煤抄表',
+                            component: charging_meter_reading,
+                            meta: {
+                                id: 154
+                            }
+                        },
+                        {
                             path: '/charging_bill',
                             name: '账单列表',
                             component: charging_bill,
@@ -608,6 +634,62 @@ export default new Router({
                         //     name: '商家信息管理',
                         //     component: online_shop_info
                         // },
+                        {
+                            path: '/community_dynamics',
+                            name: '社区动态管理',
+                            component: community_dynamics,
+                            meta: {
+                                id: 150
+                            }
+                        },
+                        {
+                            path: '/community_dynamics1',
+                            name: '社区动态评论',
+                            component: community_dynamics1,
+                            meta: {
+                                id: 150
+                            }
+                        },
+                        {
+                            path: '/community_dynamics2',
+                            name: '社区动态点赞',
+                            component: community_dynamics2,
+                            meta: {
+                                id: 150
+                            }
+                        },
+                        {
+                            path: '/interest_tribe',
+                            name: '兴趣部落管理',
+                            component: interest_tribe,
+                            meta: {
+                                id: 152
+                            }
+                        },
+                        {
+                            path: '/interest_tribe_post1',
+                            name: '帖子信息评论',
+                            component: interest_tribe_post1,
+                            meta: {
+                                id: 153
+                            }
+                        },
+                        {
+                            path: '/interest_tribe_post2',
+                            name: '帖子信息点赞',
+                            component: interest_tribe_post2,
+                            meta: {
+                                id: 153
+                            }
+                        },
+                        {
+                            path: '/interest_tribe_post',
+                            name: '帖子信息',
+                            component: interest_tribe_post,
+                            meta: {
+                                id: 153
+                            }
+                        },
                         {
                             path: '/property_type',
                             name: '物业类型管理',

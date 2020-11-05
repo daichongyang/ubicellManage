@@ -82,7 +82,7 @@
             <el-input v-model="formPush.name"></el-input>
           </el-form-item>
           <el-form-item label="手机号码" prop="phone">
-            <el-input v-model="formPush.phone"></el-input>
+            <el-input v-model="formPush.phone" @blur="confirmPhone(formPush.phone)"></el-input>
           </el-form-item>
           <el-form-item label="身份证">
             <el-input v-model="formPush.idNumber"></el-input>
@@ -262,7 +262,7 @@
 
 <script>
 import paging from '../paging'
-import { userhouselist,adduserhouselist,updateuserhouselist,deleteuserhouselist,orgTree,xqSelectList,houseList } from '../../url/api';
+import { userhouselist,adduserhouselist,updateuserhouselist,deleteuserhouselist,orgTree,xqSelectList,houseList,confirmPhone } from '../../url/api';
 export default {
   data(){
     return{
@@ -316,6 +316,25 @@ export default {
     }
   },
   methods:{
+    confirmPhone(phone){
+      let params ={
+        phone:phone,
+        xqId:this.formSearch.xqId
+      }
+      console.log(phone)
+      confirmPhone(params).then(res=>{
+        console.log(res)
+        if(res.data.code == 200){
+          if(res.data.data){
+            for(let ii in res.data.data){
+              this.formPush[ii] = res.data.data[ii]
+              console.log(res.data.data[ii])
+            }
+          }
+          
+        }
+      })
+    },
     gethouseLIst(){
       houseList(this.formSearch1).then((res)=>{//房间列表
         console.log(res)

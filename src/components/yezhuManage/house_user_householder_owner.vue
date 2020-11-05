@@ -44,6 +44,9 @@
       <el-form-item>
         <el-button size="small" type="danger" @click="deleInfor(false)">批量删除</el-button>
       </el-form-item>
+      <el-form-item>
+        <el-button size="small" type="danger" @click="deleInfor1(false)">删除业主和成员</el-button>
+      </el-form-item>
     </el-form>
     <el-table ref="multipleTable" :data="formData" style="width: 100%" stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"></el-table-column>
@@ -98,7 +101,7 @@
             <el-input v-model="formPush.name"></el-input>
           </el-form-item>
           <el-form-item label="手机号码" prop="phone">
-            <el-input v-model="formPush.phone"></el-input>
+            <el-input v-model="formPush.phone" @blur="confirmPhone(formPush.phone)"></el-input>
           </el-form-item>
           <el-form-item label="身份证">
             <el-input v-model="formPush.idNumber"></el-input>
@@ -304,7 +307,7 @@
 
 <script>
 import paging from '../paging'
-import { exportUser,importUser,userhouselist,adduserhouselist,updateuserhouselist,deleteuserhouselist,orgTree,xqSelectList,houseList } from '../../url/api';
+import { exportUser,importUser,userhouselist,adduserhouselist,updateuserhouselist,deleteuserhouselist,orgTree,xqSelectList,houseList,confirmPhone,userdeleteAll } from '../../url/api';
 export default {
   data(){
     return{
@@ -380,6 +383,25 @@ export default {
       //     });
       //   }
       // })
+    },
+    confirmPhone(phone){
+      let params ={
+        phone:phone,
+        xqId:this.formSearch.xqId
+      }
+      console.log(phone)
+      confirmPhone(params).then(res=>{
+        console.log(res)
+        if(res.data.code == 200){
+          if(res.data.data){
+            for(let ii in res.data.data){
+              this.formPush[ii] = res.data.data[ii]
+              console.log(res.data.data[ii])
+            }
+          }
+          
+        }
+      })
     },
     importInfor(){//导入信息
       let params = {
@@ -523,6 +545,30 @@ export default {
       })
       .catch(_ => {});
     },
+    deleInfor1(ids){//删除
+      let arrId = []
+      if(ids){
+        arrId.push(ids)
+      }else{
+        if(this.deleBatch.length!=0){
+          this.deleBatch.filter((item)=>{
+            arrId.push(item.id)
+            return item
+          })
+        }
+      }
+      this.$confirm('确认删除业主和成员吗？')
+      .then(_ => {
+        userdeleteAll(arrId).then((res)=>{
+          console.log(res)
+          if(res.data.code == 200){
+            this.$message('删除成功');
+            this.getInit()
+          }
+        })
+      })
+      .catch(_ => {});
+    },
     toggleSelection(rows) {//回显
       console.log(rows,this.formData)
       if (rows) {
@@ -544,24 +590,8 @@ export default {
       }
     },
     handleSelectionChange(val,self) {//多选
+      console.log(val)
       this.deleBatch = val
-      let obj = {}
-      let aa = val.find(item=>item.id == self.id) 
-      console.log(aa)
-      if(aa){
-        this.allSelect = [...this.allSelect,...val]
-        this.allSelect = this.allSelect.reduce((cur,next) => {
-            obj[next.id] ? "" : obj[next.id] = true && cur.push(next);
-            return cur;
-        },[])
-      }else{
-        this.allSelect = this.allSelect.filter((item)=>{
-          return item.id!=self.id
-        })
-      }
-      console.log(this.allSelect)
-      // this.deleBatch = this.allSelect
-      // console.log(this.deleBatch)
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val

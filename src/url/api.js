@@ -70,6 +70,8 @@ export const adduserhouselist = (params) => { return axios.post('/intellmanagerV
 export const deleteuserhouselist = (params) => { return axios.post('/intellmanagerV3.0/house/user/delete', params) } //删除房间单个用户
 export const userhouselist = (params) => { return axios.post('/intellmanagerV3.0/house/user/list/owner/page', params) } //查询房间业主/成员分页列表
 export const updateuserhouselist = (params) => { return axios.post('/intellmanagerV3.0/house/user/update', params) } //修改房间用户
+export const confirmPhone = (params) => { return axios.post('/intellmanagerV3.0/house/user/confirm/phone/' + params.phone + "/" + params.xqId) } //confirmPhone
+export const userdeleteAll = (params) => { return axios.post('/intellmanagerV3.0/house/user/delete/all', params) } //删除房间业主跟成员
 
 export const getHwDevs = (params) => { return axios.post('/intellmanagerV3.0/door/getHwDevs/' + params.xqId) } //获取霍尼门禁列表
 export const openHwDev = (params) => { return axios.post('/intellmanagerV3.0/door/openHwDev/' + params.account + "/" + params.xqId + "/" + params.id + "/" + params.name) } //霍尼门禁远程开门
@@ -310,3 +312,29 @@ export const houseFixedFeeInfo = (params) => { return axios.post('/intellmanager
 export const houseFixedFeeInfoSelect = (params) => { return axios.post('/intellmanagerV3.0/house/fixed/fee/list/item/select', params) } // 固定费用缴费项下拉列表
 export const propertyCostList = (params) => { return axios.post('/intellmanagerV3.0/property/cost/list/page', params) } // 获取物业缴费账单分页列表
 export const propertySaveCost = (params) => { return axios.post('/intellmanagerV3.0/property/cost/save', params) } // 添加物业缴费账单
+export const deleteproperty = (params) => { return axios.post('/intellmanagerV3.0/property/cost/delete', params) } // 批量删除物业缴费账单
+export const costTotalAmount = (params) => { return axios.post('/intellmanagerV3.0/property/cost/total/amount', params) } // 获取物业缴费账单总额
+export const costCancel = (params) => { return axios.post('/intellmanagerV3.0/property/cost/cancel/' + params.id) } // 作废物业缴费账单
+export const costManualPay = (params) => { return axios.post('/intellmanagerV3.0/property/cost/manual/pay/' + params.id) } // 物业缴费账单手动收款
+export const costPrint = (params) => { return axios.post('/intellmanagerV3.0/property/cost/print/' + params.id) } // 物业缴费账单打印收据
+export const costPush = (params) => { return axios.post('/intellmanagerV3.0/property/cost/push/' + params.id) } // 物业缴费账单催缴
+
+export const csinfoList = (params) => { return axios.post('/intellmanagerV3.0/cs/info/csinfo/list', params) } // 查询社区动态管理查询
+export const addrecomm = (params) => { return axios.post('/intellmanagerV3.0/cs/info/comment/addrecomm', params) } // 添加社区动态发布
+export const deleteComment = (params) => { return axios.post('/intellmanagerV3.0/cs/info/comment/deleteoneli', params) } // 删除社区动态人员
+export const updatecsinfoList = (params) => { return axios.post('/intellmanagerV3.0/cs/info/csinfo/updatelist', params) } // 修改审核状态
+export const commentList = (params) => { return axios.post('/intellmanagerV3.0/cs/info/comment/list', params) } // 查看评论
+export const deletecommentList = (params) => { return axios.post('/intellmanagerV3.0/cs/info/comment/delete', params) } // 删除社区评论
+export const cspraiseList = (params) => { return axios.post('/intellmanagerV3.0/cs/info/cspraise/list', params) } // 社区动态管理查看点赞
+export const deletecspraiseList = (params) => { return axios.post('/intellmanagerV3.0/cs/info/cspraise/delete', params) } // 社区动态管理查看点赞删除点赞
+
+export const tribeinfoList = (params) => { return axios.post('/intellmanagerV3.0/it/tribeinfo/tribeinfo/list', params) } // 查询兴趣部落管理
+export const addcommlist = (params) => { return axios.post('/intellmanagerV3.0/it/tribeinfo/tribepostcomment/addcommlist', params) } // 管理员发布兴趣部落
+export const updatatribepostcomment = (params) => { return axios.post('/intellmanagerV3.0/it/tribeinfo/tribepostcomment/update', params) } // 兴趣部落管理修改状态
+export const updateveify = (params) => { return axios.post('/intellmanagerV3.0/it/tribeinfo/tribeinfo/updateveify', params) } // 修改帖子的审核状态
+export const listdeaile = (params) => { return axios.post('/intellmanagerV3.0/it/tribeinfo/tribeinfo/listdeaile', params) } // 查询帖子
+export const deletetribepost = (params) => { return axios.post('/intellmanagerV3.0/it/tribeinfo/tribepost/delete', params) } // 查看帖子里面删除
+export const gettruecommmDataList = (params) => { return axios.post('/intellmanagerV3.0/it/tribeinfo/tribepost/gettruecommmDataList', params) } // 查询帖子里查看评论
+export const deletetruecommmDataList = (params) => { return axios.post('/intellmanagerV3.0/it/tribeinfo/tribepostcomment/delete', params) } // 帖子里面评论删除
+export const getprisclist = (params) => { return axios.post('/intellmanagerV3.0/it/tribeinfo/tribepost/getprisclist', params) } // 查询帖子里面查看点赞
+export const addtruopstinfo = (params) => { return axios.post('/intellmanagerV3.0/it/tribeinfo/tribepost/addtruopstinfo', params) } // 添加兴趣部落帖子信息
