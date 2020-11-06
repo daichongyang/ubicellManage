@@ -12,6 +12,8 @@ import md5 from 'js-md5';
 import base64 from 'js-base64';
 import { getDateArray } from './assets/js/util';
 import store from './assets/js/store';
+import Print from './assets/js/print'
+Vue.use(Print)
 
 // Vue.$getDateArray = getDateArray
 Vue.config.productionTip = false

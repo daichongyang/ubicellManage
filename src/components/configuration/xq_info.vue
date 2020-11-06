@@ -17,29 +17,17 @@
       <el-form-item label="小区名称" size="small">
         <el-input v-model="formSearch.name" placeholder="请输入小区名称"></el-input>
       </el-form-item>
-      <!-- <el-form-item label="导出时间" size="small">
-        <el-date-picker
-          v-model="formSearch.value1"
-          type="datetime"
-          placeholder="开始时间">
-        </el-date-picker>
-        <span style="color:#a1d6f4;"> - </span>
-        <el-date-picker
-          v-model="formSearch.value2"
-          type="datetime"
-          placeholder="结束时间">
-        </el-date-picker>
-      </el-form-item> -->
       <el-form-item>
         <el-button size="small" @click="getInit">查 询</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button size="small" @click="addDialog=true">添 加</el-button>
+        <el-button size="small" @click="addDialog=true,address='',initAmap()">添 加</el-button>
       </el-form-item>
     </el-form>
     <el-table :data="formData" style="width: 100%" stripe>
       <el-table-column prop="name" label="小区名称"></el-table-column>
       <el-table-column prop="orgName" label="所属组织"></el-table-column>
+      <el-table-column prop="address" label="地址"></el-table-column>
       <el-table-column prop="status" label="状态">
 				<template slot-scope="scope">
           <span :class="{aa:scope.row.status==2,green:scope.row.status==1,red:scope.row.status==0}">
@@ -74,9 +62,19 @@
         </el-tree>
       </div>
       <div class="cont_box_right">
-        <el-form label-position="right" label-width="80px" :model="formPush" ref='formPush'>
+        <el-form label-position="right" label-width="100px" :model="formPush" ref='formPush'>
           <el-form-item label="小区名称">
             <el-input v-model="formPush.name"></el-input>
+          </el-form-item>
+          <el-form-item label="地址">
+            <el-input v-model="address" id="tipinput"></el-input>
+          </el-form-item>
+          <div id="container"></div>
+          <el-form-item label="开启地图定位">
+            <el-radio-group v-model="formPush.isShow">
+              <el-radio :label="1">是</el-radio>
+              <el-radio :label="0">否</el-radio>
+            </el-radio-group>
           </el-form-item>
         </el-form>
       </div>
@@ -103,13 +101,20 @@
           ref="tree">
         </el-tree>
       </div>
-      <!-- <div class="cont_box_right">
-        <el-form label-position="right" label-width="80px" :model="formUpdate" ref='formPush'>
-          <el-form-item label="小区名称">
-            <el-input v-model="formUpdate.name"></el-input>
+        <el-form label-position="right" label-width="100px">
+          <el-form-item label="地址">
+            <el-input v-model="address" id="tipinput"></el-input>
+          </el-form-item>
+          <div id="containerUpdata"></div>
+          <el-form-item label="开启地图定位">
+            <el-radio-group v-model="formUpdate.isShow">
+              <el-radio :label="1">是</el-radio>
+              <el-radio :label="0">否</el-radio>
+            </el-radio-group>
           </el-form-item>
         </el-form>
-      </div> -->
+
+        
       <div slot="footer" class="dialog-footer">
         <el-button size="medium" @click="updateDialog = false">取 消</el-button>
         <el-button size="medium" @click="updateList">确定</el-button>
@@ -121,18 +126,25 @@
 
 <script>
 import paging from "../paging"
+import Amap from '../../assets/js/initmap'
 import { xqList,xqAddList,xqUpdateList,xqDeleteList,orgTree } from '../../url/api';
 export default {
   data(){
     return{
+      radio:"1",
       option1:[],
       formSearch:{//查询条件
         current:1,
         size: 10
       },
-      formPush:{},//表单提交
+      address:"",
+      formPush:{
+        isShow:0
+      },//表单提交
       formData: [],//数据
-      formUpdate:{},//修改表单
+      formUpdate:{
+        isShow:0
+      },//修改表单
       total: 0,//数据总数
       pages:0,//页面总数
       addDialog:false,
@@ -146,11 +158,111 @@ export default {
         children: 'children',
         label: 'name',
         value: 'id',
-        expandTrigger: 'hover',checkStrictly: true
+        expandTrigger: 'hover',
+        checkStrictly: true
       },
     }
   },
   methods:{
+    initAmap(){
+      let _this = this
+    // 初始化地图
+      Amap.init().then((Amap)=>{
+          const map = new AMap.Map('container', {
+            resizeEnable: true,
+            rotateEnable:true,
+            pitchEnable:true,
+            zoom: 17,
+            pitch:50,//视角偏移量
+            rotation:-5,
+            viewMode:'3D',//开启3D视图,默认为关闭
+            buildingAnimation:true,//楼块出现是否带动画
+            expandZoomRange:true,
+            zooms:[3,20],
+            features:['bg','point','road'],
+            mapStyle:'amap://styles/dark',
+            center:[114.035927,22.557357],
+        });
+        map.on('click', function(e) {
+          console.log(e);
+           map.clearMap();
+          _this.formPush.latitude = e.lnglat.lat
+          _this.formPush.longitude = e.lnglat.lng
+          var marker = new AMap.Marker({
+              map: map,
+              position: [e.lnglat.lng,e.lnglat.lat]
+          });
+        });
+        var autoOptions = {
+            input: "tipinput"
+        };
+        var auto = new AMap.Autocomplete(autoOptions);
+        var placeSearch = new AMap.PlaceSearch({
+            map: map
+        });  //构造地点查询类
+        AMap.event.addListener(auto, "select", select);//注册监听，当选中某条记录时会触发
+        function select(e) {
+            console.log(e)
+            _this.formPush.latitude = e.poi.location.lat
+            _this.formPush.longitude = e.poi.location.lng
+            _this.formPush.address = e.poi.name
+            placeSearch.setCity(e.poi.adcode);
+            placeSearch.search(e.poi.name);  //关键字查询查询
+        }
+      })
+    },
+    initAmap1(item){//修改
+      let _this = this
+      let center=[item.longitude||114.0359574343264,item.latitude||22.557678]
+    // 初始化地图
+      Amap.init().then((Amap)=>{
+          const map = new AMap.Map('containerUpdata', {
+            resizeEnable: true,
+            rotateEnable:true,
+            pitchEnable:true,
+            zoom: 17,
+            pitch:50,//视角偏移量
+            rotation:-5,
+            viewMode:'3D',//开启3D视图,默认为关闭
+            buildingAnimation:true,//楼块出现是否带动画
+            expandZoomRange:true,
+            zooms:[3,20],
+            features:['bg','point','road'],
+            mapStyle:'amap://styles/dark',
+            center:center,
+        });
+        var marker1 = new AMap.Marker({
+            map: map,
+            position: center
+        });
+        map.on('click', function(e) {
+          console.log(e);
+           map.clearMap();
+          _this.formUpdate.latitude = e.lnglat.lat
+          _this.formUpdate.longitude = e.lnglat.lng
+          var marker = new AMap.Marker({
+              map: map,
+              position: [e.lnglat.lng,e.lnglat.lat]
+          });
+        });
+        var autoOptions = {
+            input: "tipinput"
+        };
+        var auto = new AMap.Autocomplete(autoOptions);
+        var placeSearch = new AMap.PlaceSearch({
+            map: map
+        });  //构造地点查询类
+        AMap.event.addListener(auto, "select", select);//注册监听，当选中某条记录时会触发
+        function select(e) {
+            console.log(e)
+            _this.formUpdate.latitude = e.poi.location.lat
+            _this.formUpdate.longitude = e.poi.location.lng
+            _this.formUpdate.address = e.poi.name
+            placeSearch.setCity(e.poi.adcode);
+            placeSearch.search(e.poi.name);  //关键字查询查询
+        }
+      })
+    },
     getInit(){//初始化列表
       xqList(this.formSearch).then((res)=>{
         console.log(res)
@@ -187,6 +299,10 @@ export default {
         this.$message('请填写小区名称');
         return;
       }
+      if(this.formPush.isShow&&!this.formPush.latitude){
+        this.$message('请设置经纬度');
+        return
+      }
       xqAddList(this.formPush).then((res)=>{
         console.log(res)
         if(res.data.code == 200){
@@ -202,7 +318,7 @@ export default {
       })
     },
     updateList(){//修改
-    console.log(this.formUpdate)
+    
       if(!this.formUpdate.orgId){
         this.$message('请选择所属组织');
         return;
@@ -211,6 +327,14 @@ export default {
         this.$message('请填写小区名称');
         return;
       }
+      this.formUpdate.orgId=this.formUpdate.orgId[0]
+      
+      console.log(this.formUpdate.orgId)
+      if(this.formUpdate.isShow&&!this.formUpdate.latitude){
+        this.$message('请设置经纬度');
+        return
+      }
+      console.log(this.formUpdate)
       xqUpdateList(this.formUpdate).then((res)=>{
         console.log(res)
         if(res.data.code == 200){
@@ -250,15 +374,21 @@ export default {
         this.$message('只能选择一个组织');
       }else{
         this.formPush.orgId = ev.checkedKeys[0]
-        this.formUpdate.orgId = ev.checkedKeys[0]
+        this.formUpdate.orgId = [ev.checkedKeys[0]]
       }
     },
     updateShowBox(item){//修改东西弹窗
-      this.formUpdate = {}
+    console.log(item)
+      // this.formUpdate = {}
       this.updateDialog = true
       this.formUpdate.orgId = [item.orgId];
       this.formUpdate.id = item.id;
+      this.formUpdate.address= this.address = item.address
+      this.formUpdate.isShow = item.isShow?1:0
+      this.formUpdate.latitude = item.latitude
+      this.formUpdate.longitude = item.longitude
       console.log(this.formUpdate)
+      this.initAmap1(item)
     },
     handleChange(value){
       if(value.length!=0){
@@ -293,6 +423,14 @@ export default {
 }
 </script>
 <style scoped>
+  #container {
+    width:100%; 
+    height: 300px;
+  }
+  #containerUpdata {
+    width:100%; 
+    height: 300px;
+  }
   .cont_box{
     width:100%;
     display: flex;

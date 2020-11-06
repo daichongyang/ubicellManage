@@ -38,10 +38,13 @@
   const {log} = console
   import indexMod from './indexMod.vue'
   import Amap from '../assets/js/initmap'
+  import {xqSelectList} from "../url/api"
   export default {
     data() {
       return {
         infor:{},
+        vueMap:{},
+        xqSelectInfor:[],
         options:{
           hideWithoutStyle:false,//是否隐藏设定区域外的楼块
           areas:[{ //围栏1
@@ -60,42 +63,69 @@
     },
     methods:{
       addMarker(map) {
-          let html = '<div class="tuxing_box2" style="position:relative;padding-bottom:20px;font-size:12px;min-height:100px;width:140px;padding:10px 10px;background:rgba(5,28,58,0.5);  border:1px solid #19dcf3;color:#19dcf3;border-radius:5px;">'+
-                      '<div class="radio radio_right"></div>'+
-                      '<div style="position:relative;"><h5>金生幼儿园</h5><span id="xiangqng" style="cursor: pointer;position:absolute;top:0;right:0;">详情</span></div>'+
-                      '<div>'+
-                        '<span>  华东区-深圳市-南山区 </span>'+
-                      '</div>'+
-                      '<div>'+
-                        '<span> 用户：34000 </span>'+
-                      '</div>'+
-                      '<div>'+
-                        '<span>日均：1311</span>'+
-                      '</div>'+
-                      '<div>'+
-                        '<span>34℃ 湿度69% PM2.5 10%</span>'+
-                      '</div>'+
-  
-                      '<div style="position: absolute;bottom: 0px;margin: 0px auto;height: 0px;width: 100%;clear: both;text-align: center;">'+
-                        '<img style="z-index: 104;position: relative;" src="https://webapi.amap.com/images/sharp.png">'+
-                      '</div>'+
-                    '</div>'
-          var infoWindow = new AMap.InfoWindow({
-              isCustom: true,  //使用自定义窗体
-              content: html,
-              offset: new AMap.Pixel(16, -45)
-          });
+          let _this = this
+          this.xqSelectInfor.forEach(item => {
+            if(item.isShow){
+              let marker = new AMap.Marker({
+                  map: map,
+                  position: [item.longitude,item.latitude],
+              });
+              marker.setMap(map);
 
-          map.clearMap();
-          var marker = new AMap.Marker({  
-              map: map,
-              position: [114.035927,22.557357]
+                // 设置鼠标划过点标记显示的文字提示
+                marker.setTitle(item.name);
+
+                // 设置label标签
+                // label默认蓝框白底左上角显示，样式className为：amap-marker-label
+                marker.setLabel({
+                    offset: new AMap.Pixel(0, 0),  //设置文本标注偏移量
+                    content: "<div class='info' style='padding-bottom:20px;font-size:12px;padding:10px 10px;background:rgba(0,0,0,0);border:1px solid #63D7D6;color:#63D7D6;border-radius:5px;'>"+item.name, //设置文本标注内容
+                    direction: 'top' //设置文本标注方位
+                });
+                marker.name=item.name
+                marker.latitude=item.latitude
+                marker.longitude=item.longitude
+                marker.id=item.id
+                marker.on('click', _this.goCommunityListMap);
+            }
+
           });
-          //鼠标点击marker弹出自定义的信息窗体
-          AMap.event.addListener(marker, 'click', function () {
-              infoWindow.open(map, marker.getPosition());
-          });
-          infoWindow.open(map, marker.getPosition());
+          // let html = '<div class="tuxing_box2" style="position:relative;padding-bottom:20px;font-size:12px;min-height:100px;width:140px;padding:10px 10px;background:rgba(5,28,58,0.5);  border:1px solid #19dcf3;color:#19dcf3;border-radius:5px;">'+
+          //             '<div class="radio radio_right"></div>'+
+          //             '<div style="position:relative;"><h5>金生幼儿园</h5><span id="xiangqng" style="cursor: pointer;position:absolute;top:0;right:0;">详情</span></div>'+
+          //             '<div>'+
+          //               '<span>  华东区-深圳市-南山区 </span>'+
+          //             '</div>'+
+          //             '<div>'+
+          //               '<span> 用户：34000 </span>'+
+          //             '</div>'+
+          //             '<div>'+
+          //               '<span>日均：1311</span>'+
+          //             '</div>'+
+          //             '<div>'+
+          //               '<span>34℃ 湿度69% PM2.5 10%</span>'+
+          //             '</div>'+
+  
+          //             '<div style="position: absolute;bottom: 0px;margin: 0px auto;height: 0px;width: 100%;clear: both;text-align: center;">'+
+          //               '<img style="z-index: 104;position: relative;" src="https://webapi.amap.com/images/sharp.png">'+
+          //             '</div>'+
+          //           '</div>'
+          // var infoWindow = new AMap.InfoWindow({
+          //     isCustom: true,  //使用自定义窗体
+          //     content: html,
+          //     offset: new AMap.Pixel(16, -45)
+          // });
+
+          // map.clearMap();
+          // var marker = new AMap.Marker({  
+          //     map: map,
+          //     position: [114.035927,22.557357]
+          // });
+          // //鼠标点击marker弹出自定义的信息窗体
+          // AMap.event.addListener(marker, 'click', function () {
+          //     infoWindow.open(map, marker.getPosition());
+          // });
+          // infoWindow.open(map, marker.getPosition());
       },
       initAmap(){
         let _this = this
@@ -108,7 +138,7 @@
                 resizeEnable: true,
                 rotateEnable:true,
                 pitchEnable:true,
-                zoom: 17,
+                zoom: 10,
                 pitch:50,//视角偏移量
                 rotation:-5,
                 viewMode:'3D',//开启3D视图,默认为关闭
@@ -123,6 +153,7 @@
                   buildingLayer,
                 ]
             });
+            _this.vueMap = map
             // map.addControl(new AMap.Scale())
             new AMap.Polygon({
                 bubble:true,
@@ -139,15 +170,40 @@
                 path:_this.options.areas[1].path,
                 map:map
             })
-            _this.addMarker(map)
+            xqSelectList({}).then(res=>{//查询小区列表
+              console.log(res)
+              if(res.data.code == 200){
+                _this.xqSelectInfor = res.data.data
+                 _this.addMarker(map)
+              }
+            })
+           
         })
       },
-      setMapStyle() {
-    }
+    getxqSelectList() {
+      xqSelectList({}).then(res=>{
+        console.log(res)
+        if(res.data.code == 200){
+          this.xqSelectInfor = res.data.data
+          // this.addMarker()
+        }
+      })
+    },
+      goCommunityListMap(e) {//小区地图信息和列表信息
+      // console.log(e)
+        let params = {
+          latitude:e.target.latitude,
+          longitude:e.target.longitude,
+          name:e.target.name,
+          xqId:e.target.id
+        }
+        console.log(params)
+        sessionStorage.setItem('mapInfor',JSON.stringify(params))
+      },
     },
     mounted(){
+      // this.getxqSelectList()
       this.initAmap()
-
       // console.log(this.menus)
     },
     components:{
@@ -171,7 +227,9 @@
     z-index: 200;
     display: flex;
 }
-
+.amap-marker-label{
+  background-color: rgba(0, 0, 0, 0) !important;
+}
 .modelue_cont::-webkit-scrollbar {
     display: none
 }

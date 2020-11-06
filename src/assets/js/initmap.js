@@ -3,7 +3,7 @@ export default {
         const key = '3d91b12e02a16d16835c072cea02aadb'
         const apiVersion = '1.4.15'
             // const timestamp = new Date().getTime()
-        const AMapURL = 'https://webapi.amap.com/maps?v=' + apiVersion + '&key=' + key + '&callback=onAMapCallback'
+        const AMapURL = 'https://webapi.amap.com/maps?v=' + apiVersion + '&key=' + key + '&callback=onAMapCallback&plugin=AMap.Autocomplete,AMap.PlaceSearch'
         const AMapURL1 = '//a.amap.com/jsapi_demos/static/demo-center/model/js/three.js'
         return new Promise((resolve, reject) => {
             // 插入script脚本

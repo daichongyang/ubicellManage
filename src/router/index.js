@@ -9,6 +9,8 @@ const index = () =>
     import ('@/components/index');
 const formApart = () =>
     import ('@/components/form_apart');
+const img_receipt_print = () =>
+    import ('@/components/img_receipt_print');
 // 用户中心
 const manager_org = () =>
     import ('@/components/manager/manager_org');
@@ -113,6 +115,8 @@ const intercom_line_config = () =>
     import ('@/components/duijiang/intercom_line_config');
 const intercom_number_config = () =>
     import ('@/components/duijiang/intercom_number_config');
+const intercom_number_list = () =>
+    import ('@/components/duijiang/intercom_number_list');
 const intercom_log = () =>
     import ('@/components/duijiang/intercom_log');
 
@@ -1065,6 +1069,14 @@ export default new Router({
                             }
                         },
                         {
+                            path: '/intercom_number_list',
+                            name: '对讲号查看',
+                            component: intercom_number_list,
+                            meta: {
+                                id: 31
+                            }
+                        },
+                        {
                             path: '/intercom_line_config',
                             name: '线路配置',
                             component: intercom_line_config,
@@ -1211,6 +1223,11 @@ export default new Router({
                             meta: {
                                 id: 13
                             }
+                        },
+                        {
+                            path: '/img_receipt_print',
+                            name: '打印',
+                            component: img_receipt_print,
                         },
                         {
                             path: '/middleMoudle',

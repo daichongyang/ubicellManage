@@ -171,35 +171,35 @@
     <el-dialog class="gudinfeiyon_define" title="详情" :visible.sync="defineDialog" :close-on-click-modal="false">
       <el-form class="form_inline" style="margin-bottom:20px;">
         <el-form-item label="小区:" size="small">
-          <el-input v-model="item.optionName"></el-input>
+          <el-input v-model="defineInfor.optionName"></el-input>
         </el-form-item>
         <el-form-item label="房间:" size="small">
-          <el-input v-model="item.num"></el-input>
+          <el-input v-model="defineInfor.num"></el-input>
         </el-form-item>
         <el-form-item label="年份:" size="small">
-          <el-input v-model="item.price"></el-input>
+          <el-input v-model="defineInfor.price"></el-input>
         </el-form-item>
         <el-form-item label="周期:" size="small">
-          <el-input v-model="item.cost"></el-input>
+          <el-input v-model="defineInfor.cost"></el-input>
         </el-form-item>
         <el-form-item label="备注:" size="small">
-          <el-input v-model="item.cost"></el-input>
+          <el-input v-model="defineInfor.cost"></el-input>
         </el-form-item>
         <div style="margin:20px 0; text-align:center;">缴费明细</div>
         <el-form-item label="空调费:" size="small">
-          <el-input v-model="item.cost"></el-input>
+          <el-input v-model="defineInfor.cost"></el-input>
         </el-form-item>   
         <el-form-item label="通知权限:" size="small">
-          <el-input v-model="item.cost"></el-input>
+          <el-input v-model="defineInfor.cost"></el-input>
         </el-form-item>   
         <el-form-item label="总费用:" size="small">
-          <el-input v-model="item.cost"></el-input>
+          <el-input v-model="defineInfor.cost"></el-input>
         </el-form-item>   
         <el-form-item label="创建时间:" size="small">
-          <el-input v-model="item.cost"></el-input>
+          <el-input v-model="defineInfor.cost"></el-input>
         </el-form-item>   
         <el-form-item label="支付状态:" size="small">
-          <el-input v-model="item.cost"></el-input>
+          <el-input v-model="defineInfor.cost"></el-input>
         </el-form-item>   
         <el-form-item label="通知用户:" size="small">
           <el-input type="textarea" :rows="2" v-model="houseUsers" :disabled="true"></el-input>
@@ -305,10 +305,19 @@ export default {
       .catch(_ => {});
     },
     costPrint(row){//物业缴费账单打印收据
-      costPrint().then(res=>{
+      let params = {
+        id:row.id
+      }
+      costPrint(params).then(res=>{
         console.log(res)
         if(res.data.code == 200){
-          this.TotalAmount = res.data.data
+          // this.TotalAmount = res.data.data
+          this.$router.push({
+            path:'/img_receipt_print',
+            query:{
+              printInfor:res.data.data
+            }
+          })
         }
       })
     },
