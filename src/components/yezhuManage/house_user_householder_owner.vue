@@ -52,7 +52,7 @@
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="name" label="业主名称"></el-table-column>
       <el-table-column prop="nickName" label="昵称"></el-table-column>
-      <el-table-column prop="ubicellJyh" label="家园号" ></el-table-column>
+      <!-- <el-table-column prop="ubicellJyh" label="家园号" ></el-table-column> -->
       <el-table-column prop="phone"label="手机号"></el-table-column>
       <el-table-column prop="sectionName"label="区域"></el-table-column>
       <el-table-column prop="xqName"label="小区名称"></el-table-column>

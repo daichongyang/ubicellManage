@@ -42,7 +42,7 @@
       <el-table-column prop="xqName" label="小区名称"></el-table-column>
       <el-table-column label="用户类型">
         <template slot-scope="scope">
-          {{scope.row.userType==1?"业主":"成员"}}
+          {{scope.row.userType==2?"业主":"成员"}}
         </template>
       </el-table-column>
       <el-table-column label="操作" fixed="right" width=250>
