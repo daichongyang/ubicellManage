@@ -3,7 +3,7 @@
     <!-- 导航栏 -->
     <p class="margintop"></p>
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-      <el-form :inline="true" class="gridContt" label-width="100px">
+      <el-form :inline="true" class="gridContt" label-width="80px">
         <el-form-item label="选择小区" size="small">
           <el-select v-model="checkInfor.xqId" placeholder="请选择小区">
             <el-option v-for="(item,index) in xqTree" :label="item.name" :value="item.id" :key="index"></el-option>
@@ -17,21 +17,6 @@
           </el-form-item>
           <el-form-item size="small" label="账号">
             <el-input placeholder="请输入账号" v-model="checkInfor.account" size='small'></el-input>
-          </el-form-item>
-          <el-form-item size="small" label="转换服务器IP">
-            <el-input placeholder="请输入转换服务器IP" v-model="checkInfor.devip" size='small'></el-input>
-          </el-form-item>
-          <el-form-item size="small" label="门牌号">
-            <el-input placeholder="请输入门牌号" v-model="checkInfor.droorNum" size='small'></el-input>
-          </el-form-item>
-          <el-form-item size="small" label="业主手机号">
-            <el-input placeholder="请输入业主手机号" v-model="checkInfor.phone" size='small'></el-input>
-          </el-form-item>
-          <el-form-item size="small" label="操作结果">
-            <el-input placeholder="请输入操作结果" v-model="checkInfor.remark" size='small'></el-input>
-          </el-form-item>
-          <el-form-item size="small" label="单元号">
-            <el-input placeholder="请输入单元号" v-model="checkInfor.unitNumber" size='small'></el-input>
           </el-form-item>
           <el-form-item size="small" label="导入时间">
             <el-date-picker
@@ -64,6 +49,11 @@
 			</el-table-column>   -->
 			<el-table-column prop="account" label="账号">
 			</el-table-column>
+			<el-table-column prop="" label="导入类型">
+        <template slot-scope="scope">
+          <div>{{scope.row.menuCode=='house_user'?'房间类型':''}}</div>
+        </template>
+			</el-table-column>
 			<el-table-column prop="" label="导入时间">
         <template slot-scope="scope">
           <div v-if="scope.row.gmtCreate">{{$root.getDateArray(scope.row.gmtCreate)[9]}}</div>
@@ -76,7 +66,7 @@
           {{scope.row.state==0?'成功':'失败'}}
         </template>
 			</el-table-column>
-			<el-table-column label="操作" fixed="right" width=200>
+			<el-table-column label="操作" fixed="right" width=100>
 				<template slot-scope="scope">
           <el-button size="small" @click="gohouseUserLogList(scope.row)">详情</el-button>
 				</template>

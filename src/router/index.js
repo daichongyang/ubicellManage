@@ -51,6 +51,8 @@ const charging_bill = () =>
     import ('@/components/shoufeiManage/charging_bill');
 const charging_meter_reading = () =>
     import ('@/components/shoufeiManage/charging_meter_reading');
+const charging_refill_log = () =>
+    import ('@/components/shoufeiManage/charging_refill_log');
 // 系统配置
 const sys_log = () =>
     import ('@/components/sysManage/sys_log');
@@ -501,6 +503,14 @@ export default new Router({
                             component: charging_meter_reading,
                             meta: {
                                 id: 154
+                            }
+                        },
+                        {
+                            path: '/charging_refill_log',
+                            name: '充值记录',
+                            component: charging_refill_log,
+                            meta: {
+                                id: 145
                             }
                         },
                         {

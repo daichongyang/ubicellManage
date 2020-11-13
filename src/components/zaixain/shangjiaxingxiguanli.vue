@@ -122,7 +122,7 @@
               <el-option v-for="(item,index) in lishopinfo" :label="item.name" :value="item.id" :key="index"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="服务类型" size="small" v-if="formPush.genreId&&formPush.genreId!=2">
+          <el-form-item label="服务类型" size="small" v-if="formPush.genreId&&formPush.genreId==1||formPush.genreId==3||formPush.genreId==4||formPush.genreId==5||formPush.genreId==8">
             <el-checkbox-group v-model="checkList">
               <el-checkbox v-for="item in shoptype" :key="item.id" :label="item.id" :value="item.id">{{item.name}}</el-checkbox>
             </el-checkbox-group>          
@@ -190,7 +190,7 @@
               <el-option v-for="(item,index) in lishopinfo" :label="item.name" :value="item.id" :key="index"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="服务类型" size="small" v-if="formUpdate.genreId&&formUpdate.genreId!=2">
+          <el-form-item label="服务类型" size="small" v-if="formUpdate.genreId&&formUpdate.genreId==1||formUpdate.genreId==3||formUpdate.genreId==4||formUpdate.genreId==5||formUpdate.genreId==8">
             <el-checkbox-group v-model="checkList">
               <el-checkbox v-for="item in shoptype" :key="item.id" :label="item.id" :value="item.id">{{item.name}}</el-checkbox>
             </el-checkbox-group>          
@@ -384,7 +384,7 @@ export default {
         this.checkList.forEach(item=>{
           this.formPush.subdivide = item+","+this.formPush.subdivide
         })
-        if(this.formPush.genreId==2){
+        if(this.formPush.genreId==2||this.formPush.genreId==6||this.formPush.genreId==7){
           this.formPush.subdivide=''
         }else{
           this.formPush.deliveryMoney=0
@@ -446,7 +446,7 @@ export default {
         this.checkList.forEach(item=>{
           this.formUpdate.subdivide = item+","+this.formUpdate.subdivide
         })
-        if(this.formUpdate.genreId==2){
+        if(this.formUpdate.genreId==2||this.formUpdate.genreId==6||this.formUpdate.genreId==7){
           this.formUpdate.subdivide=''
         }else{
           this.formUpdate.deliveryMoney=0

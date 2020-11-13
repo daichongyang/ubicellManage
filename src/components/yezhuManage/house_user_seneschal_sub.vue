@@ -36,7 +36,7 @@
         <el-input v-model="formSearch.sectionName" placeholder="请输入区域名称"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button size="small" @click="getInit">查 询</el-button>
+        <el-button size="small" @click="getlist">查 询</el-button>
       </el-form-item>
       <el-form-item>
         <el-button size="small" @click="addDialog=true">添 加</el-button>
@@ -272,6 +272,7 @@ export default {
       formSearch:{//查询条件
         houseType:1,//房间类型 1管家房间 2业主房间
         current:1,
+        xqId:'',
         size: 10
       },
       formSearch1:{
@@ -374,7 +375,7 @@ export default {
       })
     },
     getInit(){//初始化列表
-      this.getlist()
+      
       this.gethouseLIst()
       let org_tree={
             name:'',
@@ -393,11 +394,16 @@ export default {
           this.xqTree = res.data.data
           if(this.xqTree.length!=0){
             this.formSearch.xqId = this.xqTree[0].id
+            this.getlist()
           }
         }
       })
     },
     addList(addList){//添加
+      if(!this.formPush.houseId){
+        this.$message("请选择房间")
+        return
+      }
       this.$refs[addList].validate((valid) => {
         if (valid) {
           adduserhouselist(this.formPush).then((res)=>{
@@ -421,6 +427,10 @@ export default {
     },
     updateList(){//修改
     console.log(this.formUpdate)
+      if(!this.formUpdate.houseId){
+        this.$message("请选择房间")
+        return
+      }
       updateuserhouselist(this.formUpdate).then((res)=>{
         console.log(res)
         if(res.data.code == 200){

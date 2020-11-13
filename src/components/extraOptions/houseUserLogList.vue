@@ -41,6 +41,8 @@
 			</el-table-column>
 			<el-table-column prop="department" label="部门">
 			</el-table-column>
+			<el-table-column prop="floor" label="楼层">
+			</el-table-column>
 			<el-table-column prop="doorNum" label="门牌号">
 			</el-table-column>
 			<el-table-column prop="idNumber" label="身份证">

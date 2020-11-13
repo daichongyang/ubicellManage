@@ -127,12 +127,14 @@ import { shoptypeList,addShoptype,updateShoptype,deleteShoptype,orgTree,xqSelect
 export default {
   data(){
     return{
+      aaa:"",
       option1:[],
       deleBatch:[],
       isGetFather:false,//是否选中
       formSearch:{//查询条件
         classify:4,
         current:1,
+        xqId:'',
         size: 10
       },
       formPush:{

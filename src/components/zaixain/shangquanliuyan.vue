@@ -135,6 +135,7 @@ export default {
       isGetFather:false,//是否选中
       formSearch:{//查询条件
         classify:8,
+        xqId:'',
         current:1,
         size: 10
       },

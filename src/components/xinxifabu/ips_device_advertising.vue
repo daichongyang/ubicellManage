@@ -44,21 +44,30 @@
         <el-button size="small" @click="getlist">查 询</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button size="small" @click="addDialog=true">添 加</el-button>
+        <el-button size="small" @click="addDialog=true,devListt=''">添 加</el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-button size="small" type="danger" @click="deleInfor(false)">批量删除</el-button>
       </el-form-item>
     </el-form>
     <el-table ref="multipleTable" :data="formData" style="width: 100%" stripe @selection-change="handleSelectionChange">
-      <!-- <el-table-column type="selection" width="55"></el-table-column> -->
+      <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="title" label="标题"></el-table-column>
       <el-table-column prop="gmtCreate" label="发送时间"></el-table-column>
+      <el-table-column prop="recallTime" label="撤回时间">
+        <template slot-scope="scope" v-if="scope.row.recallTime">
+          {{$root.getDateArray(Number(scope.row.recallTime))[9]}}
+        </template>
+      </el-table-column>
       <el-table-column label="发送状态">
         <template slot-scope="scope">
-          {{scope.row.isDel==1?"已删除":"投放中"}}
+            {{scope.row.isRecall==1?"已撤回":"投放中"}}
 				</template>
       </el-table-column>
       <el-table-column label="操作" fixed="right" width=250>
 				<template slot-scope="scope">
-					<el-button type="danger" size="small" @click="deleInfor(scope.row.tid)">删 除</el-button>
+					<el-button type="danger" size="small" @click="deleInfor(scope.row.tid)" v-if="scope.row.isRecall==1">删 除</el-button>
+					<el-button type="" size="small" @click="getrecallVillage(scope.row.tid)" v-if="scope.row.isRecall==0">撤 回</el-button>
 					<el-button type="primary" size="small" @click="updateShowBox(scope.row)">详 情</el-button>
         </template>
 			</el-table-column>
@@ -76,7 +85,7 @@
           </el-select>
         </el-form-item>
           <el-form-item label="标题">
-            <el-input v-model="formPush.title"></el-input>
+            <el-input v-model="formPush.title" type="textarea" :rows="2" style="width:250px;"></el-input>
           </el-form-item>
           <el-form-item label="门禁设备">
             <el-input
@@ -108,12 +117,14 @@
               class="avatar-uploader"
               :action="uploadToRealPath"
               :headers='headers'
+              :on-progress="uploadVideoProcess"
               :show-file-list="false"
               :on-success="handleAvatarSuccess2"
               :on-remove="handleRemove">
-              <video v-if="videoUrl" :src="videoUrl" class="avatar"></video>
+              <video v-if="videoUrl" :src="videoUrl" class="avatar" controls></video>
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload> 
+            </el-upload>
+            <el-progress v-if="progressFlag" :percentage="loadProgress" style="width:230px"></el-progress>
           </el-form-item>
         </el-form>
       </div>
@@ -128,7 +139,7 @@
       <div class="cont_box_left">
         <el-form label-position="right" :rules="rules" label-width="110px" :model="formUpdate" ref='formUpdate'>
           <el-form-item label="标题">
-            <el-input v-model="formUpdate.title"></el-input>
+            <el-input v-model="formUpdate.title" type="textarea" :rows="2" style="width:250px;"></el-input>
           </el-form-item>
           <el-form-item label="门禁设备">
             <el-input
@@ -138,13 +149,13 @@
               :autosize="{ minRows: 2, maxRows: 4}"
               placeholder=""
               v-model="devListt">
-            </el-input>          
+            </el-input>
           </el-form-item>
           <el-form-item label="图片" size="small">
-          <el-image fit='cover' style="width:120px;height:120px;" :src='formUpdate.imgAddress'></el-image>
+            <el-image fit='cover' style="width:120px;height:120px;" :src='formUpdate.imgAddress'></el-image>
           </el-form-item>
           <el-form-item label="视频" size="small">
-            <video :src="formUpdate.videoAddress" class="avatar"></video>
+            <video :src="formUpdate.videoAddress" class="avatar" controls></video>
           </el-form-item>
         </el-form>
       </div>
@@ -168,7 +179,7 @@
 <script>
 import paging from '../paging'
 import acsdev from "./xinxiacs_dev1"
-import { getVillageAD,saveVillage,deleteVillage,orgTree,xqSelectList,houseList } from '../../url/api';
+import { getVillageAD,saveVillage,deleteVillage,orgTree,xqSelectList,houseList,recallVillage } from '../../url/api';
 export default {
   data(){
     return{
@@ -180,6 +191,8 @@ export default {
       imageUrl: '',
       videoUrl: '',
       devDialog:false,
+      progressFlag:false,
+      loadProgress:0,
       pushSelect:0,
       allSelect:[],
       option1:[],
@@ -229,6 +242,20 @@ export default {
     }
   },
   methods:{
+    getrecallVillage(id){//撤回
+      let params = {
+        tid :id
+      }
+      recallVillage(params).then(res=>{
+        console.log(res)
+        if(res.data.code == 200){
+          this.$message("撤回成功")
+          this.getlist()
+        }else{
+          this.$message("撤回失败")
+        }
+      })
+    },
     nextt(){
       this.devDialog =true
       this.$nextTick(()=>{
@@ -319,7 +346,7 @@ export default {
       })
     },
     getInit(){//初始化列表
-      this.getlist()
+
       this.gethouseLIst()
       let org_tree={
             name:'',
@@ -338,6 +365,7 @@ export default {
           this.xqTree = res.data.data
           if(this.xqTree.length!=0){
             this.formSearch.xqId = this.xqTree[0].id
+            this.getlist()
           }
         }
       })
@@ -388,18 +416,18 @@ export default {
       }else{
         if(this.deleBatch.length!=0){
           this.deleBatch.filter((item)=>{
-            arrId.push(item.id)
+            arrId.push(item.tid)
             return item
           })
         }
       }
       this.$confirm('确认删除吗？')
       .then(_ => {
-        deleteVillage(ids).then((res)=>{
+        deleteVillage(arrId).then((res)=>{
           console.log(res)
           if(res.data.code == 200){
             this.$message('删除成功');
-            this.getInit()
+            this.getlist()
           }
         })
       })
@@ -426,22 +454,8 @@ export default {
       }
     },
     handleSelectionChange(val,self) {//多选
+      console.log(val)
       this.deleBatch = val
-      let obj = {}
-      let aa = val.find(item=>item.id == self.id) 
-      console.log(aa)
-      if(aa){
-        this.allSelect = [...this.allSelect,...val]
-        this.allSelect = this.allSelect.reduce((cur,next) => {
-            obj[next.id] ? "" : obj[next.id] = true && cur.push(next);
-            return cur;
-        },[])
-      }else{
-        this.allSelect = this.allSelect.filter((item)=>{
-          return item.id!=self.id
-        })
-      }
-      console.log(this.allSelect)
       // this.deleBatch = this.allSelect
       // console.log(this.deleBatch)
     },
@@ -493,6 +507,7 @@ export default {
         this.formSearch.orgId = ''
         this.formSearch1.orgId = ''
       }
+      
       getVillageAD(this.formSearch).then((res)=>{
         console.log(res)
         if(res.data.code == 200){
@@ -508,7 +523,16 @@ export default {
           this.$message(res.data.msg);
         }
       })
-    }
+    },
+    uploadVideoProcess(event, file, fileList) {
+        console.log(event)
+        this.progressFlag = true; // 显示进度条
+        this.loadProgress = parseInt(event.percent); // 动态获取文件上传进度
+        if (this.loadProgress >= 100) {
+            this.loadProgress = 100
+            setTimeout( () => {this.progressFlag = false}, 1000) // 一秒后关闭进度条
+        }
+    },
   },
   mounted(){
     this.getInit()

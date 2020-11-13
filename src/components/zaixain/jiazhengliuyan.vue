@@ -136,6 +136,7 @@ export default {
       formSearch:{//查询条件
         classify:4,
         current:1,
+        xqId:'',
         size: 10
       },
       formPush:{

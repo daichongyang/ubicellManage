@@ -92,7 +92,7 @@ export const callHistory = (params) => { return axios.post('/intellmanagerV3.0/c
 export const getSectionHouseList = (params) => { return axios.post('/intellmanagerV3.0/cloudCall/getSectionHouseList', params) } //对讲获取区域/房间列表
 
 export const authAddManager = (params) => { return axios.post('/intellmanagerV3.0/auth/manager/add', params) } //添加管理员
-export const authDeleteManager = (params) => { return axios.post('/intellmanagerV3.0auth/manager/delete', params) } //删除管理员
+export const authDeleteManager = (params) => { return axios.post('/intellmanagerV3.0/auth/manager/delete', params) } //删除管理员
 export const authManagerList = (params) => { return axios.post('/intellmanagerV3.0/auth/manager/list/page', params) } //查询管理员分页列表
 export const authUpdateManager = (params) => { return axios.post('/intellmanagerV3.0/auth/manager/update', params) } //修改管理员信息
 
@@ -247,7 +247,7 @@ export const getOneHouseUser = (params) => { return axios.post('/intellmanagerV3
 
 export const getVillageAD = (params) => { return axios.post('/intellmanagerV3.0/Message/getVillageAD', params) } // 获取小区广告
 export const saveVillage = (params) => { return axios.post('/intellmanagerV3.0/Message/saveVillage', params) } // 发送小区广告
-export const deleteVillage = (params) => { return axios.post('/intellmanagerV3.0/Message/deleteVillage/' + params) } // 删除小区广告，通过id
+export const deleteVillage = (params) => { return axios.post('/intellmanagerV3.0/Message/deleteVillage', params) } // 删除小区广告，通过id
 
 export const toTenementAD = (params) => { return axios.post('/intellmanagerV3.0/Message/toTenementAD', params) } // 获取物业app广告
 export const updatePicture = (params) => { return axios.post('/intellmanagerV3.0/Message/updatePicture', params) } // 更新物业app广告
@@ -319,6 +319,11 @@ export const costManualPay = (params) => { return axios.post('/intellmanagerV3.0
 export const costPrint = (params) => { return axios.post('/intellmanagerV3.0/property/cost/print/' + params.id) } // 物业缴费账单打印收据
 export const costPush = (params) => { return axios.post('/intellmanagerV3.0/property/cost/push/' + params.id) } // 物业缴费账单催缴
 
+export const refillList = (params) => { return axios.post('/intellmanagerV3.0/refill/card/order/list/page', params) } // 查询充值记录分页列表
+export const refillPrint = (params) => { return axios.post('/intellmanagerV3.0/refill/card/order/print/' + params.id) } // 打印充值收据
+export const refillSave = (params) => { return axios.post('/intellmanagerV3.0/refill/card/order/save', params) } // 录入充值记录
+export const refillcardType = (params) => { return axios.post('/intellmanagerV3.0/refill/card/list/select/' + params.houseId) } // 充值卡类型
+
 export const csinfoList = (params) => { return axios.post('/intellmanagerV3.0/cs/info/csinfo/list', params) } // 查询社区动态管理查询
 export const addrecomm = (params) => { return axios.post('/intellmanagerV3.0/cs/info/comment/addrecomm', params) } // 添加社区动态发布
 export const deleteComment = (params) => { return axios.post('/intellmanagerV3.0/cs/info/comment/deleteoneli', params) } // 删除社区动态人员
@@ -338,3 +343,5 @@ export const gettruecommmDataList = (params) => { return axios.post('/intellmana
 export const deletetruecommmDataList = (params) => { return axios.post('/intellmanagerV3.0/it/tribeinfo/tribepostcomment/delete', params) } // 帖子里面评论删除
 export const getprisclist = (params) => { return axios.post('/intellmanagerV3.0/it/tribeinfo/tribepost/getprisclist', params) } // 查询帖子里面查看点赞
 export const addtruopstinfo = (params) => { return axios.post('/intellmanagerV3.0/it/tribeinfo/tribepost/addtruopstinfo', params) } // 添加兴趣部落帖子信息
+
+export const recallVillage = (params) => { return axios.post(`/intellmanagerV3.0/Message/recallVillage/${params.tid}`) } // 撤回小区广告，通过tid(只有isRecall=0的才可撤回)

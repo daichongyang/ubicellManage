@@ -50,7 +50,7 @@
           {{scope.row.isVerify==0?"未审核":scope.row.isVerify==1?"审核通过":"不通过"}}
         </template>
       </el-table-column>
-      <el-table-column prop="typeId" label="出租状态">
+      <el-table-column prop="typeId" label="类型">
         <template slot-scope="scope">
           {{scope.row.typeId==0?"能工巧匠":"求助"}}
         </template>

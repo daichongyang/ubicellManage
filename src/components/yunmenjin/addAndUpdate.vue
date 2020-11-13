@@ -8,7 +8,7 @@
                 <el-option v-for="item in xqTree" :label="item.name" :value="item.id" :key="item.id"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="设备名称" v-if="isActive!==6">
+            <el-form-item label="设备名称" v-if="isActive!==6" prop="name">
               <el-input v-model="pushform.name"></el-input>
             </el-form-item>
             <el-form-item label="设备密码" v-if="isActive==4||isActive==2">

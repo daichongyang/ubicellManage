@@ -44,7 +44,7 @@
       <el-table-column prop="cname" label="操作人员"></el-table-column>
       <el-table-column prop="classify" label="状态">
         <template slot-scope="scope">
-          {{scope.row.status==1?"申请":scope.row.status==2?"已接单":scope.row.status==3?"已完成":"投诉"}}
+          {{scope.row.status==0?"申请":scope.row.status==1?"已接单":scope.row.status==2?"已完成":"投诉"}}
         </template>
       </el-table-column>
       

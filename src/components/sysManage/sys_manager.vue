@@ -79,7 +79,6 @@
               :show-file-list="false"
               :headers='headers'
               :on-change="onChange"
-              :auto-upload="false"
               :on-success="handleAvatarSuccess">
               <img v-if="imageUrl" :src="imageUrl" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -121,7 +120,7 @@
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button size="medium " @click="addDialog = false">取 消</el-button>
-        <el-button size="medium " @click="updataImg(1)">新 增</el-button>
+        <el-button size="medium " @click="addList('addList')">新 增</el-button>
       </div>
     </el-dialog>
     <!-- 修改 -->
@@ -130,13 +129,12 @@
         <el-form label-position="right" :rules="rules" label-width="80px" :model="formUpdate" ref='formUpdate'>
           <el-form-item label="头像" size="small">
             <el-upload
-              ref="Updata"
+              ref="uupdata"
               class="avatar-uploader"
               action="/intellmanagerV3.0/upload/file/upload"
               :show-file-list="false"
               :headers='headers'
               :on-change="onChange"
-              :auto-upload="false"
               :on-success="handleAvatarSuccess1">
               <img v-if="imageUrl" :src="imageUrl" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -167,7 +165,7 @@
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button size="medium " @click="updateDialog = false">取 消</el-button>
-        <el-button size="medium " @click="updataImg(2)">修 改</el-button>
+        <el-button size="medium " @click="updateList('formUpdate')">修 改</el-button>
       </div>
     </el-dialog>
     <!-- 角色绑定 -->
@@ -307,14 +305,16 @@ export default {
       }
     },
     updataImg(type){//感觉type区分是添加还是修改图片
+     
       if(this.imageUrl){
+         
         if(type == 1){
           this.$nextTick(function () {
           　　this.$refs.addUpdata.submit();
           })
         }else{
           this.$nextTick(function () {
-          　　this.$refs.Updata.submit();
+          　　this.$refs.uupdata.submit();
           })
         }
       }else{
@@ -327,7 +327,7 @@ export default {
           authAddManager(this.formPush).then((res)=>{
             console.log(res)
             if(res.data.code == 200){
-              this.getInit()
+              this.getlist()
               this.$message({
                 message: '添加成功',
                 type: 'success'
@@ -438,7 +438,6 @@ export default {
       this.imageUrl = URL.createObjectURL(file.raw);
       if(res.code == 200){
         this.formPush.avatar = res.data[0]
-        this.addList('addList')
       }
     },
     handleAvatarSuccess1(res, file) {//修改头像上传成功
@@ -446,7 +445,6 @@ export default {
       this.imageUrl = URL.createObjectURL(file.raw);
       if(res.code == 200){
         this.formPush.avatar = res.data[0]
-        this.updateList('formUpdate')
       }
     },
     onChange(file, fileList){

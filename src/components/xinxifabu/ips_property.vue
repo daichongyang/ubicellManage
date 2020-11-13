@@ -219,7 +219,7 @@
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-form-item>
-          <el-form-item label="是否发送">
+          <el-form-item label="是否发送" v-if="updateDialog1">
             <el-radio v-model="formUpdate.isSend" :label="1">是</el-radio>
             <el-radio v-model="formUpdate.isSend" :label="0">否</el-radio>
           </el-form-item>
@@ -234,7 +234,7 @@
             </el-input>
             <el-button size="small" @click="nextt" v-if="updateDialog1">选 择</el-button>
           </el-form-item>
-          <el-form-item label="区域房间">
+          <el-form-item label="区域房间" v-if="updateDialog1">
             <div class="tree_box">
               <div class="tree_box_item">
                 <el-tree
@@ -690,7 +690,7 @@ export default {
     console.log(item)
       this.updateDialog1 = false
       this.devListt = ''
-      this.getgetAllHouseUser1()
+      // this.getgetAllHouseUser1()
       let houseUserIds = []
       if(item.userList){
         item.userList.forEach((itemm)=>{
@@ -710,7 +710,13 @@ export default {
         id:item.id
       }
       this.imageUrl = item.address
-      this.formData2 = item.userList
+      if(item.userList){
+        this.formData2 = item.userList.filter(item=>{
+          item.name = item.name||item.phone
+          return item
+        })
+      }
+
       if(item.deviceList){
         item.deviceList.forEach((itemm)=>{
           // this.devList.push(obj)

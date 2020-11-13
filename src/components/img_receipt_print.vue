@@ -14,8 +14,9 @@
                     <span>据</span>
                 </h1>
             </div>
-            <div class="cont_item2" style="display: flex;justify-content: flex-end; margin-top: 30px;">
-                <div class="cont_item2_li1" style="margin-right: 0px;">
+            <!-- <div class="cont_item2" style="display: flex;justify-content: flex-end; margin-top: 30px;"> -->
+            <div class="cont_item2" style="display: flex;text-align:center;margin-top: 30px;">
+                <div class="cont_item2_li1" style="margin-right: 0px; flex:1">
                     <span style="        display: inline-block;
 		                margin: 0 5px;">入账时间：</span>
                     <span style="        display: inline-block;
@@ -31,11 +32,11 @@
                     <span style="        display: inline-block;
 		                margin: 0 5px;">日</span>
                 </div>
-                <div class="cont_item2_li2" style="        margin-right: 30px;
+                <!-- <div class="cont_item2_li2" style="        margin-right: 30px;
 		            width: 240px;
 		            text-align: right;">
                     <span>{{printInfor.number }}</span>
-                </div>
+                </div> -->
             </div>
             <div class="cont_item3" style="        border: 2px solid black;
 		        padding: 14px 14px;
