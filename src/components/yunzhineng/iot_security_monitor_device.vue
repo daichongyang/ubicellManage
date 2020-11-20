@@ -349,11 +349,11 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getList()
+      this.getlist()
     },
     handleCurrentPage1(val){//页码改变
       this.formSearch.current=val
-      this.getList1()
+      this.getlist1()
     },
       handleCurrentPage2(val){//页码改变
       this.ysaccountpush.current=val

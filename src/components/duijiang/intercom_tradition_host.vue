@@ -157,7 +157,7 @@ export default {
                 message: '修改成功',
                 type: 'warning'
               });
-              this.getInit()
+              this.getlist()
             }
           })
         } else {
@@ -174,7 +174,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getInit()
+      this.getlist()
     },
     handleChange(value){//监听组织选择
       if(value.length!=0){

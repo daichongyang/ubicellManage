@@ -7,7 +7,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button size="small" @click="getInit">查 询</el-button>
+        <el-button size="small" @click="getlist">查 询</el-button>
       </el-form-item>
       <el-form-item>
         <el-button size="small" @click="addDialog=true">新 增</el-button>
@@ -167,6 +167,7 @@ export default {
       xqTree:[],
       isAddorUpdate:1,//1添加、2修改
       formSearch:{
+        xqId:'',
         current:1,
         size:10
       },
@@ -243,7 +244,7 @@ export default {
         
       }
         this.detailsDialog = true
-        this.updateShowBox(res.data.data)
+        // this.updateShowBox(res.data.data)
         }
       })
     },
@@ -280,13 +281,14 @@ export default {
       })
     },
     getInit(){
-      this.getlist()
+      
       xqSelectList({}).then((res)=>{//小区选择列表
         console.log(res)
         if(res.data.code == 200){
           this.xqTree = res.data.data
           if(this.xqTree.length!=0){
             this.formSearch.xqId = this.xqTree[0].id
+            this.getlist()
           }
         }
       })
@@ -408,7 +410,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getList()
+      this.getlist()
     },
   },
   mounted(){

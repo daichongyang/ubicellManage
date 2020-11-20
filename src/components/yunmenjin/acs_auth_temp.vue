@@ -52,6 +52,9 @@
           <el-form-item label="公司" size="small">
             <el-input v-model="formPush.company" placeholder="请输入公司"></el-input>
           </el-form-item>
+          <!-- <el-form-item label="班级" size="small">
+            <el-input v-model="formPush.company" placeholder="请输入班级"></el-input>
+          </el-form-item> -->
           <el-form-item label="楼层" size="small" prop="floor">
             <el-input v-model.number="formPush.floor" placeholder="请输入楼层"></el-input>
           </el-form-item>
@@ -159,6 +162,7 @@ export default {
       dialog:false,
       formPush:{
         sumCount:0,
+        xqId:'',
         floor:'',
         sex:1,
         type:2,
@@ -317,7 +321,7 @@ export default {
           authAddManager(this.formPush).then((res)=>{
             console.log(res)
             if(res.data.code == 200){
-              this.getInit()
+              this.getlist()
               this.$message({
                 message: '添加成功',
                 type: 'success'
@@ -354,7 +358,7 @@ export default {
                 message: '修改成功',
                 type: 'warning'
               });
-              this.getInit()
+              this.getlist()
             }
           })
         } else {
@@ -379,7 +383,7 @@ export default {
           console.log(res)
           if(res.data.code == 200){
             this.$message('删除成功');
-            this.getInit()
+            this.getlist()
           }else{
             this.$message(res.data.msg);
           }
@@ -447,7 +451,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getList()
+      this.getlist()
     },
   },
   mounted(){

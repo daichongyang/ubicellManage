@@ -351,15 +351,17 @@ export default {
       console.log(this.controlDialog)
     },
     changeList(pushform){//添加或者修改
-      console.log(this.inforShangtan)
+      
       this.pushform.devType = this.isActive
-      if((this.isActive==3||this.isActive==4||this.isActive==5)&&this.pushform.embedType==2){
-        this.pushform.sectionId = ''
-      }else{
+      console.log(this.inforShangtan,this.pushform)
+      if((this.isActive==3||this.isActive==4||this.isActive==5)&&this.pushform.embedType==1){
+        
         if(!this.pushform.sectionId){
           this.$message("请选择区域")
           return
         }
+      }else{
+          this.pushform.sectionId = ''
       }
       if(this.pushform.devType==6){
         this.pushform.deviceGroup={

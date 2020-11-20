@@ -328,7 +328,7 @@ export default {
         if(res.data.code == 200){
           this.xqTree = res.data.data
           this.formSearch.xqId = this.xqTree[0].id||""
-          this.getList()
+          this.getlist()
         }
       })
       let org_tree={
@@ -407,7 +407,7 @@ export default {
                 message: '授权成功',
                 type: 'success'
               });
-              this.getList()
+              this.getlist()
             }else{
               this.$message('授权失败')
             }
@@ -549,7 +549,7 @@ export default {
           console.log(res)
           if(res.data.code == 200){
             this.$message('删除成功');
-            this.getList()
+            this.getlist()
           }
         })
       })
@@ -557,7 +557,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getList()
+      this.getlist()
     },
     updateShowBox(item){//统一分配弹框
       console.log(this.deleBatch)

@@ -339,7 +339,7 @@ export default {
           this.addFormVisible = false;
           if (res.data.code === 200) {
             alert("生成账单成功");
-            this.getList();
+            this.getlist();
           } else if (res.data.code == 109) {
             alert(res.data.msg);
           } else {
@@ -389,7 +389,7 @@ export default {
     },
     handleCurrentChange(val) {
       this.checkInfor.current = val;
-      this.getList();
+      this.getlist();
     },
     selsChange: function(sels) {
       // 当选择项发生变化时会触发该事件

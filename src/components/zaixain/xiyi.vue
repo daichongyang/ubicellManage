@@ -30,7 +30,7 @@
         <el-input v-model="formSearch.name" placeholder="请输入创建人员"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button size="small" @click="getInit">查 询</el-button>
+        <el-button size="small" @click="getlist">查 询</el-button>
       </el-form-item>
       <el-form-item>
         <el-button size="small" @click="addDialog=true">添 加</el-button>
@@ -187,7 +187,7 @@ export default {
                 message: '添加成功',
                 type: 'success'
               });
-              this.getInit()
+              this.getlist()
             }else{
               this.$message('添加失败')
             }
@@ -208,7 +208,7 @@ export default {
             message: '修改成功',
             type: 'warning'
           });
-          this.getInit()
+          this.getlist()
         }
       })
       this.updateDialog = false
@@ -231,7 +231,7 @@ export default {
           console.log(res)
           if(res.data.code == 200){
             this.$message('删除成功');
-            this.getInit()
+            this.getlist()
           }
         })
       })
@@ -243,7 +243,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getInit()
+      this.getlist()
     },
     checkTreeInfor(data,ev) {//监听树状图勾选
       // console.log(ev);

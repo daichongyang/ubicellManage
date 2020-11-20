@@ -151,6 +151,7 @@ export default {
       xqTree:[],
       isAddorUpdate:1,//1添加、2修改
       formSearch:{
+        xqId:'',
         current:1,
         size:10
       },
@@ -268,7 +269,7 @@ export default {
                 message: '修改成功',
                 type: 'warning'
               });
-              this.getInit()
+              this.getlist()
             }
           })
         } else {
@@ -314,7 +315,7 @@ export default {
           console.log(res)
           if(res.data.code == 200){
             this.$message('删除成功');
-            this.getInit()
+            this.getlist()
           }
         })
       })
@@ -327,7 +328,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getList()
+      this.getlist()
     },
   },
   mounted(){

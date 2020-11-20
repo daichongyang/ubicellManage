@@ -20,7 +20,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button size="small" @click="getInit">查 询</el-button>
+        <el-button size="small" @click="getList">查 询</el-button>
       </el-form-item>
       <!-- <el-form-item>
         <el-button size="small" type="danger" @click="deleInfor(false)">批量删除</el-button>
@@ -244,6 +244,7 @@ export default {
       deleBatch:[],//批量删除
       formSearch:{//查询条件
         current:1,
+        xqId:"",
         size: 10
       },
       fatherName:[
@@ -296,8 +297,8 @@ export default {
         console.log(this.formPush.devList)
       })
     },
-    getInit(){//初始化列表
-      getAcPasscardUsers(this.formSearch).then((res)=>{
+    getList(){
+        getAcPasscardUsers(this.formSearch).then((res)=>{
         console.log(res)
         if(res.data.code == 200){
           this.formData = res.data.data.records.filter((item)=>{
@@ -312,12 +313,16 @@ export default {
           this.$message(res.data.msg);
         }
       })
+    },
+    getInit(){//初始化列表
+
       let org_tree1={}
       xqSelectList(org_tree1).then((res)=>{//小区选择列表
         console.log(res)
         if(res.data.code == 200){
           this.xqTree = res.data.data
           this.formSearch.xqId = this.xqTree[0].id||""
+          this.getlist()
         }
       })
       let org_tree={
@@ -373,7 +378,7 @@ export default {
                 message: '授权成功',
                 type: 'success'
               });
-              this.getInit()
+              this.getlist()
             }else{
               this.$message('授权失败')
             }
@@ -514,7 +519,7 @@ export default {
           console.log(res)
           if(res.data.code == 200){
             this.$message('删除成功');
-            this.getInit()
+            this.getlist()
           }
         })
       })
@@ -522,7 +527,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getInit()
+      this.getlist()
     },
     updateShowBox(item){//统一分配弹框
       console.log(this.deleBatch)
@@ -613,7 +618,7 @@ export default {
         params.passcardIds.push(item.passcardId)
         return item
       })
-      this.$confirm('确认删除吗？')
+      this.$confirm('确认要还原已勾选对象吗？')
       .then(_ => {
         restoreUsersPasscard(params).then((res)=>{
           console.log(res)

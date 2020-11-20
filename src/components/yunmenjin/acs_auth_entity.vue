@@ -49,10 +49,13 @@
               placeholder="结束时间">
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="公司" size="small">
+          <el-form-item label="班级" size="small" v-if="tenantCode=='0029'">
+            <el-input v-model="formPush.company" placeholder="请输入班级"></el-input>
+          </el-form-item>
+          <el-form-item label="公司" size="small" v-else>
             <el-input v-model="formPush.company" placeholder="请输入公司"></el-input>
           </el-form-item>
-          <el-form-item label="楼层" size="small" prop="floor">
+          <el-form-item label="楼层" size="small">
             <el-input v-model.number="formPush.floor" placeholder="请输入楼层"></el-input>
           </el-form-item>
           <el-form-item label="部门" size="small">
@@ -210,6 +213,7 @@ export default {
       },
       devListt:'',
       xqId:'',
+      tenantCode:sessionStorage.getItem('tenantCode'),
       devList:[],
       pushSelect:0,//控制是否提交勾选的东西
       checkStrictly:false,
@@ -235,6 +239,7 @@ export default {
         sumCount:1,
         sex:1,
         type:1,
+        xqId:'',
         floor:'',
         icNum:''
       },
@@ -257,9 +262,6 @@ export default {
         startTime:[{ required: true, message: '该项不能为空',trigger: 'blur'}],
         endTime:[{ required: true, message: '该项不能为空',trigger: 'blur'}],
         status:[{ required: true, message: '该项不能为空',trigger: 'change'}],
-        floor:[
-            { validator: checkAge, trigger: 'blur' }
-          ]
       },
       imageUrl:''
     }
@@ -682,7 +684,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getList()
+      this.getlist()
     },
   },
   mounted(){

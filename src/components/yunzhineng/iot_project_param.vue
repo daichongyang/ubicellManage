@@ -409,7 +409,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getList()
+      this.getlist()
     },
     handleCurrentPage1(val){//页码改变
       this.formSearch1.current=val

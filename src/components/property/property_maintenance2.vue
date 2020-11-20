@@ -50,7 +50,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button size="small" @click="getInit">查 询</el-button>
+        <el-button size="small" @click="getlist">查 询</el-button>
       </el-form-item>
       <!-- <el-form-item>
         <el-button size="small" @click="addDialog=true">新 增</el-button>
@@ -291,7 +291,7 @@ export default {
               addMaintenanceMan(this.formPush).then((res)=>{
                 console.log(res)
                 if(res.data.code == 200){
-                  this.getInit()
+                  this.getlist()
                   this.$message({
                     message: '添加成功',
                     type: 'success'
@@ -329,7 +329,7 @@ export default {
               updataModifyMaintenanceManById(params).then((res)=>{
                 console.log(res)
                 if(res.data.code == 200){
-                  this.getInit()
+                  this.getlist()
                   this.$message({
                     message: '修改成功',
                     type: 'success'
@@ -391,7 +391,7 @@ export default {
           console.log(res)
           if(res.data.code == 200){
             this.$message('删除成功');
-            this.getInit()
+            this.getlist()
           }
         })
       })
@@ -420,7 +420,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getList()
+      this.getlist()
     },
   },
   mounted(){

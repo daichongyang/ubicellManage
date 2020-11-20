@@ -123,9 +123,9 @@
           <el-form-item label="审核状态" size="small">
             <el-input v-model="formUpdate.isVerify==0?'未审核':formUpdate.isVerify==1?'审核通过':'不通过'"></el-input>
           </el-form-item>
-          <el-form-item label="出租状态" size="small">
+          <!-- <el-form-item label="出租状态" size="small">
             <el-input v-model="formUpdate.typeId==0?'出租':formUpdate.typeId==1?'求租':'购置'"></el-input>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="图片" size="small">
             <el-image style="width: 100px; height: 100px" :src="formUpdate.picture" fit="contain"></el-image>
           </el-form-item>
@@ -159,6 +159,7 @@ export default {
       xqTree:[],
       isAddorUpdate:1,//1添加、2修改
       formSearch:{
+        xqId:'',
         current:1,
         size:10
       },
@@ -356,7 +357,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getList()
+      this.getlist()
     },
     handleAvatarSuccess(res, file) {
       console.log(res)

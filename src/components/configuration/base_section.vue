@@ -20,7 +20,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button size="small" @click="getInit">查 询</el-button>
+        <el-button size="small" @click="getList">查 询</el-button>
       </el-form-item>
       <el-form-item>
         <el-button size="small" @click="addDialog=true">添 加</el-button>
@@ -68,7 +68,6 @@
     <paging @changePage = handleCurrentPage :get-total='total'></paging>
 
     </div>
-
     <!-- 添加 -->
     <el-dialog title="新增" :visible.sync="addDialog" :close-on-click-modal="false">
       <div class="cont_box_right">
@@ -136,6 +135,7 @@ export default {
       fatherId:0,
       formSearch:{//查询条件
         current:1,
+        xqId:'',
         pid:0,
         size: 10
       },
@@ -169,7 +169,7 @@ export default {
     }
   },
   methods:{
-    getInit(){//初始化列表
+    getList(){
       sectionList(this.formSearch).then((res)=>{
         console.log(res)
         if(res.data.code == 200){
@@ -185,12 +185,16 @@ export default {
           this.$message(res.data.msg);
         }
       })
+    },
+    getInit(){//初始化列表
+
       let org_tree1={}
       xqSelectList(org_tree1).then((res)=>{//小区选择列表
         console.log(res)
         if(res.data.code == 200){
           this.xqTree = res.data.data
           this.formSearch.xqId = this.xqTree[0].id
+          this.getlist()
         }
       })
       let org_tree={
@@ -219,7 +223,7 @@ export default {
                 message: '添加成功',
                 type: 'success'
               });
-              this.getInit()
+              this.getlist()
             }else{
               this.$message('添加失败')
             }
@@ -241,7 +245,7 @@ export default {
             message: '修改成功',
             type: 'warning'
           });
-          this.getInit()
+          this.getlist()
         }
       })
       this.updateDialog = false
@@ -264,7 +268,7 @@ export default {
           console.log(res)
           if(res.data.code == 200){
             this.$message('删除成功');
-            this.getInit()
+            this.getlist()
           }
         })
       })
@@ -272,7 +276,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getInit()
+      this.getlist()
     },
     checkTreeInfor(data,ev) {//监听树状图勾选
       // console.log(ev);

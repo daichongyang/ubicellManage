@@ -188,7 +188,7 @@ export default {
       }, 500);
     },
     getInit(){
-      this.getList()
+      this.getlist()
       let org_tree={
         name:'',
         status:1
@@ -252,7 +252,7 @@ export default {
                 message: '添加成功',
                 type: 'success'
               });
-              this.getInit()
+              this.getlist()
             }
           })
         } else {
@@ -278,7 +278,7 @@ export default {
                 message: '修改成功',
                 type: 'warning'
               });
-              this.getInit()
+              this.getlist()
             }
           })
         } else {
@@ -296,7 +296,7 @@ export default {
           console.log(res)
           if(res.data.code == 200){
             this.$message('删除成功');
-            this.getList()
+            this.getlist()
           }
         })
       })

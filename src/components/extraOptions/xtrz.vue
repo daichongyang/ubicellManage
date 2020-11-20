@@ -232,7 +232,7 @@ export default {
       deptupdateList(params).then(res => {
         console.log(res)
         if(res.data.code == 200){
-          this.getList();
+          this.getlist();
         }else{
           alert(res.data.msg)
         }
@@ -256,7 +256,7 @@ export default {
         console.log(res)
         this.addFormVisible=false
         if(res.data.code===200){
-          this.getList()
+          this.getlist()
         }else{
           alert(res.data.msg)
         }
@@ -273,7 +273,7 @@ export default {
         deptdeleteList(params).then(res => {
           console.log(res)
           if (res.data.code === 200) {
-            this.getList()
+            this.getlist()
             this.$message({
               type: 'success',
               message: '操作成功'
@@ -291,7 +291,7 @@ export default {
     },
     handleCurrentChange(val){
       this.checkInfor.current = val;
-			this.getList();
+			this.getlist();
     },
     selsChange: function (sels) {// 当选择项发生变化时会触发该事件
       this.houseAssign.houseIds=[]
@@ -310,7 +310,7 @@ export default {
     } 
   },
   mounted(){
-    this.getList()
+    this.getlist()
   }
 }
 </script>

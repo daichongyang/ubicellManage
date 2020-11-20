@@ -555,12 +555,12 @@ export default {
         console.log(res)
         this.selectArr=res.data.data
         // this.checkInfor.apartmentId=res.data.data[0].apartmentId
-        this.getList()
+        this.getlist()
       })
     },
     changeStyle(){
       this.checkInfor.current=1
-      this.getList()
+      this.getlist()
     },
     getList(){//获取列表
       let params=this.checkInfor
@@ -627,7 +627,7 @@ export default {
     },
     handleCurrentChange(val){
       this.checkInfor.current=val
-      this.getList()
+      this.getlist()
     },
     selsChange: function (sels) {// 当选择项发生变化时会触发该事件
       this.sels=[]

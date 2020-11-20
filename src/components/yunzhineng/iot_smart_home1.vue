@@ -267,7 +267,7 @@ export default {
         console.log(res)
         if(res.data.code == 200){
           this.$message("修改成功")
-          this.getList()
+          this.getlist()
         }
         this.picsDialog = false
       })
@@ -383,7 +383,7 @@ export default {
           delDeviceOne(parmas).then((res)=>{//
             console.log(res)
             if(res.data.code == 200){
-              this.getList()
+              this.getlist()
               this.$message("删除成功")
             }else{
               this.$message("删除失败")
@@ -405,7 +405,7 @@ export default {
           delModule(parmas).then((res)=>{//
             console.log(res)
             if(res.data.code == 200){
-              this.getList()
+              this.getlist()
               this.$message("删除成功")
             }else{
               this.$message("删除失败")
@@ -435,7 +435,7 @@ export default {
       setNameToEntity(params).then(res=>{
         console.log(res)
         if(res.data.code == 200){
-          this.getList()
+          this.getlist()
           this.$message("操作成功")
         }else{
           this.$message("操作失败")
@@ -493,7 +493,7 @@ export default {
         console.log(res)
         if(res.data.code == 200){
           this.$message("添加成功")
-          this.getList()
+          this.getlist()
         }
       })
       this.addDialog = false
@@ -512,7 +512,7 @@ export default {
           console.log(res)
           if(res.data.code == 200){
             this.$message('删除成功');
-            this.getList()
+            this.getlist()
           }
         })
       })
@@ -528,7 +528,7 @@ export default {
   mounted(){
     this.uploadToRealPath = this.$root.uploadToRealPath
     // console.log(this.$root.uploadToRealPath)
-    this.getList()
+    this.getlist()
     // this.showAddUsers()
     console.log(JSON.parse(this.$route.query.configInfor) )
   },

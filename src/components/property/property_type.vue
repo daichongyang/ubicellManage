@@ -40,7 +40,7 @@
         <el-input v-model="formSearch.crname" placeholder="请输入创建人员"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button size="small" @click="getInit">查 询</el-button>
+        <el-button size="small" @click="getlist">查 询</el-button>
       </el-form-item>
       <el-form-item>
         <el-button size="small" @click="addDialog=true">新 增</el-button>
@@ -232,7 +232,7 @@ export default {
           addPropertyTypeList(this.formPush).then((res)=>{
             console.log(res)
             if(res.data.code == 200){
-              this.getInit()
+              this.getlist()
               this.$message({
                 message: '添加成功',
                 type: 'success'
@@ -263,7 +263,7 @@ export default {
                 message: '修改成功',
                 type: 'warning'
               });
-              this.getInit()
+              this.getlist()
             }
           })
         } else {
@@ -301,7 +301,7 @@ export default {
           console.log(res)
           if(res.data.code == 200){
             this.$message('删除成功');
-            this.getInit()
+            this.getlist()
           }
         })
       })
@@ -329,7 +329,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getList()
+      this.getlist()
     },
   },
   mounted(){

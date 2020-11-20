@@ -186,7 +186,7 @@ export default {
                 message: '添加成功',
                 type: 'success'
               });
-              this.getList()
+              this.getlist()
             }else{
               this.$message('添加失败:'+res.data.msg)
             }
@@ -208,7 +208,7 @@ export default {
                 message: '修改成功',
                 type: 'warning'
               });
-              this.getInit()
+              this.getlist()
             }
           })
         } else {
@@ -228,7 +228,7 @@ export default {
           console.log(res)
           if(res.data.code == 200){
             this.$message('删除成功');
-            this.getInit()
+            this.getlist()
           }
         })
       })
@@ -237,7 +237,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getList()
+      this.getlist()
     },
   },
   mounted(){

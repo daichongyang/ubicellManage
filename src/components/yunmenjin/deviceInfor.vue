@@ -13,7 +13,7 @@
         </el-cascader>
       </el-form-item> -->
       <el-form-item label="选择小区" size="small">
-        <el-select v-model="formSearch.xqId" placeholder="请选择小区">
+        <el-select v-model="formSearch.xqId" placeholder="请选择小区" @change="getlist(),pushChild()">
           <el-option v-for="(item,index) in xqTree" :label="item.name" :value="item.id" :key="index"></el-option>
         </el-select>
       </el-form-item>
@@ -23,7 +23,7 @@
     </el-form>
     <el-form :inline="true">
       <el-form-item>
-        <el-button size="small" @click="getlist">查 询</el-button>
+        <el-button size="small" @click="getlist(),pushChild()">查 询</el-button>
       </el-form-item>
       <el-form-item>
         <el-button size="small" v-if="formSearch.devType != 8" @click.native="dialog=true,isAddorUpdate=1">添 加</el-button>
@@ -53,6 +53,7 @@
     <el-table :data="formData" style="width: 100%" stripe v-if="formSearch.devType == 2">
       <el-table-column :key="Math.random()" prop="name" label="设备名称"></el-table-column>
       <el-table-column :key="Math.random()" prop="xqName" label="小区名称"></el-table-column>
+      <el-table-column :key="Math.random()" prop="houseName" label="房间名称"></el-table-column>
       <el-table-column :key="Math.random()" prop="devSn" label="控制单元序列号"></el-table-column>
       <el-table-column :key="Math.random()" prop="loginPass" label="设备登录密码"></el-table-column>
       <el-table-column :key="Math.random()" prop="devPass" label="设备操作密码"></el-table-column>
@@ -294,7 +295,11 @@ export default {
         this.getlist()
       }
     },
+    pushChild(){
+      this.$emit("changeXqid",this.formSearch.xqId)
+    },
     getlist(){
+      
       if(this.formSearch.devType == 8){
 
         freshHwLevels(this.xqTree[0].id).then((res)=>{//刷新霍尼门禁权限列表
@@ -329,12 +334,13 @@ export default {
 
     },
     getInit(){//初始化列表
-      this.getlist()
+      
       xqSelectList({}).then((res)=>{//小区选择列表
         console.log(res)
         if(res.data.code == 200){
           this.xqTree = res.data.data
-          this.formSearch.xqId = this.xqTree[0].id
+          // this.formSearch.xqId = this.xqTree[0].id
+          this.getlist()
         }
       })
       let org_tree={
@@ -359,7 +365,7 @@ export default {
           console.log(res)
           if(res.data.code == 200){
             this.$message('删除成功');
-            this.getInit()
+            this.getlist()
           }
         })
       })

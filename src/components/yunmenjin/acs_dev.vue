@@ -33,7 +33,7 @@
       </div>
     </div>
     <div class="modoule_online">
-      <deviceInfor :top-active="isActive"></deviceInfor>
+      <deviceInfor :top-active="isActive" @changeXqid="getInit"></deviceInfor>
     </div>
     <el-dialog title="新增" :visible.sync="addDialog" :close-on-click-modal="false">
       <div class="cont_box_right">
@@ -125,10 +125,11 @@ export default {
         })
       },
       getgetDevSetting(xqId){//获取已勾选的门禁设备类型
+        
         let params = {
-          xqId:xqId
+          xqId:xqId||this.formPush.xqId
         }
-       
+        this.formPush.xqId = xqId
         this.getDevList = []
         getDevSetting(params).then((res)=>{
           console.log(res)
@@ -141,6 +142,10 @@ export default {
           }
         })
       },
+      getInit(xqId){
+          this.getdevTypeList(xqId)
+          this.getgetDevSetting(xqId)
+      }
   },
   mounted(){
       xqSelectList({}).then((ress)=>{//小区选择列表

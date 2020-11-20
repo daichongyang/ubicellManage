@@ -127,6 +127,7 @@ export default {
       isAddorUpdate:1,//1添加、2修改
       formSearch:{
         type:4,
+        xqId:''
       },
       deleBatch:[],
       formData: [],//数据
@@ -225,7 +226,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getInit()
+      this.getlist()
     },
     handleChange(value){
       if(value.length!=0){

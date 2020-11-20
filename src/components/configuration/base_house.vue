@@ -35,7 +35,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button size="small" @click="getList">查 询</el-button>
+        <el-button size="small" @click="getlist">查 询</el-button>
       </el-form-item>
       <el-form-item>
         <el-button size="small" @click="addDialog=true">添 加</el-button>
@@ -342,6 +342,7 @@ export default {
       fatherId:0,
       formSearch:{//查询条件
         current:1,
+        xqId:'',
         size: 10
       },
       formSearch1:{//区域查询条件
@@ -391,7 +392,7 @@ export default {
     }
   },
   methods:{
-    getList(){
+    getlist(){
       // this.formSearch.xqId = this.xqTree\[0\]\.id||""
       houseList(this.formSearch).then((res)=>{//房间列表
         console.log(res)
@@ -427,7 +428,7 @@ export default {
       })
     },
     getInit(){//初始化列表
-      this.getList()
+      
       this.getsectionList()
       let org_tree={
         name:'',
@@ -446,6 +447,7 @@ export default {
           this.xqTree = res.data.data
           if(this.xqTree.length!=0){
             this.formSearch.xqId = this.xqTree[0].id
+            this.getlist()
           }
         }
       })
@@ -466,7 +468,7 @@ export default {
                 message: '添加成功',
                 type: 'success'
               });
-              this.getList()
+              this.getlist()
             }else{
               this.$message('添加失败')
             }
@@ -488,7 +490,7 @@ export default {
             message: '修改成功',
             type: 'warning'
           });
-          this.getInit()
+          this.getlist()
         }
       })
       this.updateDialog = false
@@ -504,7 +506,7 @@ export default {
           console.log(res)
           if(res.data.code == 200){
             this.$message('删除成功');
-            this.getList()
+            this.getlist()
           }
         })
       })
@@ -512,7 +514,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getList()
+      this.getlist()
     },
     handleCurrentPage1(val){//页码区域改变
       this.formSearch1.current=val
@@ -557,7 +559,7 @@ export default {
       }else{
         this.formSearch.orgId = ''
       }
-      this.getList(this.formSearch)
+      this.getlist(this.formSearch)
     },
     zuzhiChange1(value){//改变组织
       if(value.length!=0){

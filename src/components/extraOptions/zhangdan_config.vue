@@ -131,7 +131,7 @@ export default {
       tallyConfigSave(params).then(res=>{
         console.log(res)
         if(res.data.code===200){
-          this.getList()
+          this.getlist()
         }
       })
     },
@@ -236,7 +236,7 @@ export default {
     }
   },
   mounted(){
-    this.getList()
+    this.getlist()
   }
 }
 </script>

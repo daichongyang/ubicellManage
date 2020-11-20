@@ -194,6 +194,7 @@ export default {
       houseUsersArr:[],//选择中的人员id
       isAddorUpdate:1,//1添加、2修改
       formSearch:{
+        xqId:'',
         size:10,
         current:1
       },
@@ -358,7 +359,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getList()
+      this.getlist()
     },
     getChoiseHouseInfo(val){//接受房间模板数据
       console.log(val)

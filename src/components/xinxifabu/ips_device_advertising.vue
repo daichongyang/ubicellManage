@@ -403,7 +403,7 @@ export default {
             message: '修改成功',
             type: 'warning'
           });
-          this.getInit()
+          this.gethouseLIst()
         }
       })
       this.updateDialog = false
@@ -461,7 +461,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getInit()
+      this.gethouseLIst()
       
     },
     checkTreeInfor(data,ev) {//监听树状图勾选

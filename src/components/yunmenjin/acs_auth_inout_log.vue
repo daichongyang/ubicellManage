@@ -82,7 +82,9 @@ export default {
       option1:[],
       xqTree:[],
       isAddorUpdate:1,//1添加、2修改
-      formSearch:{},
+      formSearch:{
+        xqId:""
+      },
       formData: [],//数据
       formUpdate:{},//修改表单
       total: 0,//数据总数
@@ -113,12 +115,13 @@ export default {
       })
     },
     getInit(){//初始化列表
-      this.getlist()
+      
       xqSelectList({}).then((res)=>{//小区选择列表
         console.log(res)
         if(res.data.code == 200){
           this.xqTree = res.data.data
           this.formSearch.xqId= this.xqTree[0].id
+          this.getlist()
         }
       })
       let org_tree={
@@ -150,7 +153,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getInit()
+      this.getlist()
     },
     handleChange(value){
       if(value.length!=0){

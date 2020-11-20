@@ -146,7 +146,9 @@ export default {
       option1:[],
       xqTree:[],
       isAddorUpdate:1,//1添加、2修改
-      formSearch:{},
+      formSearch:{
+        xqId:'',
+      },
       formData: [],//数据
       formUpdate:{},//修改表单
       total: 0,//数据总数
@@ -331,7 +333,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getList()
+      this.getlist()
     },
     handleChange(value){
       if(value.length!=0){

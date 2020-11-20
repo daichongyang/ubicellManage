@@ -111,7 +111,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getInit()
+      this.getlist()
     },
     handleChange(value){
       if(value.length!=0){

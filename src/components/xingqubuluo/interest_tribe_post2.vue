@@ -43,6 +43,7 @@ export default {
       xqTree:[],
       isAddorUpdate:1,//1添加、2修改
       formSearch:{
+        xqId:'',
         current:1,
         size:10
       },
@@ -188,7 +189,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getList()
+      this.getlist()
     },
   },
   mounted(){

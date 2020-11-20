@@ -364,7 +364,7 @@ export default {
                 message: '修改成功',
                 type: 'warning'
               });
-              this.getInit()
+              this.getlist()
             }
           })
         } else {
@@ -389,7 +389,7 @@ export default {
           console.log(res)
           if(res.data.code == 200){
             this.$message('删除成功');
-            this.getInit()
+            this.getlist()
           }else{
             this.$message(res.data.msg);
           }
@@ -444,7 +444,7 @@ export default {
       console.log(res, file)
       this.imageUrl = URL.createObjectURL(file.raw);
       if(res.code == 200){
-        this.formPush.avatar = res.data[0]
+        this.formUpdate.avatar = res.data[0]
       }
     },
     onChange(file, fileList){
@@ -465,7 +465,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getList()
+      this.getlist()
     },
   },
   mounted(){

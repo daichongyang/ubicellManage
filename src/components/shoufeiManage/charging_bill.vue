@@ -230,7 +230,9 @@ export default {
       houseUsers:'',//选择中的人员id
       houseUsersArr:[],//选择中的人员id
       isAddorUpdate:1,//1添加、2修改
-      formSearch:{},
+      formSearch:{
+        xqId:'',
+      },
       formData: [],//数据
       formUpdate:{},//修改表单
       total: 0,//数据总数
@@ -466,7 +468,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getList()
+      this.getlist()
     },
     getChoiseHouseInfo(val){//接受房间模板数据
       console.log(val)

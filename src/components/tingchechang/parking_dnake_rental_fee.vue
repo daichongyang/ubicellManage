@@ -86,6 +86,7 @@ export default {
       xqTree:[],
       isAddorUpdate:1,//1添加、2修改
       formSearch:{
+        xqId:'',
       },
       formData: [],//数据
       deleBatch: [],//删除数据
@@ -224,7 +225,7 @@ export default {
           console.log(res)
           if(res.data.code == 200){
             this.$message('删除成功');
-            this.getInit()
+            this.getlist()
           }
         })
       })
@@ -237,7 +238,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getList()
+      this.getlist()
     },
   },
   mounted(){

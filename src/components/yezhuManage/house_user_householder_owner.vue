@@ -523,7 +523,7 @@ export default {
             message: '修改成功',
             type: 'warning'
           });
-          this.getInit()
+          this.getlist()
         }
       })
       this.updateDialog = false
@@ -546,7 +546,7 @@ export default {
           console.log(res)
           if(res.data.code == 200){
             this.$message('删除成功');
-            this.getInit()
+            this.getlist()
           }
         })
       })
@@ -570,7 +570,7 @@ export default {
           console.log(res)
           if(res.data.code == 200){
             this.$message('删除成功');
-            this.getInit()
+            this.getlist()
           }
         })
       })
@@ -602,7 +602,7 @@ export default {
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getInit()
+      this.getlist()
       
     },
     checkTreeInfor(data,ev) {//监听树状图勾选
