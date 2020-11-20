@@ -2,7 +2,7 @@
   <section class="modlude">
     <el-form :inline="true" :model="formSearch">
       <el-form-item label="选择小区" size="small">
-        <el-select v-model="formSearch.xqId" placeholder="请选择小区">
+        <el-select v-model="formSearch.xqId" placeholder="请选择小区" @change="changeShopId">
           <el-option v-for="(item,index) in xqTree" :label="item.name" :value="item.id" :key="index"></el-option>
         </el-select>
       </el-form-item>
@@ -136,6 +136,7 @@ export default {
       formSearch:{//查询条件
         classify:8,
         xqId:'',
+        shopId:'',
         current:1,
         size: 10
       },
@@ -166,6 +167,19 @@ export default {
     }
   },
   methods:{
+    changeShopId(){
+      let params = {
+        genreId:4,
+        xqId:this.formSearch.xqId
+      }
+      getgenreid(params).then((res)=>{//添加时查询商家名称
+        console.log(res)
+        if(res.data.code == 200){
+          this.formSearch.shopId=""
+          this.genreid = res.data.data
+        }
+      })
+    },
     getlist(){
       shopMessageList(this.formSearch).then((res)=>{//查询房间业主/成员分页列表
         console.log(res)
@@ -189,19 +203,20 @@ export default {
           if(this.xqTree.length!=0){
             this.formSearch.xqId = this.xqTree[0].id
             this.getlist()
+            this.changeShopId()
           }
         }
       })
-      let getgenreidp = {
-        genreId:4
-      }
-      getgenreid(getgenreidp).then((res)=>{//添加时查询商家名称
-        console.log(res)
-        if(res.data.code == 200){
-          this.genreid= res.data.data
-          // this.formPush.formSearch = res.data.data[0].id
-        }
-      })
+      // let getgenreidp = {
+      //   genreId:4
+      // }
+      // getgenreid(getgenreidp).then((res)=>{//添加时查询商家名称
+      //   console.log(res)
+      //   if(res.data.code == 200){
+      //     this.genreid= res.data.data
+      //     // this.formPush.formSearch = res.data.data[0].id
+      //   }
+      // })
     },
     addList(addList){//添加
       this.$refs[addList].validate((valid) => {

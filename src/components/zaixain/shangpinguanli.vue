@@ -25,7 +25,7 @@
         <el-button size="small" @click="getlist">查 询</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button size="small" @click="addDialog=true">新 增</el-button>
+        <el-button size="small" @click="changeShopId(),addDialog=true">新 增</el-button>
       </el-form-item>
       <el-form-item>
         <el-button size="small" type="danger" @click="deleInfor(false)">批量删除</el-button>
@@ -60,7 +60,7 @@
       <div class="cont_box_right">
         <el-form label-position="right" :rules="rules" label-width="85px" :model="formPush" ref='addList'> 
           <el-form-item label="选择小区" size="small" prop="xqId">
-            <el-select v-model="formPush.xqId" placeholder="请选择小区">
+            <el-select v-model="formPush.xqId" placeholder="请选择小区" @change="changeShopId">
               <el-option v-for="(item,index) in xqTree" :label="item.name" :value="item.id" :key="index"></el-option>
             </el-select>
           </el-form-item>
@@ -123,6 +123,7 @@ export default {
       xqTree:[],
       isAddorUpdate:1,//1添加、2修改
       formSearch:{
+        xqId:'',
         current:1,
         size:10
       },
@@ -166,11 +167,9 @@ export default {
   },
   methods:{
     changeShopId(){
-      // this.formPush.shopId = ''
-      // this.formUpdate.shopId = ''
-      // console.log(val)
       let params = {
-        genreId:2
+        genreId:2,
+        xqId:this.formPush.xqId
       }
       getgenreid(params).then((res)=>{//添加时查询商家名称
         console.log(res)
@@ -178,7 +177,6 @@ export default {
           this.genreid = res.data.data
           if(res.data.data){
             this.formPush.fkShopId = res.data.data[0].id
-            // this.formUpdate.shopId = res.data.data[0].id
           }
 
         }
@@ -198,13 +196,15 @@ export default {
       })
     },
     getInit(){
-      this.getlist()
+      
       xqSelectList({}).then((res)=>{//小区选择列表
         console.log(res)
         if(res.data.code == 200){
           this.xqTree = res.data.data
           if(this.xqTree.length!=0){
             this.formSearch.xqId = this.xqTree[0].id
+            this.getlist()
+            // this.changeShopId()
           }
         }
       })
@@ -214,16 +214,17 @@ export default {
       //     this.lishopinfo = res.data.data
       //   }
       // })
-      let getgenreidp = {
-        genreId:2
-      }
-      getgenreid(getgenreidp).then((res)=>{//添加时查询商家名称
-        console.log(res)
-        if(res.data.code == 200){
-          this.genreid= res.data.data
-          this.formPush.fkShopId = res.data.data[0].id
-        }
-      })
+      
+      // let getgenreidp = {
+      //   genreId:2
+      // }
+      // getgenreid(getgenreidp).then((res)=>{//添加时查询商家名称
+      //   console.log(res)
+      //   if(res.data.code == 200){
+      //     this.genreid= res.data.data
+      //     // this.formPush.fkShopId = res.data.data[0].id
+      //   }
+      // })
       let org_tree={
         name:'',
         status:1

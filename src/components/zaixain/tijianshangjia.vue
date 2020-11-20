@@ -45,12 +45,12 @@
       <div class="cont_box_right">
         <el-form label-position="right" :rules="rules" label-width="85px" :model="formPush" ref='addList'> 
           <el-form-item label="选择小区" size="small" prop="xqId">
-            <el-select v-model="formPush.xqId" placeholder="请选择小区">
+            <el-select v-model="formPush.xqId" placeholder="请选择小区" @change="changeShopId">
               <el-option v-for="(item,index) in xqTree" :label="item.name" :value="item.id" :key="index"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="商家类型" size="small">
-            <el-select @change="changeShopId" v-model="shopId" placeholder="请选择商家类型">
+            <el-select @change="changeShopId(formPush.xqId)" v-model="shopId" placeholder="请选择商家类型">
               <el-option v-for="(item,index) in lishopinfo" :label="item.name" :value="item.id" :key="index"></el-option>
             </el-select>
           </el-form-item>
@@ -72,12 +72,12 @@
       <div class="cont_box_right">
         <el-form label-position="right" :rules="rules" label-width="85px" :model="formUpdate" ref='formUpdate'> 
           <el-form-item label="选择小区" size="small" prop="xqId">
-            <el-select v-model="formUpdate.xqId" placeholder="请选择小区">
+            <el-select v-model="formUpdate.xqId" placeholder="请选择小区" @change="changeShopId">
               <el-option v-for="(item,index) in xqTree" :label="item.name" :value="item.id" :key="index"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="商家类型" size="small">
-            <el-select @change="changeShopId" v-model="shopId" placeholder="请选择商家类型">
+            <el-select @change="changeShopId(formUpdate.xqId)" v-model="shopId" placeholder="请选择商家类型">
               <el-option v-for="(item,index) in lishopinfo" :label="item.name" :value="item.id" :key="index"></el-option>
             </el-select>
           </el-form-item>
@@ -209,6 +209,22 @@ export default {
     }
   },
   methods:{
+    // changeShopId(){
+    //   let params = {
+    //     genreId:2,
+    //     xqId:this.formPush.xqId
+    //   }
+    //   getgenreid(params).then((res)=>{//添加时查询商家名称
+    //     console.log(res)
+    //     if(res.data.code == 200){
+    //       this.genreid = res.data.data
+    //       if(res.data.data){
+    //         this.formPush.fkShopId = res.data.data[0].id
+    //       }
+
+    //     }
+    //   })
+    // },
     details(item){//查看详情
       let params = {
         id:item.shopId
@@ -248,12 +264,13 @@ export default {
         }
       })
     },
-    changeShopId(val){
+    changeShopId(xqId){
       this.formPush.shopId = ''
       this.formUpdate.shopId = ''
-      console.log(val)
+      console.log(xqId)
       let params = {
-        genreId:val
+        genreId:this.shopId,
+        xqId:xqId,
       }
       getgenreid(params).then((res)=>{//添加时查询商家名称
         console.log(res)
@@ -361,13 +378,15 @@ export default {
     },
     updateShowBox(item){//修改东西弹窗
       // this.formUpdate = JSON.parse(JSON.stringify(item));
+      console.log(item)
       this.formUpdate = {
         id:item.id,
         xqId:item.xqId,
         shopId:parseInt(item.shopId)
       }
       let params = {
-        genreId:item.id
+        genreId:item.genreId,
+        xqId:item.xqId,
       }
       getgenreid(params).then((res)=>{//添加时查询商家名称
         console.log(res)
@@ -376,7 +395,7 @@ export default {
         }
       })
       // this.changeShopId(item.shopId)
-      this.shopId = item.id
+      this.shopId = item.genreId
       this.updateDialog = true
       
     },

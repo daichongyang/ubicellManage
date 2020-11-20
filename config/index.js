@@ -12,11 +12,11 @@ module.exports = {
         proxyTable: {
             '/intellmanagerV3.0': {
                 // target: 'http://192.168.0.245:8082/intellmanagerV3.0',
-                // target: 'http://192.168.0.194:8081/intellmanagerV3.0',
+                target: 'http://192.168.0.194:8081/intellmanagerV3.0',
                 // target: 'http://192.168.0.143:8081/intellmanagerV3.0',
                 // target: 'http://192.168.0.194:8081/intellmanagerV3.0',
                 // target: 'http://117.78.42.182:8080/intellmanagerV3.0',
-                target: 'http://www.ubicell.cn:8080/intellmanagerV3.0',
+                // target: 'http://www.ubicell.cn:8080/intellmanagerV3.0',
                 // target: 'http://www.ubicell.com:8080',
                 // target: 'http://117.78.42.182:8080',
                 changeOrigin: true,

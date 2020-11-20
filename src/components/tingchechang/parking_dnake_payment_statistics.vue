@@ -103,6 +103,7 @@ export default {
   },
   methods:{
     getlist(){
+      this.formData = []
       onlinePayRecordsSum(this.formSearch).then((res)=>{
         console.log(res)
         if(res.data.code == 200){
