@@ -38,7 +38,7 @@
                   <div class="group_ul_li_item" @click="$router.push('/zhbb')">综合报表</div>
                   <div class="group_ul_li_item" @click="$router.push('/dcjl')">导出入记录</div>
                   <div class="group_ul_li_item" @click="$router.push('/xtrz')">系统日志</div>
-                  <div class="group_ul_li_item">帮助</div>
+                  <div class="group_ul_li_item" @click="$router.push('/helpDoc')">帮助</div>
                   <div class="group_ul_li_item" @click="$router.push('/login')">切换账号</div>
                   <div class="group_ul_li_item" @click="$router.push('/login')">退出登录</div>
                 </div>

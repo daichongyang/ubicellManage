@@ -95,6 +95,8 @@ export const authAddManager = (params) => { return axios.post('/intellmanagerV3.
 export const authDeleteManager = (params) => { return axios.post('/intellmanagerV3.0/auth/manager/delete', params) } //删除管理员
 export const authManagerList = (params) => { return axios.post('/intellmanagerV3.0/auth/manager/list/page', params) } //查询管理员分页列表
 export const authUpdateManager = (params) => { return axios.post('/intellmanagerV3.0/auth/manager/update', params) } //修改管理员信息
+export const authManagerInfo = (params) => { return axios.post('/intellmanagerV3.0/auth/manager/info', params) } //个人中心-管理员个人资料
+export const authManagerPassword = (params) => { return axios.post('/intellmanagerV3.0/auth/manager/update/password', params) } //管理员修改登录密码
 
 export const getIntercomOpenLog = (params) => { return axios.post('/intellmanagerV3.0/interocm/getIntercomOpenLog', params) } //传统开门日志
 export const getIntercomEmgLog = (params) => { return axios.post('/intellmanagerV3.0/interocm/getIntercomEmgLog', params) } //传统报警日志
@@ -345,3 +347,7 @@ export const getprisclist = (params) => { return axios.post('/intellmanagerV3.0/
 export const addtruopstinfo = (params) => { return axios.post('/intellmanagerV3.0/it/tribeinfo/tribepost/addtruopstinfo', params) } // 添加兴趣部落帖子信息
 
 export const recallVillage = (params) => { return axios.post(`/intellmanagerV3.0/Message/recallVillage/${params.tid}`) } // 撤回小区广告，通过tid(只有isRecall=0的才可撤回)
+export const tribeinfoRemove = (params) => { return axios.post('/intellmanagerV3.0/it/tribeinfo/tribeinfo/remove', params) } // 兴趣部落删除
+
+export const refillCardList = (params) => { return axios.post('/intellmanagerV3.0/refill/card/config/list', params) } // 充值卡列表
+export const refillupdateCard = (params) => { return axios.post('/intellmanagerV3.0/refill/card/config/update', params) } // 修改充值卡

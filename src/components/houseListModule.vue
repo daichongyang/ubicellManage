@@ -114,7 +114,7 @@ export default {
       })
     },
     getInit(){//初始化列表
-      this.getlist()
+      this.getList()
       let org_tree={
         name:'',
         status:1
@@ -143,11 +143,11 @@ export default {
       }else{
         this.formSearch.orgId = ''
       }
-      this.getlist(this.formSearch)
+      this.getList(this.formSearch)
     },
     handleCurrentPage(val){//页码改变
       this.formSearch.current=val
-      this.getlist()
+      this.getList()
     },
     handleSelectionChange(val){//多选
       console.log(val)

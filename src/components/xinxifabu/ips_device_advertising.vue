@@ -200,6 +200,7 @@ export default {
       deleBatch:[],
       isGetFather:false,//是否选中
       formSearch:{//查询条件
+        xqId:'',
         current:1,
         size: 10
       },

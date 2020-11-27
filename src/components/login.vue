@@ -31,7 +31,8 @@
 
 <script>
   import { login } from '../url/api';
-
+  import Store from "../assets/js/store"
+  import {mapMutations,mapActions } from 'vuex'
   export default {
     data() {
       return {
@@ -131,10 +132,19 @@
           // alert('登录失败')
            this.logining = false;
         })
-      }
+      },
+      ...mapMutations({
+        getNewData:"increment"
+      }),
+      ...mapActions({
+        getActions:"increment"
+      })
     },
     mounted(){
-      // console.log(this.checked)
+      this.getActions()
+      // this.getNewData()
+      // Store.commit('increment') 
+      console.log(Store.state)
     }
   }
 

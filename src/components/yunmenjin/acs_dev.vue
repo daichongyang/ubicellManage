@@ -143,6 +143,7 @@ export default {
         })
       },
       getInit(xqId){
+        this.formPush.xqId = xqId
           this.getdevTypeList(xqId)
           this.getgetDevSetting(xqId)
       }
@@ -152,9 +153,9 @@ export default {
         console.log(ress)
         if(ress.data.code == 200){
           this.xqTree = ress.data.data
-          this.formPush.xqId = this.xqTree[0].id
-          this.getdevTypeList(this.formPush.xqId)
-          this.getgetDevSetting(this.formPush.xqId)
+          // this.formPush.xqId = this.xqTree[0].id
+          // this.getdevTypeList(this.formPush.xqId)
+          // this.getgetDevSetting(this.formPush.xqId)
         }
       })
 

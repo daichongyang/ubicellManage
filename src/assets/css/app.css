@@ -10,6 +10,7 @@ li {
 body,
 html {
     height: 100%;
+    min-width: 1680px;
     background: #04121f;
 }
 

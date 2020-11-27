@@ -31,6 +31,7 @@
         <el-date-picker
           v-model="formSearch.createTime"
           type="datetime"
+          value-format="timestamp"
           placeholder="创建时间">
         </el-date-picker>
       </el-form-item>
@@ -38,6 +39,7 @@
         <el-date-picker
           v-model="formSearch.startTime"
           type="datetime"
+          value-format="timestamp"
           placeholder="开始时间">
         </el-date-picker>
       </el-form-item>
@@ -45,6 +47,7 @@
         <el-date-picker
           v-model="formSearch.endTime"
           type="datetime"
+          value-format="timestamp"
           placeholder="结束时间">
         </el-date-picker>
       </el-form-item>

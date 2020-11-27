@@ -339,8 +339,9 @@ export default {
         console.log(res)
         if(res.data.code == 200){
           this.xqTree = res.data.data
-          // this.formSearch.xqId = this.xqTree[0].id
+          this.formSearch.xqId = this.xqTree[0].id
           this.getlist()
+          this.pushChild()
         }
       })
       let org_tree={

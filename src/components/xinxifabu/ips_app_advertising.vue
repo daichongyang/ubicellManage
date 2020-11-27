@@ -13,7 +13,7 @@
         </el-cascader>
       </el-form-item> -->
       <el-form-item label="选择小区" size="small" prop="xqId">
-        <el-select v-model="formSearch.xqId" placeholder="请选择小区" @change="formSearch1.xqId=formSearch.xqId">
+        <el-select v-model="formSearch.xqId" placeholder="请选择小区" @change="formPush.xqId=formSearch.xqId">
           <el-option v-for="item in xqTree" :label="item.name" :value="item.id" :key="item.id"></el-option>
         </el-select>
       </el-form-item>
@@ -25,6 +25,9 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary">添加视频</el-button>
+      </el-form-item>
+      <el-form-item>
+        <span>建议图片尺寸：375*175；或者750*350 等相关比例图片</span>
       </el-form-item>
     </el-form>
     <div class="app_advertise">
@@ -41,7 +44,7 @@
               :show-file-list="false"
               :on-success="handleAvatarSuccess1"
               >
-              <img v-if="imageUrl1" :src="imageUrl1" class="avatar">              
+              <img v-if="imageUrl1" :src="imageUrl1" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload> 
         </div>

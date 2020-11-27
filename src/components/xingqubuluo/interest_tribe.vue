@@ -29,9 +29,9 @@
         <el-button size="small" @click="getlist">查 询</el-button>
         <el-button type="primary" size="small" @click="addDialog=true" v-if="statusType!=1">添 加</el-button>
       </el-form-item>
-      <!-- <el-form-item>
+      <el-form-item>
         <el-button size="small" type="danger" @click="deleInfor(false)">批量删除</el-button>
-      </el-form-item> -->
+      </el-form-item>
     </el-form>
     <el-table :data="formData" style="width: 100%" stripe @selection-change="handleSelectionChange">
       <el-table-column label="编号" width="60" v-if="statusType==1">
@@ -69,6 +69,7 @@
 				<template slot-scope="scope">
 					<el-button  size="small" @click="updatatribepostcomment(scope.row)">{{scope.row.isVerify==1?"重新审核":"审核通过"}}</el-button>
 					<el-button  size="small" @click="gopinglun(scope.row.id)">查看帖子</el-button>
+					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删除</el-button>
 					<el-button  size="small" @click="updateShowBox(scope.row),detailsDialog=false">查看详情</el-button>
         </template>
 			</el-table-column>
@@ -157,7 +158,7 @@
 
 <script>
 import paging from "../paging"
-import {deleteComment,getlishopinfo,updatatribepostcomment,tribeinfoList,xqSelectList,orgTree,addcommlist } from '../../url/api';
+import {deleteComment,getlishopinfo,updatatribepostcomment,tribeinfoList,xqSelectList,orgTree,addcommlist,tribeinfoRemove } from '../../url/api';
 export default {
   props:['statusType'],
   data(){
@@ -353,7 +354,7 @@ export default {
       }
       this.$confirm('确认删除吗？')
       .then(_ => {
-        deleteComment(arrId).then((res)=>{
+        tribeinfoRemove(arrId).then((res)=>{
           console.log(res)
           if(res.data.code == 200){
             this.$message('删除成功');

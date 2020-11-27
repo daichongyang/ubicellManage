@@ -17,12 +17,43 @@
           <el-option v-for="(item,index) in xqTree" :label="item.name" :value="item.id" :key="index"></el-option>
         </el-select>
       </el-form-item>
-        <el-form-item label="支付状态" size="small">
-          <el-select v-model="formSearch.payStatus">
-            <el-option label="是" :value="1"></el-option>
-            <el-option label="否" :value="0"></el-option>
-          </el-select>
-        </el-form-item>
+      <el-form-item label="房间" size="small">
+        <el-input v-model="formSearch.houseName"></el-input>
+      </el-form-item>
+      <el-form-item label="区域名称" size="small">
+        <el-input v-model="formSearch.sectionName"></el-input>
+      </el-form-item>
+      <el-form-item label="支付人员" size="small">
+        <el-input v-model="formSearch.payUser"></el-input>
+      </el-form-item>
+      <el-form-item label="支付状态" size="small">
+        <el-select v-model="formSearch.payStatus">
+          <el-option label="是" :value="1"></el-option>
+          <el-option label="否" :value="0"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="账单途径" size="small">
+        <el-select v-model="formSearch.generaWay">
+          <el-option label="线上" :value="1"></el-option>
+          <el-option label="线下" :value="0"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="开始时间" size="small">
+        <el-date-picker
+          v-model="formSearch.startTime"
+          type="datetime"
+          value-format="timestamp"
+          placeholder="开始时间">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="结束时间" size="small">
+        <el-date-picker
+          v-model="formSearch.endTime"
+          type="datetime"
+          value-format="timestamp"
+          placeholder="结束时间">
+        </el-date-picker>
+      </el-form-item>
       <el-form-item>
         <el-button size="small" @click="getlist">查 询</el-button>
         <el-button type="primary" size="small" @click="addDialog=true">添 加</el-button>
@@ -44,7 +75,7 @@
       </el-table-column>
       <el-table-column prop=""label="周期">
         <template slot-scope="scope">
-          {{scope.row.month==0?"一次性缴费":scope.row.month+"个月"}}
+          {{scope.row.cycle==0?"一次性缴费":scope.row.cycle+"个月"}}
         </template>
       </el-table-column>
       </el-table-column>
@@ -89,7 +120,7 @@
             <el-button type="primary" size="small" @click="houseDialog=true">添 加</el-button>
           </el-form-item>
           <el-form-item label="缴费周期" size="small">
-            <el-select v-model="pushInfor.month">
+            <el-select v-model="pushInfor.cycle">
               <el-option label="一次性缴费" :value="0"></el-option>
               <el-option label="1个月" :value="1"></el-option>
               <el-option label="2个月" :value="2"></el-option>
@@ -232,6 +263,8 @@ export default {
       isAddorUpdate:1,//1添加、2修改
       formSearch:{
         xqId:'',
+        current:1,
+        size:10,
       },
       formData: [],//数据
       formUpdate:{},//修改表单

@@ -23,6 +23,8 @@ const manager_station = () =>
 const manager_manager = () =>
     import ('@/components/manager/manager_manager');
 // 右侧下拉部分
+const helpDoc = () =>
+    import ('@/components/extraOptions/helpDoc');
 const personalCenter = () =>
     import ('@/components/extraOptions/personalCenter');
 const messageCenter = () =>
@@ -57,6 +59,8 @@ const charging_meter_reading = () =>
     import ('@/components/shoufeiManage/charging_meter_reading');
 const charging_refill_log = () =>
     import ('@/components/shoufeiManage/charging_refill_log');
+const charging_config_refill_card = () =>
+    import ('@/components/shoufeiManage/charging_config_refill_card');
 // 系统配置
 const sys_log = () =>
     import ('@/components/sysManage/sys_log');
@@ -515,6 +519,14 @@ export default new Router({
                             component: charging_refill_log,
                             meta: {
                                 id: 145
+                            }
+                        },
+                        {
+                            path: '/charging_config_refill_card',
+                            name: '充值卡管理',
+                            component: charging_config_refill_card,
+                            meta: {
+                                id: 146
                             }
                         },
                         {
@@ -1184,6 +1196,11 @@ export default new Router({
                             path: '/personalCenter',
                             name: '个人中心',
                             component: personalCenter,
+                        },
+                        {
+                            path: '/helpDoc',
+                            name: '帮助文档',
+                            component: helpDoc,
                         },
                         {
                             path: '/messageCenter',

@@ -66,6 +66,7 @@
           let _this = this
           this.xqSelectInfor.forEach(item => {
             if(item.isShow){
+              item.color = item.color||"#63D7D6"
               let marker = new AMap.Marker({
                   map: map,
                   position: [item.longitude,item.latitude],
@@ -79,7 +80,7 @@
                 // label默认蓝框白底左上角显示，样式className为：amap-marker-label
                 marker.setLabel({
                     offset: new AMap.Pixel(0, 0),  //设置文本标注偏移量
-                    content: "<div class='info' style='padding-bottom:20px;font-size:12px;padding:10px 10px;background:rgba(0,0,0,0);border:1px solid #63D7D6;color:#63D7D6;border-radius:5px;'>"+item.name, //设置文本标注内容
+                    content: "<div class='info' style='padding-bottom:20px;font-size:12px;padding:10px 10px;background:rgba(0,0,0,0);border:1px solid "+item.color+";color:"+item.color+";border-radius:5px;'>"+item.name, //设置文本标注内容
                     direction: 'top' //设置文本标注方位
                 });
                 marker.name=item.name
@@ -174,7 +175,10 @@
               console.log(res)
               if(res.data.code == 200){
                 _this.xqSelectInfor = res.data.data
-                 _this.addMarker(map)
+                _this.addMarker(map)
+                let lng=res.data.data[0].longitude
+                let lat=res.data.data[0].latitude
+                map.setCenter([lng, lat]);
               }
             })
            
