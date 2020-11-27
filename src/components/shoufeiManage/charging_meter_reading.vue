@@ -2,24 +2,13 @@
   <section class="modlude">
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" class="gridContt">
-        <el-form :inline="true">
-          <el-form-item size="small" label="公寓/小区">
-            <el-select
-              size="small"
-              v-model="checkInfor.apartmentId"
-              placeholder="输入公寓/小区名"
-              @change="checkInfor.current=1,getList"
-            >
-              <el-option
-                v-for="item in selectArr"
-                :key="item.apartmentId"
-                :label="item.name"
-                :value="item.apartmentId"
-              ></el-option>
-            </el-select>
-          </el-form-item>
+        <el-form-item label="选择小区" size="small">
+          <el-select v-model="formSearch.xqId" placeholder="请选择小区" @change="getlist">
+            <el-option v-for="item in xqTree" :label="item.name" :value="item.id" :key="item.id"></el-option>
+          </el-select>
+        </el-form-item>
           <!-- <el-form-item size="small" label="查询类型">
-            <el-select size='small' v-model="checkInfor.handle" placeholder="选择查询类型" >
+            <el-select size='small' v-model="formSearch.handle" placeholder="选择查询类型" >
               <el-option v-for="item in selectArr" :key="item.apartmentId" :label="item.name" :value="item.apartmentId"></el-option>
               <el-option label="未审核" :value="0"></el-option>
               <el-option label="已审核" :value="1"></el-option>
@@ -27,19 +16,18 @@
             </el-select>
           </el-form-item>
           <el-form-item label="手机号">
-            <el-input placeholder="输入手机号" v-model="checkInfor.phone" size='small'></el-input>
+            <el-input placeholder="输入手机号" v-model="formSearch.phone" size='small'></el-input>
           </el-form-item>-->
-        </el-form>
-        <el-form class="button">
           <el-form-item>
-            <el-button type="primary" size="medium" @click="gocharging_config_price">配置单价</el-button>
+            <el-button type="primary" size="small" @click="getlist">查询</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="medium" @click="getList">查询</el-button>
+            <el-button type="primary" size="small" @click="gocharging_config_price">配置单价</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="medium" @click="reloadCon">重置</el-button>
+            <el-button type="warning" size="small" @click="showBill">生成账单</el-button>
           </el-form-item>
+
         </el-form>
       </el-form>
       <!-- <el-form class="marginTop20" :inline="true">
@@ -79,16 +67,19 @@
           <el-input
             v-model="scope.row.handwritten[0].lastNum"
             palceholder="请输入"
+            class="shuidianmei"
             style="width:100px;"
           ></el-input>
           <el-input
             v-model="scope.row.handwritten[1].lastNum"
             palceholder="请输入"
+            class="shuidianmei"
             style="width:100px;"
           ></el-input>
           <el-input
             v-model="scope.row.handwritten[2].lastNum"
             palceholder="请输入"
+            class="shuidianmei"
             style="width:100px;"
           ></el-input>
         </template>
@@ -96,15 +87,23 @@
       <el-table-column prop="createTime" label="本次度数">
         <template slot-scope="scope">
           <el-input
-            @change="changeInput(item,$event)"
-            v-for="item in scope.row.handwritten"
-            :value="item.nowNum"
-            :key="item.nowNum"
+            v-model="scope.row.handwritten[0].nowNum"
             palceholder="请输入"
+            class="shuidianmei"
             style="width:100px;"
           ></el-input>
-          <!-- <el-input v-model="scope.row.currentNum[1]" palceholder="请输入" style="width:100px;"></el-input>
-          <el-input v-model="scope.row.currentNum[2]" palceholder="请输入" style="width:100px;"></el-input>-->
+          <el-input
+            v-model="scope.row.handwritten[1].nowNum"
+            palceholder="请输入"
+            class="shuidianmei"
+            style="width:100px;"
+          ></el-input>
+          <el-input
+            v-model="scope.row.handwritten[2].nowNum"
+            palceholder="请输入"
+            class="shuidianmei"
+            style="width:100px;"
+          ></el-input>
         </template>
       </el-table-column>
       <el-table-column prop="promiseMan" label="用量" width="100">
@@ -128,7 +127,7 @@
           <div style="line-height:40px;"><el-button v-if="scope.row.handwritten[2].isAuto==1" size="small" @click="checkNum(scope.row.houseId,scope.row.leaseId,scope.row.handwritten[2])">更新读数</el-button></div>
         </template>
       </el-table-column>
-      <el-table-column prop="lastTime" label="上次抄表时间">
+      <el-table-column prop="lastTime" label="上次抄表时间" width="150">
         <template slot-scope="scope">
           <div style="line-height:40px;">{{scope.row.handwritten[0].lastTimee}}</div>
           <div style="line-height:40px;">{{scope.row.handwritten[1].lastTimee}}</div>
@@ -167,11 +166,11 @@
           >{{scope.row.handwritten[2].status == 0 ? "本月未抄" : "本月已抄"}}</div>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="操作" fixed="right" width=250>
+      <el-table-column label="操作" fixed="right" width=250>
 				<template slot-scope="scope">
-					<el-button size="small" @click="updateInfor(scope.row)">保存</el-button>
+					<el-button size="small" @click="showBill">保存</el-button>
 				</template>
-      </el-table-column>-->
+      </el-table-column>
     </el-table>
     <!-- 生成账单 -->
     <el-dialog title="生成账单" :visible.sync="addFormVisible" :close-on-click-modal="false">
@@ -217,13 +216,8 @@
   </section>
 </template>
 <script>
-// import { getDateArray } from "../../util/util";
-// import {
-//   handwrittenList,
-//   selectApartment,
-//   handwrittenGenerate,
-//   getPowerNumberByHouseId
-// } from "../../url/api";
+import { getDateArray } from '../../assets/js/util';
+import {handwrittenList,handwrittenGenerate,xqSelectList } from '../../url/api'
 export default {
   data() {
     return {
@@ -238,13 +232,14 @@ export default {
       listLoading: false,
       sels: [], //列表选中列
       checkList: [],
+      xqTree:[],
       inforList: [],
       selectArr: [], //公寓下拉列表
-      checkInfor: {
+      formSearch: {
         //条件查询
         current: 1,
         size: 10,
-        apartmentId: ""
+        xqId: ""
       },
       //生成账单
       addForm: {},
@@ -296,17 +291,12 @@ export default {
 
         return item;
       });
-      _this.addFormVisible = true;
+      // _this.addFormVisible = true;
     },
     gocharging_config_price() {
       this.$router.push({
-        path: "/charging_config_price"
+        path: "/charging_config_price"  
       });
-    },
-    changeInput(row, e) {
-      console.log(row);
-      console.log(e);
-      row.nowNum = e;
     },
     updateInfor() {
       //生成账单
@@ -333,29 +323,25 @@ export default {
         alert("请勾选需要生成账单的水电表");
         return;
       }
-      handwrittenGenerate(params)
-        .then(res => {
+      handwrittenGenerate(params).then(res => {
           console.log(res);
-          this.addFormVisible = false;
           if (res.data.code === 200) {
-            alert("生成账单成功");
+            this.$message("生成账单成功");
             this.getlist();
           } else if (res.data.code == 109) {
-            alert(res.data.msg);
+            this.$message(res.data.msg);
           } else {
-            alert("生成账单失败");
+            this.$message("生成账单失败");
           }
         })
         .catch(err => {
-          alert("请求失败");
+          this.$message("请求失败");
         });
+        this.addFormVisible = false;
     },
-    getApartmentList() {
-
-    },
-    getList() {
+    getlist() {
       //获取列表
-      let params = this.checkInfor;
+      let params = this.formSearch;
       console.log(params);
       handwrittenList(params).then(res => {
         console.log(res);
@@ -363,9 +349,7 @@ export default {
           this.inforList = res.data.data.records.filter(function(item) {
             for (let i = 0; i < item.handwritten.length; i++) {
               if (item.handwritten[i].lastTime) {
-                item.handwritten[i].lastTimee = getDateArray(
-                  item.handwritten[i].lastTime
-                )[16];
+                item.handwritten[i].lastTimee = getDateArray(item.handwritten[i].lastTime)[9];
               }
               if (item.handwritten[i].lastNum) {
                 item.handwritten[i].lastNum = item.handwritten[
@@ -388,10 +372,11 @@ export default {
       //修改
     },
     handleCurrentChange(val) {
-      this.checkInfor.current = val;
+      this.formSearch.current = val;
       this.getlist();
     },
     selsChange: function(sels) {
+      console.log(sels)
       // 当选择项发生变化时会触发该事件
       this.sels = sels.filter(function(sel) {
         if (sel.isExist !== 1) {
@@ -401,7 +386,16 @@ export default {
     }
   },
   mounted() {
-
+      xqSelectList({}).then((res)=>{//小区选择列表
+        console.log(res)
+        if(res.data.code == 200){
+          this.xqTree = res.data.data
+          if(this.xqTree.length!=0){
+            this.formSearch.xqId = this.xqTree[0].id
+            this.getlist()
+          }
+        }
+      })
   }
 };
 </script>

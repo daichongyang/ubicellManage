@@ -205,3 +205,8 @@ input::placeholder {
 .login .el-input__inner {
     max-width: 100%;
 }
+
+.shuidianmei .el-input__inner {
+    max-width: 90px;
+    min-width: 90px;
+}

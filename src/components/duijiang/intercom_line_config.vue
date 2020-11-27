@@ -47,11 +47,20 @@
       </el-form-item>
     </el-form>
     <el-table :data="formData" style="width: 100%" stripe>
-      <el-table-column prop="name" label="设备名称"></el-table-column>
-      <el-table-column prop="devStatus" label="状态"></el-table-column>
+      <el-table-column prop="name" label="线路名称"></el-table-column>
+      <el-table-column prop="number" label="线路账号"></el-table-column>
+      <el-table-column prop="password" label="线路密码"></el-table-column>
+      <el-table-column prop="addr" label="线路地址"></el-table-column>
+      <el-table-column prop="number" label="外显号码"></el-table-column>
+      <el-table-column prop="isOn" label="是否启用">
+        <template slot-scope="scope">
+          {{scope.row.isOn==1?'启用':'禁止'}}
+				</template>
+      </el-table-column>
       <el-table-column label="操作" fixed="right" width=250>
 				<template slot-scope="scope">
-					<el-button type="success" size="small" @click="deleInfor(scope.row)">远程开门</el-button>
+					<el-button type="primary" size="small" @click="getupdateGatewaySetting(scope.row)">{{scope.row.isOn==0?'启用':'禁止'}}</el-button>
+					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删除</el-button>
 				</template>
 			</el-table-column>
     </el-table>
@@ -102,7 +111,7 @@
 
 <script>
 import paging from "../paging"
-import { getGatewaySetting,addGatewaySetting,updateTree,delGatewaySetting,xqSelectList,orgTree } from '../../url/api';
+import { getGatewaySetting,addGatewaySetting,updateTree,delGatewaySetting,xqSelectList,orgTree,updateGatewaySetting } from '../../url/api';
 export default {
   data(){
     return{
@@ -221,10 +230,23 @@ export default {
       console.log(ev);
       this.delTree = ev.checkedKeys
     },
-    deleInfor(){
+    getupdateGatewaySetting(item){//启用和停用
+      let params ={
+        id:item.id,
+        isOn:item.isOn==1?0:1
+      }
+      updateGatewaySetting(params).then((res)=>{
+        console.log(res)
+        if(res.data.code == 200){
+          this.$message('操作成功');
+          this.getlist()
+        }
+      })
+    },
+    deleInfor(id){
       this.$confirm('确认删除吗？')
       .then(_ => {
-        delGatewaySetting(this.delTree).then((res)=>{
+        delGatewaySetting(id).then((res)=>{
           console.log(res)
           if(res.data.code == 200){
             this.$message('删除成功');

@@ -113,6 +113,7 @@ export default {
       formSearch:{
         xqId:'',
       },
+      selsData:[],
       formData: [],//数据
       formUpdate:{},//修改表单
       total: 0,//数据总数
@@ -138,6 +139,17 @@ export default {
       })
     },
     updateMeterPriceConfig(){//水电煤费用价格修改
+      this.updata=[]
+      this.selsData.forEach(item=>{
+        let newItem = {
+          id:item.id,
+          unitPrice:item.unitPrice,
+          useAble:item.useAble,
+          xqId:this.formSearch.xqId,
+          type:this.typeId.type
+        }
+        this.updata.push(newItem)
+      })
       if(this.updata.length==0){
         this.$message("请勾选对象")
         return 
@@ -235,17 +247,7 @@ export default {
     },
     selsChange: function (sels) {// 当选择项发生变化时会触发该事件
       console.log(sels)
-      this.updata=[]
-      sels.forEach(item=>{
-        let newItem = {
-          id:item.id,
-          unitPrice:item.unitPrice,
-          useAble:item.useAble,
-          xqId:this.formSearch.xqId,
-          type:this.typeId.type
-        }
-        this.updata.push(newItem)
-      })
+      this.selsData=sels
     },
     handleChange(value){
       if(value.length!=0){

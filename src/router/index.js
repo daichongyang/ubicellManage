@@ -61,6 +61,8 @@ const charging_refill_log = () =>
     import ('@/components/shoufeiManage/charging_refill_log');
 const charging_config_refill_card = () =>
     import ('@/components/shoufeiManage/charging_config_refill_card');
+const charging_balance = () =>
+    import ('@/components/shoufeiManage/charging_balance');
 // 系统配置
 const sys_log = () =>
     import ('@/components/sysManage/sys_log');
@@ -527,6 +529,14 @@ export default new Router({
                             component: charging_config_refill_card,
                             meta: {
                                 id: 146
+                            }
+                        },
+                        {
+                            path: '/charging_balance',
+                            name: "余额查询",
+                            component: charging_balance,
+                            meta: {
+                                id: 144
                             }
                         },
                         {

@@ -83,6 +83,7 @@ export const freshHwLevels = (params) => { return axios.post('/intellmanagerV3.0
 export const getGatewaySetting = (params) => { return axios.post('/intellmanagerV3.0/cloudCall/getGatewaySetting', params) } //获取voip线路
 export const addGatewaySetting = (params) => { return axios.post('/intellmanagerV3.0/cloudCall/addGatewaySetting', params) } //增加voip线路
 export const delGatewaySetting = (params) => { return axios.post('/intellmanagerV3.0/cloudCall/delGatewaySetting/' + params) } //删除voip线路
+export const updateGatewaySetting = (params) => { return axios.post('/intellmanagerV3.0/cloudCall/updateGatewaySetting/' + params.id + "/" + params.isOn) } //启用/停用voip线路
 export const setHouseCallNum = (params) => { return axios.post('/intellmanagerV3.0/cloudCall/setHouseCallNum/' + params) } //一键配置对讲号
 export const updateCallState = (params) => { return axios.post('/intellmanagerV3.0/cloudCall/updateCallState/' + params.id + '/' + params.callState) } //启用/停用区域对讲号
 export const updateHouseCallState = (params) => { return axios.post('/intellmanagerV3.0/cloudCall/updateHouseCallState/' + params.id + '/' + params.callState) } //启用/停用房间对讲号
@@ -351,3 +352,13 @@ export const tribeinfoRemove = (params) => { return axios.post('/intellmanagerV3
 
 export const refillCardList = (params) => { return axios.post('/intellmanagerV3.0/refill/card/config/list', params) } // 充值卡列表
 export const refillupdateCard = (params) => { return axios.post('/intellmanagerV3.0/refill/card/config/update', params) } // 修改充值卡
+
+export const leaseMoveOut = (params) => { return axios.post('/intellmanagerV3.0/lease/move/out', params) } // 房间搬离
+export const leaseRent = (params) => { return axios.post('/intellmanagerV3.0/lease/rent', params) } // 房间入住
+
+export const handwrittenList = (params) => { return axios.post('/intellmanagerV3.0/hydroelectric/handwritten/list', params) } // 水电煤手抄表列表
+export const handwrittenGenerate = (params) => { return axios.post('/intellmanagerV3.0/hydroelectric/handwritten/generate', params) } // 水电煤手动生成账单
+
+export const accountBalanceList = (params) => { return axios.post('/intellmanagerV3.0/card/account/balance/list', params) } // 余额查询分页列表
+export const accountBalanceListSettlement = (params) => { return axios.post('/intellmanagerV3.0/card/account/balance/balance/settlement', params) } // 房间余额批量结算
+export const accountBalanceListOption = (params) => { return axios.post('/intellmanagerV3.0/card/account/balance/list/balance/option/' + params.xqId) } // 查询小区余额项目

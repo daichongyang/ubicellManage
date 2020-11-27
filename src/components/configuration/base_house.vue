@@ -53,8 +53,14 @@
           {{scope.row.type==1?"物业中心":"业主房间"}}
         </template>
       </el-table-column>
+      <el-table-column label="状态">
+        <template slot-scope="scope">
+          {{scope.row.isRent?"已入住":"已搬离"}}
+        </template>
+      </el-table-column>
       <el-table-column label="操作" fixed="right" width='250'>
 				<template slot-scope="scope">
+					<el-button type="primary" size="small" @click="status=scope.row.isRent,showrentLeave(scope.row)">{{scope.row.isRent?"搬离":"入住"}}</el-button>
 					<el-button type="warning" size="small" @click="updateShowBox(scope.row)">修 改</el-button>
 					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删 除</el-button>
 				</template>
@@ -67,7 +73,43 @@
         <el-button size="small" @click="getLabel" type="warning" round>导出数据</el-button>
         <el-button size="small" @click="showImport=true" type="success" round>导入数据</el-button>
       </div>
-
+    <!-- 入住或搬离 -->
+    <el-dialog :title="status?'搬离':'入住'" :visible.sync="rentLeaveDialog" :close-on-click-modal="false">
+        <el-form label-width="80px">
+          <el-form-item label="搬离时间" size="small" v-if="status">
+            <el-date-picker
+              v-model="rentLeave.moveOutTime"
+              type="datetime"
+              value-format="timestamp"
+              placeholder="搬离时间">
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item label="入住时间" size="small" v-if="!status">
+            <el-date-picker
+              v-model="rentLeave.rentTime"
+              type="datetime"
+              value-format="timestamp"
+              placeholder="入住时间">
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item label="收租日期" size="small" v-if="!status">
+            <el-input v-model.number="rentLeave.collectRentTime"></el-input>
+          </el-form-item>
+          <el-form-item label="是否自动发送账单消息提醒" size="small" v-if="!status">
+            <el-select v-model="rentLeave.isSend">
+              <el-option label="是" :value="1"></el-option>
+              <el-option label="否" :value="0"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="备注" size="small" v-if="!status">
+            <el-input v-model.number="rentLeave.remark"></el-input>
+          </el-form-item>
+        </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="medium " @click="rentLeaveDialog = false">取 消</el-button>
+        <el-button size="medium " @click="rentOrLeave">{{status?"搬离":"入住"}}</el-button>
+      </div>
+    </el-dialog>
     <!-- 添加 -->
     <el-dialog title="新增" :visible.sync="addDialog" :close-on-click-modal="false">
       <div class="cont_box_right">
@@ -310,7 +352,7 @@
 <script>
 const cityOptions = ['上海', '北京', '广州', '深圳'];
 import paging from "../paging"
-import { sectionList,houseaddList,houseupdateList,housedeleteList,orgTree,houseList,xqSelectList,exportTemplateHouse,exportHouse,importHouse } from '../../url/api';
+import { sectionList,houseaddList,leaseMoveOut,leaseRent,houseupdateList,housedeleteList,orgTree,houseList,xqSelectList,exportTemplateHouse,exportHouse,importHouse } from '../../url/api';
 export default {
   data(){
     var checkAge = (rule, value, callback) => {
@@ -365,6 +407,7 @@ export default {
       total1: 0,//数据总数
       pages1:0,//页面总数
       addDialog:false,
+      rentLeaveDialog:false,
       updateDialog:false,
       zuzhiTree:[],
       xqTree:[],
@@ -389,9 +432,38 @@ export default {
             { validator: checkAge, trigger: 'blur' }
           ]
       },
+      status:'',
+      rentLeave:{}
     }
   },
   methods:{
+    showrentLeave(obj){
+      console.log(obj)
+      this.rentLeave={}
+      this.rentLeave.houseId=obj.id
+      this.rentLeaveDialog = true
+    },
+    rentOrLeave(){
+      let pramas=this.rentLeave
+      if(this.status){//已入住，进行搬离操作
+        leaseMoveOut(pramas).then(res=>{
+          console.log(res)
+          if(res.data.code == 200){
+            this.getlist();
+            this.$message("搬离成功")
+          }
+        })
+      }else{
+        leaseRent(pramas).then(res=>{
+          console.log(res)
+          if(res.data.code == 200){
+            this.getlist();
+            this.$message("入住成功")
+          }
+        })
+      }
+      this.rentLeaveDialog = false
+    },
     getlist(){
       // this.formSearch.xqId = this.xqTree\[0\]\.id||""
       houseList(this.formSearch).then((res)=>{//房间列表
