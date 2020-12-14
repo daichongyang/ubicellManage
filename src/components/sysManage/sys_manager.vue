@@ -84,7 +84,7 @@
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-form-item>
-          <el-form-item label="邮箱" size="small">
+          <el-form-item label="邮箱" size="small"> 
             <el-input v-model="formPush.email"></el-input>
           </el-form-item>
           <el-form-item label="号码" size="small">
@@ -498,5 +498,8 @@ export default {
   }
   .cont_box_right .el-form-item{
     margin-bottom:20px;
+  }
+  .avatar-uploader-icon{
+    line-height: 178px !important;
   }
 </style>

@@ -7,7 +7,7 @@
             <el-button type="primary" @click="dialog = true">角色绑定</el-button>
           </el-form-item>
           <el-form-item label="">
-            <el-button type="warning" @click="changeHandle = 1,getList,formPush={}">重置</el-button>
+            <el-button type="warning" @click="changeHandle = 1,getlist,formPush={}">重置</el-button>
           </el-form-item>
           <el-form-item label="">
             <!-- <el-button type="danger" @click="deleInfor">删除</el-button> -->
@@ -166,7 +166,7 @@ export default {
     }
   },
   methods:{
-    getList(){
+    getlist(){
       let params = sessionStorage.getItem('userId')
       roletreeList(params).then((res)=>{//角色列表
         console.log(res)
@@ -181,7 +181,7 @@ export default {
       }
       let data1=node.data.data||[]
       let data2 =node.data.children||[]
-      let data3 =[...data1,...data2] 
+      let data3 =[...data1,...data2]
       setTimeout(() => {
         const data = data3;
         resolve(data);

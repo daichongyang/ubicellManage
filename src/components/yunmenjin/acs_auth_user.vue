@@ -20,7 +20,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button size="small" @click="getList">查 询</el-button>
+        <el-button size="small" @click="getlist">查 询</el-button>
       </el-form-item>
       <!-- <el-form-item>
         <el-button size="small" type="danger" @click="deleInfor(false)">批量删除</el-button>
@@ -52,7 +52,7 @@
 				</template>
 			</el-table-column>
     </el-table>
-    <paging @changePage = handleCurrentPage :get-total='total'></paging>
+    <paging @changePage ="handleCurrentPage" :get-total='total'></paging>
 
     <!-- 统一分配 -->
     <el-dialog title="统一分配" :visible.sync="addDialog" :close-on-click-modal="false">
@@ -297,7 +297,7 @@ export default {
         console.log(this.formPush.devList)
       })
     },
-    getList(){
+    getlist(){
         getAcPasscardUsers(this.formSearch).then((res)=>{
         console.log(res)
         if(res.data.code == 200){

@@ -20,7 +20,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button size="small" @click="getList">查 询</el-button>
+        <el-button size="small" @click="getlist">查 询</el-button>
       </el-form-item>
       <el-form-item>
         <el-button size="small" @click="addDialog=true">添 加</el-button>
@@ -169,7 +169,7 @@ export default {
     }
   },
   methods:{
-    getList(){
+    getlist(){
       sectionList(this.formSearch).then((res)=>{
         console.log(res)
         if(res.data.code == 200){

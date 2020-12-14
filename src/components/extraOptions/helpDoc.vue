@@ -1,6 +1,6 @@
 <template>
   <section class="modlude">
-    <iframe src="" frameborder="0" width='100%' src="https://view.officeapps.live.com/op/view.aspx?src=">
+    <iframe class="doc_ifrom" src="" frameborder="0" width='100%' src="https://view.officeapps.live.com/op/view.aspx?src=http://www.ubicell.cn/system_usage.doc">
       
     </iframe>
   </section>
@@ -20,6 +20,12 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.modlude{
+  height:100%;
+}
+.doc_ifrom{
+  height:100%;
+  margin-bottom:20px;
+}
 </style>

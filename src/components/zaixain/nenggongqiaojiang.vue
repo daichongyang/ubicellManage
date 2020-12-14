@@ -251,13 +251,14 @@ export default {
       })
     },
     getInit(){
-      this.getlist()
+      
       xqSelectList({}).then((res)=>{//小区选择列表
         console.log(res)
         if(res.data.code == 200){
           this.xqTree = res.data.data
           if(this.xqTree.length!=0){
             this.formSearch.xqId = this.xqTree[0].id
+            this.getlist()
           }
         }
       })

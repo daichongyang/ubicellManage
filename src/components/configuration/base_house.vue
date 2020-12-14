@@ -53,14 +53,19 @@
           {{scope.row.type==1?"物业中心":"业主房间"}}
         </template>
       </el-table-column>
-      <el-table-column label="状态">
+      <!-- <el-table-column label="状态">
         <template slot-scope="scope">
           {{scope.row.isRent?"已入住":"已搬离"}}
+        </template>
+      </el-table-column> -->
+      <el-table-column label="状态">
+        <template slot-scope="scope">
+          {{!scope.row.isLive?"--":scope.row.isRent?"已入住":"已搬离"}}
         </template>
       </el-table-column>
       <el-table-column label="操作" fixed="right" width='250'>
 				<template slot-scope="scope">
-					<el-button type="primary" size="small" @click="status=scope.row.isRent,showrentLeave(scope.row)">{{scope.row.isRent?"搬离":"入住"}}</el-button>
+					<el-button type="primary" size="small" @click="status=scope.row.isRent,showrentLeave(scope.row)" v-if="scope.row.isLive">{{scope.row.isRent?"搬离":"入住"}}</el-button>
 					<el-button type="warning" size="small" @click="updateShowBox(scope.row)">修 改</el-button>
 					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删 除</el-button>
 				</template>
@@ -295,8 +300,10 @@
         <el-form-item size="small">
           <el-upload
             class="upload-demo"
+            ref="uploadd"
             :headers='headers'
             name="importFile"
+            :auto-upload="false"
             :action="'/intellmanagerV3.0/import/house/'+ExportImportInfor.xqId+'/'+ExportImportInfor.type"
             :on-success="handleAvatarSuccess"
             :on-remove="handleRemove"
@@ -305,8 +312,8 @@
           </el-upload>
         </el-form-item>
         <el-form-item>
-          <!-- <el-button size="small" @click="showImport=false">取 消</el-button> -->
-          <!-- <el-button size="small" @click="addDialog=true">确 定</el-button> -->
+          <el-button size="small" @click="showImport=false">取 消</el-button>
+          <el-button size="small" @click="showExport=false,submitUpload()">确 定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -442,6 +449,9 @@ export default {
       this.rentLeave={}
       this.rentLeave.houseId=obj.id
       this.rentLeaveDialog = true
+    },
+    submitUpload() {//上传完文件后，在上传
+      this.$refs.uploadd.submit();
     },
     rentOrLeave(){
       let pramas=this.rentLeave
@@ -701,8 +711,9 @@ export default {
     handleAvatarSuccess(file,fileList) {
       console.log(file,fileList);
       if(file.code !=200){
-        this.$message(file.code);
+        this.$message(file.msg);
       }
+      this.showImport = false
     },
     handleRemove(file, fileList) {
       console.log(file, fileList);
