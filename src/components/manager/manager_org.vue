@@ -29,6 +29,11 @@
           :props="defaultProps"
           :filter-node-method="filterNode"
           ref="tree">
+          <span slot-scope="{ node, data }">
+            <i class="el-icon-user-solid" v-if="data.type==1"></i>
+            <i class="el-icon-user" v-if="data.type==2"></i>
+            <span>{{ node.label }}</span>
+          </span>
         </el-tree>
       </div>
       <div class="cont_box_right">
@@ -48,6 +53,12 @@
           </el-form-item>
           <el-form-item label="描述">
             <el-input v-model="formPush.description"></el-input>
+          </el-form-item>
+          <el-form-item label="类型">
+              <el-radio-group v-model="formPush.type">
+                <el-radio :label="1">单位</el-radio>
+                <el-radio :label="2">部门</el-radio>
+              </el-radio-group>
           </el-form-item>
           <el-form-item label="状态">
               <el-radio-group v-model="formPush.status">
@@ -76,6 +87,7 @@ export default {
       min:0,
       nowName:'',//子集
       pName:'',//父级
+      type:'',
       sortValue:'',//排序
       abbreviation:'',//简称
       description:'',//描述
@@ -85,8 +97,10 @@ export default {
         name:'',
         status:1
       },
+      parentType:'',//父级类型
       formPush:{
         sortValue:0,
+        // type:1,
         status:true
       },//表单提交
       defaultProps: {//树状图key定义
@@ -115,6 +129,7 @@ export default {
       this.formPush.parentName =this.pName
       this.formPush.abbreviation=this.abbreviation
       this.formPush.description=this.description
+      this.formPush.type=this.type
       this.inputNumber = this.formPush.sortValue = this.sortValue
     },
     showAdd(){//切换添加状态
@@ -149,13 +164,15 @@ export default {
       if (!value) return true;
       return data.label.indexOf(value) !== -1;
     },
-    treeClick(data){//树状图node节点点击事件,将该节点的数据填充，修改
+    treeClick(data,nodes){//树状图node节点点击事件,将该节点的数据填充，修改
       this.formPush = JSON.parse(JSON.stringify(data))
+      this.parentType = nodes.parent.data.type
       this.nowName =this.formPush.name
       this.pName =this.formPush.parentName
       this.sortValue =this.formPush.sortValue
       this.abbreviation =this.formPush.abbreviation
       this.description =this.formPush.description
+      this.type =this.formPush.type
       if(!this.formPush.parentName){
         this.formPush.parentName = this.formPush.name
       }
@@ -188,6 +205,10 @@ export default {
         this.$message("请先选择组织")
         return
       }
+      if(this.parentType==2||this.formPush.type==1){
+        this.$message("部门下面不能创建单位")
+        return
+      }
       this.$refs[formName].validate((valid) => {
         if (valid) {
           let params = {
@@ -196,6 +217,7 @@ export default {
             abbreviation:this.formPush.abbreviation,
             description:this.formPush.description,
             status:this.formPush.status,
+            type:this.formPush.type,
             sortValue:this.formPush.sortValue
           }
           saveTree(params).then((res)=>{

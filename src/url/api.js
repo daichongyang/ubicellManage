@@ -169,6 +169,7 @@ export const addMaintenanceMan = (params) => { return axios.post('/intellmanager
 export const updataModifyMaintenanceManById = (params) => { return axios.post('/intellmanagerV3.0/pmapply/type/pmtype/modifyMaintenanceManById', params) } //修改维修人员管理
 export const delMaintenanceMan = (params) => { return axios.post('/intellmanagerV3.0/pmapply/type/pmtype/delMaintenanceMan', params) } //   (传id和角色类型 0:管家 1:维修人员)
 export const pmtypePhone = (params) => { return axios.post('/intellmanagerV3.0/pmapply/type/pmtype/phone', params) } //校验手机号是否注册
+export const getpropertytype = (params) => { return axios.post('/intellmanagerV3.0/pmapply/type/pmtype/getpropertytype', params) } //添加维修人员查询物业类型管理
 
 export const getRepairData = (params) => { return axios.post('/intellmanagerV3.0/PmRepair/info/pmtype/repairData', params) } //查询保修
 export const getgetnamr = (params) => { return axios.post('/intellmanagerV3.0/pmapply/type/pmtype/getnamr', params) } //获取物业类型名称
@@ -359,6 +360,8 @@ export const leaseRent = (params) => { return axios.post('/intellmanagerV3.0/lea
 export const handwrittenList = (params) => { return axios.post('/intellmanagerV3.0/hydroelectric/handwritten/list', params) } // 水电煤手抄表列表
 export const handwrittenGenerate = (params) => { return axios.post('/intellmanagerV3.0/hydroelectric/handwritten/generate', params) } // 水电煤手动生成账单
 
+export const checkdate = (params) => { return axios.post('/intellmanagerV3.0/PmRepair/info/pmtype/checkdate', params) } // 保修保养关单是否审核通过
+export const closedate = (params) => { return axios.post('/intellmanagerV3.0/PmRepair/info/pmtype/closedate', params) } // 保修保养关单
 export const accountBalanceList = (params) => { return axios.post('/intellmanagerV3.0/card/account/balance/list', params) } // 余额查询分页列表
 export const accountBalanceListSettlement = (params) => { return axios.post('/intellmanagerV3.0/card/account/balance/balance/settlement', params) } // 房间余额批量结算
 export const accountBalanceListOption = (params) => { return axios.post('/intellmanagerV3.0/card/account/balance/list/balance/option/' + params.xqId) } // 查询小区余额项目

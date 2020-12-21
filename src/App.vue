@@ -31,4 +31,7 @@ export default {
 .login .el-input{
   width: 100%;
 }
+.el-input-number{
+  width:auto;
+}
 </style>

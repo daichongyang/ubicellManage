@@ -91,6 +91,13 @@
               <el-option label="家庭事务类型" :value="3"></el-option>
             </el-select>      
           </el-form-item>
+          <el-form-item label="服务类型" size="small" v-if="formPush.type==1">
+            <el-select v-model="formPush.servicetype" placeholder="请选择服务类型">
+              <el-option label="公区保修" :value="0"></el-option>
+              <el-option label="室内保修" :value="1"></el-option>
+              <el-option label="通用" :value="2"></el-option>
+            </el-select>      
+          </el-form-item>
         </el-form>
       </div>
       <div slot="footer" class="dialog-footer">
@@ -110,6 +117,13 @@
               <el-option label="报修类型" :value="1"></el-option>
               <el-option label="物业缴费类型" :value="2"></el-option>
               <el-option label="家庭事务类型" :value="3"></el-option>
+            </el-select>      
+          </el-form-item>
+          <el-form-item label="服务类型" size="small" v-if="formUpdate.type==1">
+            <el-select v-model="formUpdate.servicetype" placeholder="请选择服务类型">
+              <el-option label="公区保修" :value="0"></el-option>
+              <el-option label="室内保修" :value="1"></el-option>
+              <el-option label="通用" :value="2"></el-option>
             </el-select>      
           </el-form-item>
           <!-- <el-form-item label="入库时间" size="small">
@@ -227,6 +241,14 @@ export default {
       }
     },
     addList(addList){//添加树状图node节点
+      if(this.formPush.type == 1){
+        if(!this.formPush.servicetype){
+          this.$message("请选择服务类型")
+          return
+        }
+      }else{
+        this.formPush.servicetype = null
+      }
       this.$refs[addList].validate((valid) => {
         if (valid) {
           addPropertyTypeList(this.formPush).then((res)=>{
@@ -250,6 +272,14 @@ export default {
       });
     },
     updateList(formName){//修改
+      if(this.formUpdate.type == 1){
+        if(!this.formUpdate.servicetype){
+          this.$message("请选择服务类型")
+          return
+        }
+      }else{
+        this.formUpdate.servicetype = null
+      }
       this.$refs[formName].validate((valid) => {
         if (valid) {
           if(this.formUpdate.gmtCreate){
@@ -279,6 +309,7 @@ export default {
         id:item.id,
         name:item.name,
         type:item.type,
+        servicetype:item.servicetype,
       }
       this.updateDialog = true
       console.log(this.formUpdate)

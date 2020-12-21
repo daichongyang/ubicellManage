@@ -17,6 +17,11 @@
           <el-option v-for="(item,index) in xqTree" :label="item.name" :value="item.id" :key="index"></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="类型" size="small" prop="typeId">
+        <el-select v-model="formSearch.typeId" placeholder="请选择类型">
+          <el-option v-for="(item,index) in typeIds" :label="item.name" :value="item.id" :key="index"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="姓名" size="small">
         <el-input v-model="formSearch.name" placeholder="请输入姓名"></el-input>
       </el-form-item>
@@ -52,12 +57,6 @@
       <el-form-item>
         <el-button size="small" @click="getlist">查 询</el-button>
       </el-form-item>
-      <!-- <el-form-item>
-        <el-button size="small" @click="addDialog=true">新 增</el-button>
-      </el-form-item>
-      <el-form-item>
-        <el-button size="small" type="danger" @click="deleInfor(false)">批量删除</el-button>
-      </el-form-item> -->
     </el-form>
     <el-table :data="formData" style="width: 100%" stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"></el-table-column>
@@ -182,10 +181,12 @@
 
 <script>
 import paging from "../paging"
-import { getmaintenanceMan,addMaintenanceMan,updataModifyMaintenanceManById,delMaintenanceMan,xqSelectList,orgTree,pmtypePhone } from '../../url/api';
+import { getmaintenanceMan,addMaintenanceMan,updataModifyMaintenanceManById,delMaintenanceMan,xqSelectList,orgTree,pmtypePhone,getpropertytype } from '../../url/api';
 export default {
+  props:['typeId'],
   data(){
     return{
+      typeIds:[],
       checkStrictly:false,
       bindRole:{},
       showmenuList:[],
@@ -194,6 +195,7 @@ export default {
       xqTree:[],
       isAddorUpdate:1,//1添加、2修改
       formSearch:{
+        typeId:'',
         roleType:1,
         current:1,
         size:10
@@ -230,6 +232,14 @@ export default {
     }
   },
   methods:{
+    getGetpropertytype(){//添加维修人员查询物业类型管理
+      getpropertytype().then(res=>{
+        console.log(res)
+        if(res.data.code == 200){
+          this.typeIds = res.data.data
+        }
+      })
+    },
     getlist(){
       getmaintenanceMan(this.formSearch).then((res)=>{
         console.log(res)
@@ -244,7 +254,9 @@ export default {
       })
     },
     getInit(){
+      this.formSearch.typeId= this.typeId
       this.getlist()
+      this.getGetpropertytype()
       xqSelectList({}).then((res)=>{//小区选择列表
         console.log(res)
         if(res.data.code == 200){

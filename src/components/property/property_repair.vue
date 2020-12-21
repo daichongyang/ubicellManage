@@ -101,17 +101,26 @@
           {{$root.getDateArray(scope.row.appointmentTime)[9]}}
         </template>
       </el-table-column>
+      <el-table-column prop="" label="服务类型">
+        <template slot-scope="scope">
+          <div>
+             {{scope.row.typeService==0?'工区保修':'室内保修'}}
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column prop="" label="状态">
         <template slot-scope="scope">
           <div :class="{red:scope.row.status==5}">
-             {{scope.row.status==0?'未审核':scope.row.status==1?'已派单':scope.row.status==2?'已支付':'已取消'}}
+             {{scope.row.status==0?'未审核':scope.row.status==1?'已审核未派单':scope.row.status==2?'已派单':scope.row.status==3?'已完成':scope.row.status==4?'已取消':scope.row.status==5?'投诉':scope.row.status==6?'关单':'关单审核结束'}}
           </div>
         </template>
       </el-table-column>
       <el-table-column label="操作" fixed="right" width=250>
 				<template slot-scope="scope">
-          <el-button v-if="scope.row.status==0" size="small" @click="addDialog=true,paidangid=scope.row.id">派 单</el-button>			
-        <!-- <el-button type="primary" size="small" @click="deleInfor(scope.row)">详 情</el-button> -->
+          <el-button v-if="scope.row.status==0" size="small" @click="addDialog=true,paidangid=scope.row.id,typeId = scope.row.typeId">派 单</el-button>			
+          <el-button type="primary" size="small" @click="getclosedate(scope.row)" v-if="scope.row.status!=6">关 单</el-button>
+          <el-button type="primary" size="small" @click="getcheckdate(scope.row,1)" v-if="scope.row.status==6">审核通过</el-button>
+          <el-button type="primary" size="small" @click="getcheckdate(scope.row,0)" v-if="scope.row.status==6">审核不通过</el-button>
 				</template>
 			</el-table-column>
     </el-table>
@@ -119,7 +128,7 @@
 
     <!-- 添加 -->
     <el-dialog title="派 单" :visible.sync="addDialog" :close-on-click-modal="false">
-      <propertyMaintenance @pushSelect="pushSelect"></propertyMaintenance>
+      <propertyMaintenance @pushSelect="pushSelect" :typeId="typeId"></propertyMaintenance>
       <div slot="footer" class="dialog-footer">
         <el-button size="medium " @click="addDialog = false">取 消</el-button>
         <el-button size="medium " @click="addList">派 单</el-button>
@@ -127,8 +136,9 @@
     </el-dialog>
     <!-- 修改 -->
     <el-dialog title="修改" :visible.sync="detailsDialog">
+      
       <div class="cont_box_right">
-        <el-form label-position="right" :rules="rules" label-width="80px" :model="formUpdate" ref='formUpdate'> 
+        <el-form label-position="right" :rules="rules" label-width="80px" :model="formUpdate" ref='formUpdate'>
           <el-form-item label="类型名称" size="small" prop="name">
             <el-input v-model="formUpdate.name"></el-input>
           </el-form-item>
@@ -166,7 +176,7 @@
 <script>
 import paging from "../paging"
 import propertyMaintenance from "./property_maintenance2"
-import { delRepairComment,pmtypeUpdaData,getupdatedata,getgetnamr,getRepairData,addPropertyTypeList,updatePropertyTypeList,deletePropertyTypeList,xqSelectList,orgTree } from '../../url/api';
+import { delRepairComment,pmtypeUpdaData,getupdatedata,getgetnamr,getRepairData,addPropertyTypeList,updatePropertyTypeList,deletePropertyTypeList,xqSelectList,orgTree,checkdate,closedate } from '../../url/api';
 export default {
   data(){
     return{
@@ -179,6 +189,7 @@ export default {
         current:1,
         size:10
       },
+      typeId:'',
       paidangid:'',
       formData: [],//数据
       deleBatch: [],//删除数据
@@ -212,6 +223,37 @@ export default {
     }
   },
   methods:{
+    getcheckdate(row,status){//审核关单
+      let params = {
+        id:row.id,
+        status:status
+      }
+      checkdate(params).then(res=>{
+        console.log(res)
+        if(res.data.code == 200){
+          this.getlist()
+          this.$message("审核成功")
+        }else{
+          this.$message("审核失败")
+        }
+      })
+    },
+    getclosedate(row){//报修关单
+      let params = [row.id]
+      this.$confirm("确定要关单吗？")
+      .then(_ => {
+        closedate(params).then(res=>{
+          console.log(res)
+          if(res.data.code == 200){
+            this.getlist()
+            this.$message("关单成功")
+          }else{
+            this.$message("关单失败")
+          }
+        })
+      })
+      .catch(_ => {});
+    },
     pushSelect(val){//选中派单人员
       console.log(val)
       this.pselect = val

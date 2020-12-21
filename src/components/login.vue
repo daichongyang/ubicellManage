@@ -143,7 +143,7 @@
     mounted(){
       this.getActions()
       // this.getNewData()
-      // Store.commit('increment') 
+      // Store.commit('increment')
       console.log(Store.state)
     }
   }

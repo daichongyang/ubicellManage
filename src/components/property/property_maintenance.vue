@@ -68,6 +68,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="phone" label="手机号"></el-table-column>
+      <el-table-column prop="typeName" label="类型"></el-table-column>
       <el-table-column prop="company" label="公司"></el-table-column>
       <el-table-column prop="department" label="部门"></el-table-column>
       <el-table-column prop="address" label="地址"></el-table-column>
@@ -93,8 +94,13 @@
       <div class="cont_box_right">
         <el-form label-position="right" :rules="rules" label-width="80px" :model="formPush" ref='addList'> 
           <el-form-item label="选择小区" size="small" prop="xqId">
-            <el-select v-model="formPush.xqId" placeholder="请选择小区">
+            <el-select v-model="formPush.xqId" placeholder="请选择小区" @change="getGetpropertytype(formPush.xqId)">
               <el-option v-for="(item,index) in xqTree" :label="item.name" :value="item.id" :key="index"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="类型" size="small" prop="typeId">
+            <el-select v-model="formPush.typeId" placeholder="请选择类型">
+              <el-option v-for="(item,index) in typeIds" :label="item.name" :value="item.id" :key="index"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="姓名" size="small">
@@ -139,6 +145,11 @@
     <el-dialog title="修改" :visible.sync="updateDialog" :close-on-click-modal="false">
       <div class="cont_box_right">
         <el-form label-position="right" :rules="rules" label-width="80px" :model="formUpdate" ref='formUpdate'> 
+          <el-form-item label="类型" size="small" prop="typeId">
+            <el-select v-model="formUpdate.typeId" placeholder="请选择类型">
+              <el-option v-for="(item,index) in typeIds" :label="item.name" :value="item.id" :key="index"></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="姓名" size="small">
             <el-input v-model="formUpdate.name"></el-input>
           </el-form-item>
@@ -182,7 +193,7 @@
 
 <script>
 import paging from "../paging"
-import { getmaintenanceMan,addMaintenanceMan,updataModifyMaintenanceManById,delMaintenanceMan,xqSelectList,orgTree,pmtypePhone } from '../../url/api';
+import { getmaintenanceMan,addMaintenanceMan,updataModifyMaintenanceManById,delMaintenanceMan,xqSelectList,orgTree,pmtypePhone,getpropertytype } from '../../url/api';
 export default {
   data(){
     return{
@@ -225,11 +236,14 @@ export default {
         phone:[{ required: true, message: '该项不能为空'}],
         roleType:[{ required: true, message: '该项不能为空',trigger: 'blur'}],
         xqId:[{ required: true, message: '该项不能为空',trigger: 'blur'}],
+        typeId:[{ required: true, message: '该项不能为空',trigger: 'blur'}],
       },
+      typeIds:[],
       imageUrl:''
     }
   },
   methods:{
+
     getlist(){
       getmaintenanceMan(this.formSearch).then((res)=>{
         console.log(res)
@@ -243,8 +257,20 @@ export default {
         }
       })
     },
+    getGetpropertytype(xqId){//添加维修人员查询物业类型管理
+      let params = {
+        xqId:xqId
+      }
+      getpropertytype(params).then(res=>{
+        console.log(res)
+        if(res.data.code == 200){
+          this.typeIds = res.data.data
+        }
+      })
+    },
     getInit(){
       this.getlist()
+      // this.getGetpropertytype()
       xqSelectList({}).then((res)=>{//小区选择列表
         console.log(res)
         if(res.data.code == 200){
@@ -365,8 +391,10 @@ export default {
         remark:item.remark,
         roleType:item.roleType,
         sex:item.sex,
+        typeId:item.typeId,
       }
       this.updateDialog = true
+      this.getGetpropertytype(item.xqId)
       console.log(this.formUpdate)
     },
     deleInfor(ids){//删除
