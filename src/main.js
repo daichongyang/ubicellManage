@@ -66,7 +66,8 @@ new Vue({
         data: () => {
             return {
                 getDateArray: getDateArray,
-                uploadToRealPath: '/intellmanagerV3.0/upload/uploadfile'
+                uploadToRealPath: '/intellmanagerV3.0/upload/uploadfile',
+                btnControl: JSON.parse(sessionStorage.getItem('btn'))
             }
         },
         components: { App },

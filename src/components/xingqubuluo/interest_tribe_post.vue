@@ -90,7 +90,7 @@
             <el-input v-model="formPush.title"></el-input>
           </el-form-item>
           <el-form-item label="描述详情" size="small" prop="descDetail">
-            <el-input v-model="formPush.descDetail"></el-input>
+            <el-input v-model="formPush.descDetail" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
           </el-form-item>
           <el-form-item label="帖子类型" size="small">
             <el-select v-model="formPush.typeId	" placeholder="帖子类型">

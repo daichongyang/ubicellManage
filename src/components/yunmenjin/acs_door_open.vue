@@ -6,7 +6,7 @@
           <el-option v-for="(item,index) in xqTree" :label="item.name" :value="item.id" :key="index"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item>
+      <el-form-item v-if="$root.btnControl.find(item=>item=='view')">
         <el-button size="small" @click="getlist">查 询</el-button>
       </el-form-item>
     </el-form>

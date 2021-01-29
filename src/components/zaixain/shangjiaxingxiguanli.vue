@@ -134,7 +134,7 @@
             <el-input v-model="formPush.distance" placeholder="单位（km）"></el-input>
           </el-form-item>
           <el-form-item label="简介" size="small" prop="intro">
-            <el-input v-model="formPush.intro"></el-input>
+            <el-input v-model="formPush.intro" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
           </el-form-item>
           <el-form-item label="备注、公告" size="small" prop="remark">
             <el-input type="textarea" v-model="formPush.remark" :rows="2" placeholder="请输入内容"></el-input>
@@ -202,7 +202,7 @@
             <el-input v-model="formUpdate.distance" placeholder="单位（km）"></el-input>
           </el-form-item>
           <el-form-item label="简介" size="small" prop="intro">
-            <el-input v-model="formUpdate.intro"></el-input>
+            <el-input v-model="formUpdate.intro" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
           </el-form-item>
           <el-form-item label="备注、公告" size="small" prop="remark">
             <el-input type="textarea" v-model="formUpdate.remark" :rows="2" placeholder="请输入内容"></el-input>

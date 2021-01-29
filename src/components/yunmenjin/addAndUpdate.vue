@@ -229,12 +229,6 @@ export default {
 
   methods:{
     initInfor(){
-      getStDevs().then((res)=>{//获取商汤人脸机列表
-        console.log(res)
-        if(res.data.code == 200){
-          this.formData3 = res.data.data.records
-        }
-      })
       xqSelectList({}).then((res)=>{//小区选择列表
         console.log(res)
         if(res.data.code == 200){
@@ -474,6 +468,15 @@ export default {
         this.pushform = {}
       }
       this.isActive = val
+      if(this.isActive==6){
+        getStDevs().then((res)=>{//获取商汤人脸机列表
+          console.log(res)
+          if(res.data.code == 200){
+            this.formData3 = res.data.data.records
+          }
+        })
+      }
+
 　　 },
 　},
   mounted(){

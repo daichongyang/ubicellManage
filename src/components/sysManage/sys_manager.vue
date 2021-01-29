@@ -28,8 +28,8 @@
             <el-input v-model="formSearch.nation" placeholder="请输入民族"></el-input>
           </el-form-item>
       <el-form-item>
-        <el-button size="medium " @click="getlist">查 询</el-button>
-        <el-button size="medium " @click="addDialog = true,imageUrl = ''">新 增</el-button>
+        <el-button size="medium " @click="getlist" v-if="$root.btnControl.find(item=>item=='view')">查 询</el-button>
+        <el-button size="medium " @click="addDialog = true,imageUrl = ''" v-if="$root.btnControl.find(item=>item=='add')">新 增</el-button>
       </el-form-item>
     </el-form>
     <el-table :data="formData" style="width: 100%" stripe>
@@ -57,8 +57,8 @@
       <el-table-column label="操作" fixed="right" width=250>
 				<template slot-scope="scope">
 					<el-button size="small" @click="showRole(scope.row)">角色绑定</el-button>
-					<el-button type="warning" size="small" @click="updateShowBox(scope.row)">修 改</el-button>
-					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删 除</el-button>
+					<el-button type="warning" size="small" @click="updateShowBox(scope.row)" v-if="$root.btnControl.find(item=>item=='edit')">修 改</el-button>
+					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)" v-if="$root.btnControl.find(item=>item=='delete')">删 除</el-button>
 				</template>
 			</el-table-column>
     </el-table>
@@ -469,6 +469,7 @@ export default {
     },
   },
   mounted(){
+    console.log(this.$root.btnControl)
     this.getInit()
   },
   components:{

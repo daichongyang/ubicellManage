@@ -90,10 +90,10 @@
               <el-option v-for="item in xqTree" :label="item.name" :value="item.id" :key="item.id"></el-option>
             </el-select>
           </el-form-item> 
-         <el-form-item label="标题">
+         <el-form-item label="标题" prop="title">
             <el-input v-model="formPush.title"></el-input>
           </el-form-item>
-          <el-form-item label="详细内容">
+          <el-form-item label="详细内容" prop="content">
             <el-input v-model="formPush.content"></el-input>
           </el-form-item>
           <el-form-item label="摘要">
@@ -133,6 +133,7 @@
             <div class="tree_box">
               <div class="tree_box_item">
                 <el-tree
+                  ref="treee"
                   :data="formData1"
                   :props='defaultProps'
                   :load="loadNode"
@@ -161,9 +162,11 @@
           </el-form-item>
           <el-form-item label="用户">
                 <div class="tree_box_item">
+                  <el-checkbox v-model="itemChecked" @change="checkAll(1)">全选</el-checkbox>
                   <el-tree
                     :data="formData2"
                     node-key="id"
+                    ref="tree1"
                     :props='defaultProps'
                     @check="checkTreeInfor1"
                     show-checkbox
@@ -182,16 +185,16 @@
     <!-- 修改 -->
     <el-dialog title="" :visible.sync="updateDialog" :close-on-click-modal="false">
       <div class="cont_box_left">
-        <el-form label-position="right" label-width="110px" :model="formUpdate" :rules="rules"  ref='addList'>
+        <el-form label-position="right" label-width="110px" :model="formUpdate" :rules="rules"  ref='update'>
           <el-form-item label="选择小区" size="small" prop="xqId">
             <el-select v-model="formUpdate.xqId" placeholder="请选择小区">
               <el-option v-for="item in xqTree" :label="item.name" :value="item.id" :key="item.id"></el-option>
             </el-select>
           </el-form-item> 
-         <el-form-item label="标题">
+         <el-form-item label="标题" prop="title">
             <el-input v-model="formUpdate.title"></el-input>
           </el-form-item>
-          <el-form-item label="详细内容">
+          <el-form-item label="详细内容" prop="content">
             <el-input v-model="formUpdate.content"></el-input>
           </el-form-item>
           <el-form-item label="摘要">
@@ -266,9 +269,11 @@
           </el-form-item>
         <el-form-item label="用户">
             <div class="tree_box_item">
+              <el-checkbox v-model="itemChecked" @change="checkAll(2)">全选</el-checkbox>
               <el-tree
                 :data="formData2"
                 node-key="id"
+                ref="tree2"
                 :props='defaultProps'
                 @check="checkTreeInfor1"
                 show-checkbox
@@ -280,7 +285,7 @@
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button size="medium" @click="updateDialog = false">取 消</el-button>
-        <el-button size="medium" @click="updateList" v-if="updateDialog1">确定</el-button>
+        <!-- <el-button size="medium" @click="updateList("update")" v-if="updateDialog1">确定</el-button> -->
       </div>
     </el-dialog>
     <!-- 选择设备 -->
@@ -316,18 +321,22 @@ export default {
       xqId:'',
       devList:[],
       deleBatch:[],
+      itemChecked:false,
       isGetFather:false,//是否选中
       devDialog:false,//选择设备
       formSearch:{//查询条件
+        xqId:'',
         current:1,
         size: 10
       },
       formSearch1:{
+        xqId:'',
         type:2,
         current:1,
         size: 10
       },
       formPush:{
+        xqId:'',
         isSend:1,
         houseUserIds:[99,100]
       },//表单提交
@@ -354,8 +363,8 @@ export default {
       },
       xqTree:[],//小区列表
       rules: {
-        phone:[{ required: true, message: '该项不能为空'}],
-        ubicellJyh:[{ required: true, message: '该项不能为空'}],
+        content:[{ required: true, message: '该项不能为空'}],
+        title:[{ required: true, message: '该项不能为空'}],
         addUser:[{ required: true, message: '该项不能为空',trigger: 'change'}],
         getCall:[{ required: true, message: '该项不能为空',trigger: 'change'}],
         xqId:[{ required: true, message: '该项不能为空',trigger: 'change'}],
@@ -369,17 +378,51 @@ export default {
     }
   },
   methods:{
-    getOneHouseUser(id){//获取单个房间的用户列表
-    console.log(`id:`+id)
-      getOneHouseUser(id).then((res)=>{
+    checkAll(index){//用户的全选或者全部选
+      let obj = this.itemChecked?this.formData2:[]
+      this.formPush.houseUserIds = []
+      obj.forEach(item=>{
+        this.formPush.houseUserIds.push(item.id)
+      })
+      if(index==1){//添加
+        this.$refs.tree1.setCheckedNodes(obj)
+      }else{
+        this.$refs.tree2.setCheckedNodes(obj)
+      }
+    },
+    getOneHouseUser(){//获取单个房间的用户列表
+    console.log(this.$refs.treee.getCheckedNodes())
+      let newArr = this.$refs.treee.getCheckedNodes()
+      let params = {
+        houseIds:[],
+        sectionIds:[],
+      }
+      this.formData2=[]
+      newArr.forEach(item=>{
+        if(item.xqName){
+          params.sectionIds.push(item.id)
+        }else{
+          params.houseIds.push(item.id)
+        }
+      })
+
+      getOneHouseUser(params).then((res)=>{
         console.log(res)
         if(res.data.code == 200){
-          this.$nextTick(()=>{
-            this.formData2 = res.data.data.userList.filter(item=>{
-              item.name = item.name||item.phone
-              return item
-            })
+          res.data.data.forEach(ii=>{
+            if(ii.userList){
+              this.$nextTick(()=>{
+                ii.userList.forEach(item=>{
+                  item.name = item.name||item.phone
+                  this.formData2.push(item)
+                })
+              })
+            }else{
+              // this.$message("房间："+item.houseNum+"暂无人员")
+            }
           })
+
+
         }
       })
     },
@@ -481,7 +524,7 @@ export default {
       })
     },
     getInit(){//初始化列表
-      this.getlist()
+      
       let org_tree={
             name:'',
             status:1
@@ -500,6 +543,7 @@ export default {
           if(this.xqTree.length!=0){
             this.formSearch.xqId = this.xqTree[0].id
             this.formPush.xqId = this.xqTree[0].id
+            this.getlist()
           }
         }
       })
@@ -537,19 +581,26 @@ export default {
         }
       });
     },
-    updateList(){//修改
+    updateList(update){//修改
     console.log(this.formUpdate)
-      editMessage(this.formUpdate).then((res)=>{
-        console.log(res)
-        if(res.data.code == 200){
-          this.$message({
-            message: '修改成功',
-            type: 'warning'
-          });
-          this.getlist()
+      this.$refs[update].validate((valid) => {
+        if (valid) {
+          editMessage(this.formUpdate).then((res)=>{
+            console.log(res)
+            if(res.data.code == 200){
+              this.$message({
+                message: '修改成功',
+                type: 'warning'
+              });
+              this.getlist()
+            }
+          })
+          this.updateDialog = false
+        } else {
+          console.log('error submit!!');
+          return false;
         }
-      })
-      this.updateDialog = false
+      });
     },
     deleInfor(ids){//删除
       let arrId = []
@@ -636,9 +687,9 @@ export default {
     checkTreeInfor(data,ev) {//监听树状图勾选
       console.log(ev);
       let obj = ev.checkedNodes
-      if(obj[0].houseNodes){
+      // if(obj[0].houseNodes){
 
-      }
+      // }
       this.getOneHouseUser(ev.checkedKeys[0])
       // this.formPush.orgId = ev.checkedKeys[0]
       // this.formUpdate.orgId = ev.checkedKeys[0]
@@ -796,5 +847,27 @@ export default {
   .cont_box_right .el-form-item{
     margin-bottom:20px;
   }
-
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 160px;
+    height: 160px;
+    line-height: 160px;
+    text-align: center;
+  }
+  .avatar {
+    width: 160px;
+    height: 160px;
+    display: block;
+  }
 </style>

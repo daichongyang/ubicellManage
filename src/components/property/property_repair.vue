@@ -115,12 +115,12 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="操作" fixed="right" width=250>
+      <el-table-column label="操作" fixed="right" width=300>
 				<template slot-scope="scope">
-          <el-button v-if="scope.row.status==0" size="small" @click="addDialog=true,paidangid=scope.row.id,typeId = scope.row.typeId">派 单</el-button>			
-          <el-button type="primary" size="small" @click="getclosedate(scope.row)" v-if="scope.row.status!=6">关 单</el-button>
-          <el-button type="primary" size="small" @click="getcheckdate(scope.row,1)" v-if="scope.row.status==6">审核通过</el-button>
-          <el-button type="primary" size="small" @click="getcheckdate(scope.row,0)" v-if="scope.row.status==6">审核不通过</el-button>
+          <el-button v-if="scope.row.status==0||scope.row.status==1" size="small" @click="addDialog=true,paidangid=scope.row.id,typeId = scope.row.typeId">派 单</el-button>			
+          <el-button type="primary" size="small" @click="getclosedate(scope.row)" v-if="scope.row.status!=6&&scope.row.status!=7&&scope.row.status!=0&&scope.row.status!=1">关 单</el-button>
+          <el-button type="primary" size="small" @click="getcheckdate(scope.row,1)" v-if="scope.row.closestale=1">审核通过</el-button>
+          <el-button type="primary" size="small" @click="getcheckdate(scope.row,0)" v-if="scope.row.closestale=1">审核不通过</el-button>
 				</template>
 			</el-table-column>
     </el-table>
@@ -226,7 +226,8 @@ export default {
     getcheckdate(row,status){//审核关单
       let params = {
         id:row.id,
-        status:status
+        status:status,
+        type:0
       }
       checkdate(params).then(res=>{
         console.log(res)
@@ -239,7 +240,10 @@ export default {
       })
     },
     getclosedate(row){//报修关单
-      let params = [row.id]
+      let params ={
+        ids: [row.id],
+        type:0
+      }
       this.$confirm("确定要关单吗？")
       .then(_ => {
         closedate(params).then(res=>{
@@ -375,6 +379,7 @@ export default {
       let params = {
         id:this.paidangid,
         manId:this.pselect[0].id,
+        type:0,// 0:保修保养1:投诉建议
       }
       pmtypeUpdaData(params).then((res)=>{
         console.log(res)

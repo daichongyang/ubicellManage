@@ -22,11 +22,14 @@
       </el-form-item>
     </el-form>
     <el-form :inline="true">
-      <el-form-item>
+      <el-form-item v-if="$root.btnControl.find(item=>item=='view')">
         <el-button size="small" @click="getlist(),pushChild()">查 询</el-button>
       </el-form-item>
+      <el-form-item v-if="$root.btnControl.find(item=>item=='add')">
+        <el-button size="small" v-if="formSearch.devType != 9&&formSearch.devType != 8" @click.native="dialog=true,isAddorUpdate=1">添 加</el-button>
+      </el-form-item>
       <el-form-item>
-        <el-button size="small" v-if="formSearch.devType != 8" @click.native="dialog=true,isAddorUpdate=1">添 加</el-button>
+        <el-button size="small" v-if="formSearch.devType == 9" @click.native="getSyncFushiDevice">同 步</el-button>
       </el-form-item>
     </el-form>
     <!-- ncu设备 -->
@@ -43,8 +46,8 @@
 			</el-table-column>
       <el-table-column :key="Math.random()" label="操作" fixed="right" width=250>
 				<template slot-scope="scope">
-					<el-button type="warning" size="small" @click="updateShowBox(scope.row,formSearch.devType)">修 改</el-button>
-					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删 除</el-button>
+					<el-button type="warning" size="small" @click="updateShowBox(scope.row,formSearch.devType)" v-if="$root.btnControl.find(item=>item=='edit')">修 改</el-button>
+					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)" v-if="$root.btnControl.find(item=>item=='delete')">删 除</el-button>
 					<el-button type="success" size="small" @click="opendoor(scope.row)">远程开门</el-button>
 				</template>
 			</el-table-column>
@@ -64,8 +67,8 @@
 			</el-table-column>
       <el-table-column :key="Math.random()" label="操作" fixed="right" width=250>
 				<template slot-scope="scope">
-					<el-button type="warning" size="small" @click="updateShowBox(scope.row,formSearch.devType)">修 改</el-button>
-					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删 除</el-button>
+					<el-button type="warning" size="small" @click="updateShowBox(scope.row,formSearch.devType)" v-if="$root.btnControl.find(item=>item=='edit')">修 改</el-button>
+					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)" v-if="$root.btnControl.find(item=>item=='delete')">删 除</el-button>
 					<el-button type="success" size="small" @click="opendoor(scope.row)">远程开门</el-button>
 				</template>
 			</el-table-column>
@@ -90,8 +93,8 @@
 			</el-table-column>
       <el-table-column :key="Math.random()" label="操作" fixed="right" width=250>
 				<template slot-scope="scope">
-					<el-button type="warning" size="small" @click="updateShowBox(scope.row,formSearch.devType)">修 改</el-button>
-					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删 除</el-button>
+					<el-button type="warning" size="small" @click="updateShowBox(scope.row,formSearch.devType)" v-if="$root.btnControl.find(item=>item=='edit')">修 改</el-button>
+					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)" v-if="$root.btnControl.find(item=>item=='delete')">删 除</el-button>
 					<el-button type="success" size="small" @click="opendoor(scope.row)">远程开门</el-button>
 				</template>
 			</el-table-column>
@@ -116,8 +119,8 @@
 			</el-table-column>
       <el-table-column :key="Math.random()" label="操作" fixed="right" width=250>
 				<template slot-scope="scope">
-					<el-button type="warning" size="small" @click="updateShowBox(scope.row,formSearch.devType)">修 改</el-button>
-					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删 除</el-button>
+					<el-button type="warning" size="small" @click="updateShowBox(scope.row,formSearch.devType)" v-if="$root.btnControl.find(item=>item=='edit')">修 改</el-button>
+					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)" v-if="$root.btnControl.find(item=>item=='delete')">删 除</el-button>
 					<el-button type="success" size="small" @click="opendoor(scope.row)">远程开门</el-button>
 				</template>
 			</el-table-column>
@@ -148,8 +151,8 @@
 			</el-table-column>
       <el-table-column :key="Math.random()" label="操作" fixed="right" width=250>
 				<template slot-scope="scope">
-					<el-button type="warning" size="small" @click="updateShowBox(scope.row,formSearch.devType)">修 改</el-button>
-					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删 除</el-button>
+					<el-button type="warning" size="small" @click="updateShowBox(scope.row,formSearch.devType)" v-if="$root.btnControl.find(item=>item=='edit')">修 改</el-button>
+					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)" v-if="$root.btnControl.find(item=>item=='delete')">删 除</el-button>
 					<el-button type="success" size="small" @click="opendoor(scope.row)">远程开门</el-button>
 				</template>
 			</el-table-column>
@@ -160,7 +163,7 @@
       <el-table-column :key="Math.random()" prop="xqName" label="小区名称"></el-table-column>
       <el-table-column :key="Math.random()" label="操作" fixed="right" width=250>
 				<template slot-scope="scope">
-					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删 除</el-button>
+					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)" v-if="$root.btnControl.find(item=>item=='delete')">删 除</el-button>
 					<el-button type="success" size="small" @click="opendoor(scope.row)">远程开门</el-button>
 				</template>
 			</el-table-column>
@@ -179,8 +182,34 @@
 			</el-table-column>
       <el-table-column :key="Math.random()" label="操作" fixed="right" width=250>
 				<template slot-scope="scope">
-					<el-button type="warning" size="small" @click="updateShowBox(scope.row,formSearch.devType)">修 改</el-button>
-					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删 除</el-button>
+					<el-button type="warning" size="small" @click="updateShowBox(scope.row,formSearch.devType)" v-if="$root.btnControl.find(item=>item=='edit')">修 改</el-button>
+					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)" v-if="$root.btnControl.find(item=>item=='delete')">删 除</el-button>
+					<el-button type="success" size="small" @click="opendoor(scope.row)">远程开门</el-button>
+				</template>
+			</el-table-column>
+    </el-table>
+    <!-- 富士门禁 -->
+    <el-table :data="formData" style="width: 100%" stripe v-if="formSearch.devType == 9">
+      <el-table-column :key="Math.random()" prop="name" label="设备名称"></el-table-column>
+      <el-table-column :key="Math.random()" prop="xqName" label="小区名称"></el-table-column>
+      <el-table-column :key="Math.random()" label="设备地址">
+				<template slot-scope="scope" v-if="scope.row.fushiDevice.devAddr">
+          {{scope.row.fushiDevice.devAddr}}
+				</template>
+			</el-table-column>
+      <el-table-column :key="Math.random()" label="状态">
+				<template slot-scope="scope">
+          {{scope.row.devState==1?'在线':'离线'}}
+				</template>
+			</el-table-column>
+      <el-table-column :key="Math.random()" label="类型">
+				<template slot-scope="scope">
+          {{scope.row.fushiDevice.devTypeCode=='21'?'拖二分体式门禁':scope.row.fushiDevice.devTypeCode=='22'?'拖四分体门禁':scope.row.fushiDevice.devTypeCode=='24'?'拖八分体式门禁':scope.row.fushiDevice.devTypeCode=='11'?'人脸门禁':scope.row.fushiDevice.devTypeCode=='10'?'电梯门禁':scope.row.fushiDevice.devTypeCode=='00'?'体式门禁':scope.row.fushiDevice.devTypeCode=='30'?'生物门禁':'人脸门禁'}}
+				</template>
+			</el-table-column>
+      <el-table-column :key="Math.random()" prop="doorkeySign" label="门栋编号"></el-table-column>
+      <el-table-column :key="Math.random()" label="操作" fixed="right">
+				<template slot-scope="scope">
 					<el-button type="success" size="small" @click="opendoor(scope.row)">远程开门</el-button>
 				</template>
 			</el-table-column>
@@ -197,7 +226,7 @@
 </template>
 
 <script>
-import { getAcDevlist,addAcDevlist,updateDoorDev,delAcDevlist,orgTree,xqSelectList,remoteOpenDoor,freshHwLevels } from '../../url/api';
+import { getAcDevlist,addAcDevlist,updateDoorDev,delAcDevlist,orgTree,xqSelectList,remoteOpenDoor,freshHwLevels,syncFushiDevice } from '../../url/api';
 import addAndUpdate from './addAndUpdate'
 import paging from '../paging'
 export default {
@@ -235,6 +264,7 @@ export default {
   watch:{
     topActive(val){//tabel切换
       console.log(val)
+      this.formSearch.current = 1
       if(this.formSearch.devType!=val){
 
         this.formSearch.devType = val
@@ -261,7 +291,6 @@ export default {
         
       }
       
-
     }
   },
   methods:{
@@ -297,6 +326,20 @@ export default {
     },
     pushChild(){
       this.$emit("changeXqid",this.formSearch.xqId)
+    },
+    getSyncFushiDevice(){//同步富士门禁设备
+        syncFushiDevice(this.formSearch.xqId).then((res)=>{
+          console.log(res)
+          if(res.data.code == 200){
+
+            this.$message("富士门禁设备成功")
+            this.getlist()
+            
+          }else{
+            this.$message("富士门禁设备失败")
+          }
+
+        })
     },
     getlist(){
       

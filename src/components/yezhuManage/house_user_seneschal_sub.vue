@@ -35,13 +35,13 @@
       <el-form-item label="区域名称" size="small">
         <el-input v-model="formSearch.sectionName" placeholder="请输入区域名称"></el-input>
       </el-form-item>
-      <el-form-item>
+      <el-form-item v-if="$root.btnControl.find(item=>item=='view')">
         <el-button size="small" @click="getlist">查 询</el-button>
       </el-form-item>
-      <el-form-item>
+      <el-form-item v-if="$root.btnControl.find(item=>item=='add')">
         <el-button size="small" @click="addDialog=true">添 加</el-button>
       </el-form-item>
-      <el-form-item>
+      <el-form-item v-if="$root.btnControl.find(item=>item=='delete')">
         <el-button size="small" type="danger" @click="deleInfor(false)">批量删除</el-button>
       </el-form-item>
     </el-form>
@@ -67,8 +67,8 @@
       <el-table-column prop="gmtCreate"label="录入时间"></el-table-column>
       <el-table-column label="操作" fixed="right" width=250>
 				<template slot-scope="scope">
-					<el-button type="warning" size="small" @click="updateShowBox(scope.row)">修 改</el-button>
-					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删 除</el-button>
+					<el-button type="warning" size="small" @click="updateShowBox(scope.row)" v-if="$root.btnControl.find(item=>item=='edit')">修 改</el-button>
+					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)" v-if="$root.btnControl.find(item=>item=='delete')">删 除</el-button>
 				</template>
 			</el-table-column>
     </el-table>
@@ -78,7 +78,7 @@
     <el-dialog title="新增" :visible.sync="addDialog" :close-on-click-modal="false">
       <div class="cont_box_left">
         <el-form label-position="right" label-width="100px" :model="formPush" :rules="rules"  ref='addList'>
-          <el-form-item label="姓名">
+          <el-form-item label="姓名" prop="name">
             <el-input v-model="formPush.name"></el-input>
           </el-form-item>
           <el-form-item label="手机号码" prop="phone">
@@ -178,7 +178,7 @@
     <el-dialog title="修改" :visible.sync="updateDialog" :close-on-click-modal="false">
       <div class="cont_box_left">
         <el-form label-position="right" label-width="100px" :model="formUpdate" ref='formUpdate'>
-          <el-form-item label="姓名">
+          <el-form-item label="姓名" prop="name">
             <el-input v-model="formUpdate.name"></el-input>
           </el-form-item>
           <el-form-item label="身份证">
@@ -281,6 +281,11 @@ export default {
         size: 10
       },
       formPush:{
+        name:'',
+        idNumber:'',
+        address:'',
+        email:'',
+        age:'',
         userType:2,
         sex:1,
         addUser:1,
@@ -291,7 +296,7 @@ export default {
       formUpdate:{},//修改表单
       total: 0,//数据总数
       total1: 0,//数据总数
-      pages:0,//页面总数
+      pages:0,//页面总数  
       addDialog:false,
       updateDialog:false,
       dataTree:[],
@@ -308,6 +313,7 @@ export default {
       xqTree:[],//小区列表
       rules: {
         phone:[{ required: true, message: '该项不能为空'}],
+        name:[{ required: true, message: '该项不能为空'}],
         ubicellJyh:[{ required: true, message: '该项不能为空'}],
         addUser:[{ required: true, message: '该项不能为空',trigger: 'change'}],
         getCall:[{ required: true, message: '该项不能为空',trigger: 'change'}],
@@ -317,7 +323,7 @@ export default {
     }
   },
   methods:{
-    confirmPhone(phone){
+    confirmPhone(phone){  
       let params ={
         phone:phone,
         xqId:this.formSearch.xqId

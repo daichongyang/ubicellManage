@@ -34,10 +34,10 @@
           <el-option label="业主房间" value="2"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item>
+      <el-form-item v-if="$root.btnControl.find(item=>item=='view')">
         <el-button size="small" @click="getlist">查 询</el-button>
       </el-form-item>
-      <el-form-item>
+      <el-form-item v-if="$root.btnControl.find(item=>item=='add')">
         <el-button size="small" @click="addDialog=true">添 加</el-button>
       </el-form-item>
     </el-form>
@@ -66,8 +66,8 @@
       <el-table-column label="操作" fixed="right" width='250'>
 				<template slot-scope="scope">
 					<el-button type="primary" size="small" @click="status=scope.row.isRent,showrentLeave(scope.row)" v-if="scope.row.isLive">{{scope.row.isRent?"搬离":"入住"}}</el-button>
-					<el-button type="warning" size="small" @click="updateShowBox(scope.row)">修 改</el-button>
-					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删 除</el-button>
+					<el-button type="warning" size="small" @click="updateShowBox(scope.row)" v-if="$root.btnControl.find(item=>item=='edit')">修 改</el-button>
+					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)" v-if="$root.btnControl.find(item=>item=='delete')">删 除</el-button>
 				</template>
 			</el-table-column>
     </el-table>
@@ -538,6 +538,10 @@ export default {
       if(this.formSearch1.xqId){
         this.formPush.xqId = this.formSearch1.xqId
       }
+      if(!this.formPush.sectionId){
+        this.$message("请选择区域")
+        return
+      }
       console.log(this.formPush)
       this.$refs.addList.validate((valid) => {
         console.log(valid)
@@ -623,7 +627,7 @@ export default {
      this.formUpdate={
        houseNum:item.houseNum,
        name:item.name,
-       sectionId:item.sectionId,
+       sectionId:Number(item.sectionId),
        type:item.type,
        floor:item.floor,
        id:item.id

@@ -101,6 +101,8 @@ const acs_door_open = () =>
     import ('@/components/yunmenjin/acs_door_open');
 const acs_auth_inout_log = () =>
     import ('@/components/yunmenjin/acs_auth_inout_log');
+const acs_auth_fushi_inout_log = () =>
+    import ('@/components/yunmenjin/acs_auth_fushi_inout_log');
 const acs_auth_init = () =>
     import ('@/components/yunmenjin/acs_auth_init');
 const acs_auth_user = () =>
@@ -828,7 +830,7 @@ export default new Router({
                         },
                         {
                             path: '/property_repair',
-                            name: "保修保养",
+                            name: "报修保养",
                             component: property_repair,
                             meta: {
                                 id: 76
@@ -1134,6 +1136,14 @@ export default new Router({
                             component: acs_auth_inout_log,
                             meta: {
                                 id: 28
+                            }
+                        },
+                        {
+                            path: '/acs_auth_fushi_inout_log',
+                            name: '富士门禁日志',
+                            component: acs_auth_fushi_inout_log,
+                            meta: {
+                                id: 156
                             }
                         },
                         {

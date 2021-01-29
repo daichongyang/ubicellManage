@@ -88,12 +88,12 @@
                         </div>
                       </template>
                       <el-menu-item-group>
-                        <el-menu-item @click="showForm = true,$router.push('/'+children4.description)" :index="index1.toString()+'-'+index2.toString()+'-'+index3.toString()+'-'+index4.toString()" v-for="(children4,index4) in itemChildrenChildren.children" :key="index4">{{children4.name}}</el-menu-item>
+                        <el-menu-item @click="showForm = true,goComponent('/'+children4.description,children4.resources)" :index="index1.toString()+'-'+index2.toString()+'-'+index3.toString()+'-'+index4.toString()" v-for="(children4,index4) in itemChildrenChildren.children" :key="index4">{{children4.name}}</el-menu-item>
                       </el-menu-item-group>
                     </el-submenu>
                     <!-- 四级 -->
                     <el-menu-item-group v-else>
-                      <el-menu-item :index="index1.toString()+'-'+index2.toString()+'-'+index3.toString()" @click="showForm = true,$router.push('/'+itemChildrenChildren.description)">{{itemChildrenChildren.name}}</el-menu-item>
+                      <el-menu-item :index="index1.toString()+'-'+index2.toString()+'-'+index3.toString()" @click="showForm = true,goComponent('/'+itemChildrenChildren.description,itemChildrenChildren.resources)">{{itemChildrenChildren.name}}</el-menu-item>
                     </el-menu-item-group>
                   </section>
 
@@ -102,7 +102,7 @@
                   </el-menu-item-group> -->
                   </el-submenu>
                   <el-menu-item-group v-else>
-                    <el-menu-item :index="index1.toString()+'-'+index2.toString()" @click="showForm = true,$router.push('/'+itemChildren.description)">{{itemChildren.name}}</el-menu-item>
+                    <el-menu-item :index="index1.toString()+'-'+index2.toString()" @click="showForm = true,goComponent('/'+itemChildren.description,itemChildren.resources)">{{itemChildren.name}}</el-menu-item>
                   </el-menu-item-group>
                 </section>
 
@@ -168,8 +168,21 @@
     methods:{
       handleGroup(value) {
         console.log(value);
+      },
+      goComponent(description,resources){//菜单跳转
+      let resourcess = ['view','add','delete','edit']
+      // let resourcess = []
+        // resources.forEach(item=>{
+        //   if(item.useAble){
+        //     resourcess.push(item.code)
+        //   }
+           
+        // })
+        this.$root.btnControl=resourcess||['btn']
+        console.log(this.$root.btnControl)
+        sessionStorage.setItem('btn',JSON.stringify(resourcess))
+        this.$router.push(description)
       }
-
     },
     mounted(){
       let backgroundImg = sessionStorage.getItem('backgroundImg')

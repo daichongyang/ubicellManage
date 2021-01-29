@@ -68,7 +68,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="简介" v-if="formPush.advertType == 3">
-            <el-input v-model="formPush.intro"></el-input>
+            <el-input v-model="formPush.intro" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
           </el-form-item>
           <el-form-item label="简介图片" v-if="formPush.advertType == 3">
           <el-upload
@@ -116,7 +116,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="简介">
-            <el-input v-model="formUpdate.intro"></el-input>
+            <el-input v-model="formUpdate.intro" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
           </el-form-item>
           <el-form-item label="简介图片">
           <el-upload

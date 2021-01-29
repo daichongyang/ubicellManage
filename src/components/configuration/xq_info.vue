@@ -17,10 +17,10 @@
       <el-form-item label="小区名称" size="small">
         <el-input v-model="formSearch.name" placeholder="请输入小区名称"></el-input>
       </el-form-item>
-      <el-form-item>
+      <el-form-item v-if="$root.btnControl.find(item=>item=='view')">
         <el-button size="small" @click="getInit">查 询</el-button>
       </el-form-item>
-      <el-form-item>
+      <el-form-item v-if="$root.btnControl.find(item=>item=='add')">
         <el-button size="small" @click="addDialog=true,address='',initAmap()">添 加</el-button>
       </el-form-item>
     </el-form>
@@ -39,14 +39,12 @@
       <el-table-column prop="gmtCreate"label="创建时间"width="180"></el-table-column>
       <el-table-column label="操作" fixed="right" width=250>
 				<template slot-scope="scope">
-					<el-button type="warning" size="small" @click="updateShowBox(scope.row)">修 改</el-button>
-					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删 除</el-button>
+					<el-button type="warning" size="small" @click="updateShowBox(scope.row)" v-if="$root.btnControl.find(item=>item=='edit')">修 改</el-button>
+					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)" v-if="$root.btnControl.find(item=>item=='delete')">删 除</el-button>
 				</template>
 			</el-table-column>
     </el-table>
     <paging @changePage = handleCurrentPage :get-total='total'></paging>
-
-
     <!-- 添加 -->
     <el-dialog title="新增" :visible.sync="addDialog" :close-on-click-modal="false">
       <div class="cont_box_left">
@@ -86,7 +84,6 @@
     
     <!-- 修改 -->
     <el-dialog title="修改" :visible.sync="updateDialog" :close-on-click-modal="false">
-      
       <div class="cont_box_left">
         <el-tree
           v-if="updateDialog"
@@ -113,14 +110,11 @@
             </el-radio-group>
           </el-form-item>
         </el-form>
-
-        
       <div slot="footer" class="dialog-footer">
         <el-button size="medium" @click="updateDialog = false">取 消</el-button>
         <el-button size="medium" @click="updateList">确定</el-button>
       </div>
     </el-dialog>
-
   </section>
 </template>
 

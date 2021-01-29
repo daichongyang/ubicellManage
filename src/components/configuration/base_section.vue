@@ -19,19 +19,19 @@
           <el-option v-for="item in xqTree" :label="item.name" :value="item.id" :key="item.id"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item>
+      <el-form-item v-if="$root.btnControl.find(item=>item=='view')">
         <el-button size="small" @click="getlist">查 询</el-button>
       </el-form-item>
-      <el-form-item>
+      <el-form-item v-if="$root.btnControl.find(item=>item=='add')">
         <el-button size="small" @click="addDialog=true">添 加</el-button>
       </el-form-item>
-      <el-form-item>
+      <el-form-item v-if="$root.btnControl.find(item=>item=='delete')">
         <el-button size="small" type="danger" @click="deleInfor(false)">批量删除</el-button>
       </el-form-item>
     </el-form>
     <!-- 面包屑 -->
     <div class="show_father">
-      <div class="show_father_box"> 
+      <div class="show_father_box">
         <div style="cursor: pointer;" v-for="(item,index) in fatherName" :key="index" @click="clickmbx(item.id)">
           <span>{{item.name}} </span>
           <span v-if="index!=fatherName.length-1" style="margin-right:10px;"> → </span>
@@ -60,8 +60,8 @@
       <el-table-column prop="xqName"label="所属小区"width="180"></el-table-column>
       <el-table-column label="操作" fixed="right" width=250>
 				<template slot-scope="scope">
-					<el-button type="warning" size="small" @click="updateShowBox(scope.row)">修 改</el-button>
-					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删 除</el-button>
+					<el-button type="warning" size="small" @click="updateShowBox(scope.row)" v-if="$root.btnControl.find(item=>item=='edit')">修 改</el-button>
+					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)" v-if="$root.btnControl.find(item=>item=='delete')">删 除</el-button>
 				</template>
 			</el-table-column>
     </el-table>

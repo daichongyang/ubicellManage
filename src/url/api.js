@@ -25,12 +25,13 @@ export const uploadToRealPath = () => "/intellmanagerV3.0/upload/uploadfile"
 
 export const login = (params) => { return axios.post('/intellmanagerV3.0/anno/token', params) } //获取认证token
 export const sysLogList = (params) => { return axios.post('/intellmanagerV3.0/log/list/sys/page', params) } //查询系统日志分页列表
-export const menuList = (params) => { return axios.post('/intellmanagerV3.0/menu/tree', params) } //查询系统所有的菜单
+export const menuList = (params) => { return axios.post('/intellmanagerV3.0/menu/tree/' + params) } //查询系统所有的菜单
 
 export const orgTree = (params) => { return axios.post('/intellmanagerV3.0/org/tree', params) } //查询所有组织列表
 export const saveTree = (params) => { return axios.post('/intellmanagerV3.0/org/tree/save', params) } //添加组织树
 export const updateTree = (params) => { return axios.post('/intellmanagerV3.0/org/tree/update', params) } //修改组织树
 export const deleteTree = (params) => { return axios.post('/intellmanagerV3.0/org/tree/delete', params) } //删除组织
+export const authority = (params) => { return axios.post('/intellmanagerV3.0/auth/resource/list/authority/' + params.menuId + "/" + params.bindMenuid) } //查看用户菜单有权限资源列表
 
 export const xqList = (params) => { return axios.post('/intellmanagerV3.0/xq/list/page', params) } //查询小区分页列表
 export const xqAddList = (params) => { return axios.post('/intellmanagerV3.0/xq/add', params) } //添加新小区
@@ -65,6 +66,8 @@ export const updateDoorDev = (params) => { return axios.post('/intellmanagerV3.0
 export const getAllDevSetting = (params) => { return axios.post('/intellmanagerV3.0/door/getAllDevSetting/' + params.xqId) } //获取所有门禁设备类型
 export const getDevSetting = (params) => { return axios.post('/intellmanagerV3.0/door/getDevSetting/' + params.xqId) } //获取已勾选的门禁设备类型
 export const editDevSetting = (params) => { return axios.post('/intellmanagerV3.0/door/editDevSetting', params) } //勾选or取消勾选门禁设备类型
+export const getFushiDoorOperLog = (params) => { return axios.post('/intellmanagerV3.0/door/getFushiDoorOperLog', params) } //富士门禁日志查询
+export const syncFushiDevice = (params) => { return axios.post('/intellmanagerV3.0/door/syncFushiDevice/' + params) } //同步富士门禁设备
 
 export const adduserhouselist = (params) => { return axios.post('/intellmanagerV3.0/house/user/add', params) } //添加房间用户
 export const deleteuserhouselist = (params) => { return axios.post('/intellmanagerV3.0/house/user/delete', params) } //删除房间单个用户
@@ -247,7 +250,8 @@ export const delMessage = (params) => { return axios.post('/intellmanagerV3.0/Me
 export const getAllHouseUser = (params) => { return axios.post('/intellmanagerV3.0/Message/getAllHouseUser', params) } // 发送通知时获取所有区域、房间、人员。设备则只选择devType=3 或者 5的门口机设备
 export const recallMessage = (params) => { return axios.post('/intellmanagerV3.0/Message/recallMessage/' + params) } // 撤回已发出的通知(status=1的可以撤回)
 export const sendMessage = (params) => { return axios.post('/intellmanagerV3.0/Message/sendMessage/' + params) } // 立即发送已保存的通知(即status=2的可以立即发送)
-export const getOneHouseUser = (params) => { return axios.post('/intellmanagerV3.0/Message/getOneHouseUser/' + params) } // 获取单个房间的用户列表
+    // export const getOneHouseUser = (params) => { return axios.post('/intellmanagerV3.0/Message/getOneHouseUser/' + params) } // 获取单个房间的用户列表
+export const getOneHouseUser = (params) => { return axios.post('/intellmanagerV3.0/Message/getOneHouseUser', params) } // 获取房间列表的用户列表
 
 export const getVillageAD = (params) => { return axios.post('/intellmanagerV3.0/Message/getVillageAD', params) } // 获取小区广告
 export const saveVillage = (params) => { return axios.post('/intellmanagerV3.0/Message/saveVillage', params) } // 发送小区广告
@@ -365,3 +369,15 @@ export const closedate = (params) => { return axios.post('/intellmanagerV3.0/PmR
 export const accountBalanceList = (params) => { return axios.post('/intellmanagerV3.0/card/account/balance/list', params) } // 余额查询分页列表
 export const accountBalanceListSettlement = (params) => { return axios.post('/intellmanagerV3.0/card/account/balance/balance/settlement', params) } // 房间余额批量结算
 export const accountBalanceListOption = (params) => { return axios.post('/intellmanagerV3.0/card/account/balance/list/balance/option/' + params.xqId) } // 查询小区余额项目
+
+export const getHdlMqttScreenCmds = (params) => { return axios.post('/intellmanagerV3.0/iot/getHdlMqttScreenCmds', params) } // 获取hdl mqtt场景指令集
+export const getHdlMqttDeviceCmds = (params) => { return axios.post('/intellmanagerV3.0/iot/getHdlMqttDeviceCmds/' + params.moduleId + "/" + params.deviceId) } // 获取hdl mqtt房间设备指令集
+export const delHdlMqttDeviceCmd = (params) => { return axios.post('/intellmanagerV3.0/iot/delHdlMqttDeviceCmd', params) } // 删除hdl mqtt房间设备指令集
+export const delHdlMqttScreenCmd = (params) => { return axios.post('/intellmanagerV3.0/iot/delHdlMqttScreenCmd', params) } // 删除hdl mqtt场景指令集
+export const addHdlMqttDeviceCmd = (params) => { return axios.post('/intellmanagerV3.0/iot/addHdlMqttDeviceCmd', params) } // 设置hdl mqtt房间设备指令集
+export const addHdlMqttScreenCmd = (params) => { return axios.post('/intellmanagerV3.0/iot/addHdlMqttScreenCmd', params) } // 设置hdl mqtt场景指令集
+export const editHdlMqttDeviceCmd = (params) => { return axios.post('/intellmanagerV3.0/iot/editHdlMqttDeviceCmd', params) } // 编辑hdl mqtt房间设备指令集
+export const editHdlMqttScreenCmd = (params) => { return axios.post('/intellmanagerV3.0/iot/editHdlMqttScreenCmd', params) } // 编辑hdl mqtt场景指令集
+
+export const bindGlobalParamForConfig = (params) => { return axios.post('/intellmanagerV3.0/iot/bindGlobalParamForConfig/' + params.projectId + "/" + params.globalParamId) } // 智能家庭配置全局参数
+export const bindProjectParamForConfig = (params) => { return axios.post('/intellmanagerV3.0/iot/bindProjectParamForConfig/' + params.projectId + "/" + params.projectParamId) } // 智能家庭配置工程参数

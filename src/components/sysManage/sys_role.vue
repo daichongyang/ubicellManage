@@ -39,7 +39,7 @@
               <el-button type="text" size="mini" @click="() => srueDate(data)"> 确定 </el-button>
             </span> -->
 
-            <el-button v-if="!data.parentId&&data.parentId!=0" style="margin-left:30px;" type="danger" size="mini" @click="() => deleInfor(data)"> 删除 </el-button> 
+            <el-button v-if="!data.parentId&&data.parentId!=0&&$root.btnControl.find(item=>item=='delete')" style="margin-left:30px;" type="danger" size="mini" @click="() => deleInfor(data)"> 删除 </el-button> 
           </div>
         </el-tree>
       </div>
@@ -72,7 +72,7 @@
                 <el-radio :label="false">禁止</el-radio>
               </el-radio-group>
           </el-form-item>
-          <el-form-item>
+          <el-form-item v-if="$root.btnControl.find(item=>item=='add')">
             <el-button v-if="changeHandle == 1" size="medium " @click="addTree('formPush')">新增</el-button>
             <el-button v-else size="medium " type="warning" @click="upTree('formPush')">修改</el-button>
           </el-form-item>
@@ -95,31 +95,44 @@
             </el-cascader>
           </el-form-item>
           <el-form-item label="菜单" size="small">
-            <el-tree
-              :data="menuList"
-              :props='defaultProps'
-              :check-strictly="checkStrictly"
-              show-checkbox
-              :default-expanded-keys="showmenuList"
-              :default-checked-keys="showmenuList"
-              @check="handleCheckChange"
-              node-key="id"
-              ref="rightsTree"
-            >
-            </el-tree>
+            <el-row >
+              <el-col :span="12">
+                <el-tree
+                  :data="menuList"
+                  :props='defaultProps'
+                  :check-strictly="checkStrictly"
+                  show-checkbox
+                  :default-expanded-keys="showmenuList"
+                  :default-checked-keys="showmenuList"
+                  @check="handleCheckChange"
+                  @node-click="treeClick1"
+                  node-key="id"
+                  ref="rightsTree"
+                >
+                </el-tree>
+              </el-col>
+              <el-col :span="12">
+                <div class="colorBlue">{{btnFather}}</div>
+                <el-table :data="formData11" :row-key="getkey" style="width: 100%" stripe @selection-change="handleSelectionChange" ref="multipleTable">
+                  <el-table-column type="selection" width="55" :reserve-selection="true" label="全选"></el-table-column>
+                  <el-table-column prop="code" label="code"></el-table-column>
+                  <el-table-column prop="name" label="名称"></el-table-column>
+                </el-table>
+              </el-col>
+            </el-row>
           </el-form-item>
         </el-form>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button size="medium " @click="dialog = false">取 消</el-button>
-        <el-button size="medium " @click="binding()">绑 定</el-button>
+        <el-button size="medium " @click="binding()" :loading="dialoggg">绑 定</el-button>
       </div>
     </el-dialog>
   </section>
 </template>
 
 <script>
-import { menuList,bindmenuroleId,bindmenu,roletreeList,addroletreeList,updateroletreeList,deleteroletreeList,xqSelectList,orgTree } from '../../url/api';
+import { menuList,bindmenuroleId,bindmenu,roletreeList,addroletreeList,updateroletreeList,deleteroletreeList,xqSelectList,orgTree,authority } from '../../url/api';
 export default {
   data(){
     return{
@@ -129,6 +142,7 @@ export default {
       menuList:[],
       showmenuList:[],
       dialog:false,
+      dialoggg:false,
       changeHandle:1,//1表示执行新增，0表示修改
       formSearch:{
         name:'',
@@ -160,12 +174,96 @@ export default {
       },
       bindMenu:{
         id:'',
-        menuIds:[]
+        menuIds:[],
+        resources:[],
       },
-      delTree:[]//删除树
+      formData11:[],
+      formData1:[],
+      resources:[//只记录useAble为true的对象
+
+      ],
+      fatherCheckedObj:'',
+      delTree:[],//删除树
+      btnFather:'',
+      deleBatch:[]//删除树
     }
   },
   methods:{
+    getkey(row){
+      return row.id
+    },
+    treeClick1(data){//树状图node节点点击事件,将该节点的数据填充，修改
+    this.btnFather = data.name
+    this.formData11= data.resources
+      if(!data.isClicked){
+        data.resources.forEach(item=>{
+          item.parentId=data.parentId
+          if(item.useAble){
+            this.$refs.multipleTable.toggleRowSelection(item);
+          }
+        })
+      }
+      // // this.$refs.multipleTable.clearSelection();
+      data.isClicked = true
+      // // this.getauthority(data)
+      console.log(data)
+    },
+    handleSelectionChange(val,self) {//列表多选//已经选中中左边的所有对象
+      this.formData1 = val
+      // this.formData11.forEach(item=>{
+      //   if(this.formData1.find(ii=>item.id==ii.id)){
+          
+      //   }else{
+      //     item.useAble = false
+      //   }
+      // })
+      // this.formData1= this.formData1.filter(item=>{
+      //   val.forEach(ii=>{
+      //     if(ii.id == item.id){
+      //       item.useAble = true
+      //       // this.$refs.multipleTable.toggleRowSelection(item);
+      //     }else{
+      //       item.useAble = false
+      //       // this.$refs.multipleTable.clearSelection(item);
+      //     }
+      //   })
+      //   return item
+      // })
+      console.log(val)
+      // val = val.filter(item=>{
+      //   if(this.formData1.find(ii=>ii.id == item.id)){
+      //     item.useAble = true
+      //   }else{
+      //     item.useAble = false
+      //   }
+        
+      //   return item
+      // })
+
+    },
+    getauthority(data){//查看用户菜单有权限资源列表
+      
+      if(!this.bindMenu.id){
+        this.$message("请先选择角色")
+        return
+      }
+      let params = {
+        menuId:data.id,
+        bindMenuid: this.bindMenu.id,
+      }
+      authority(params).then(res=>{
+        console.log(res)
+        if(res.data.code ==200){
+          this.formData1 = res.data.data
+          // console.log(this.checkedObj,this.checkedObj.resources.length)
+          this.formData1.forEach(item=>{
+            if(item.useAble){
+              this.$refs.multipleTable.toggleRowSelection(item);
+            }
+          })
+        }
+      })
+    },
     getlist(){
       let params = sessionStorage.getItem('userId')
       roletreeList(params).then((res)=>{//角色列表
@@ -173,7 +271,7 @@ export default {
         if(res.data.code == 200){
           this.formData = res.data.data
         }
-      })   
+      })
     },
     loadNode(node, resolve) {
       if(node.level == 0){
@@ -200,26 +298,50 @@ export default {
         }
       })
       this.checkStrictly = true
-      menuList({}).then((res)=>{//查询系统所有的菜单
-        console.log(res)
-        if(res.data.code == 200){
-          this.menuList = res.data.data  
-        }
-      })
+    },
+    getmenuList(){
+      console.log(this.option2)
+      let params = this.option2[this.option2.length -1]
+      this.formData11=[]
+      this.$refs.multipleTable.clearSelection();
+      if(params){
+        this.menuList=[]
+        menuList(params).then((res)=>{//查询系统所有的菜单
+          console.log(res)
+          if(res.data.code == 200){
+            this.dialog = true
+            this.menuList = res.data.data
+            this.huixian()
+          }
+        })
+      }
+      
     },
     handleChange(value){
         this.formPush.orgId = this.option1[this.option1.length -1]
     },
-    handleChange1(value){//绑定
+    handleChange1(value){//绑定角色
+      this.getmenuList()//左边列表
+    },
+    huixian(){
       this.checkStrictly = true
       this.bindMenu.id = this.option2[this.option2.length -1]
       bindmenuroleId(this.bindMenu.id).then((res)=>{//角色菜单回显
         console.log(res)
         if(res.data.code == 200){
           this.showmenuList = res.data.data
-          this.$nextTick(() => {
+
             this.$refs.rightsTree.setCheckedKeys(this.showmenuList);
             this.checkStrictly = false
+
+          this.$nextTick(() => {
+            setTimeout(()=>{
+              console.log(this.$refs.rightsTree.getCheckedNodes())
+              this.fatherCheckedObj = this.$refs.rightsTree.getCheckedNodes().filter(item=>{
+                item.isClicked = false//表示没有点击
+                return item
+              })
+            },1000)
           });
           // this.showmenuList = res.data.data
           this.bindMenu.menuIds = this.showmenuList
@@ -304,6 +426,36 @@ export default {
 
     },
     binding(){//角色绑定菜单
+      this.dialoggg = true
+      this.bindMenu.resources= []
+      let checkedObj =this.$refs.rightsTree.getCheckedNodes()
+      checkedObj.forEach(item=>{//收集已勾选，未被点击的树状对象，左边的
+      if(item.isClicked){
+        this.formData1.forEach(ii=>{//右边的左右对象
+          this.bindMenu.resources.push(ii.id)
+        })
+      }else{
+        item.resources.forEach(ii=>{//右边的左右对象
+          if(ii.useAble){
+            this.bindMenu.resources.push(ii.id)
+          }
+          
+        })
+      }
+        // this.formData1.forEach(ii=>{//右边的左右对象
+        //   if(item.id==ii.menuId){
+        //     this.bindMenu.resources.push(ii.id)
+        //   }else{
+        //     item.resources.forEach(tt=>{//没有被点击过的
+        //       if(tt.useAble){
+        //         this.bindMenu.resources.push(tt.id)
+        //       }
+        //     })
+        //   }
+        // })
+      })
+      let aa = this.bindMenu.resources
+      this.bindMenu.resources = [...new Set(aa)]
       console.log(this.bindMenu)
       bindmenu(this.bindMenu).then((res)=>{
         console.log(res)
@@ -313,12 +465,13 @@ export default {
             type: 'success'
           });
         }
+        this.dialoggg = false
         this.dialog = false
       })
     },
-    handleCheckChange(checkedNodes, obj ) {//树状图选中
+    handleCheckChange(checkedNodes, obj) {//树状图选中
       console.log(obj);
-      this.bindMenu.menuIds = this.$refs.rightsTree.getCheckedKeys().concat(this.$refs.rightsTree.getHalfCheckedKeys())
+      this.bindMenu.menuIds = this.$refs.rightsTree.getCheckedKeys().concat(this.$refs.rightsTree.getHalfCheckedKeys())||[]
       console.log(this.$refs.rightsTree.getCheckedKeys().concat(this.$refs.rightsTree.getHalfCheckedKeys()),"dfdff");
     },
     getTreeArr(id,option){//回显遍历组织id
@@ -353,5 +506,9 @@ export default {
   }
   .cont_box_right .el-form-item{
     margin-bottom:20px;
+  }
+  .colorBlue{
+    margin-left:10px;
+    color:#a1d6f4;
   }
 </style>

@@ -41,7 +41,7 @@
           placeholder="结束时间">
         </el-date-picker>
       </el-form-item>
-      <el-form-item>
+      <el-form-item v-if="$root.btnControl.find(item=>item=='view')">
         <el-button size="small" @click="getlist">查 询</el-button>
       </el-form-item>
     </el-form>

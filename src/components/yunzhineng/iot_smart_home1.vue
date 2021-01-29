@@ -9,7 +9,9 @@
       </el-row>
       <!--  -->
       <div class="iot_smart_module">
-        <div>全局参数</div>
+        <div>全局参数
+          <el-button type="primary" size="small" style="float:right;margin-left:20px;" @click="iotglobalparamDialog=true,nowConfigInforId=item.id">配置</el-button>
+        </div>
         <div class="module_cont" v-if="item.globalParam">
           <div class="module_cont_json">
             <el-row :gutter="20">
@@ -21,7 +23,9 @@
         <div style="color:#999;" v-else>暂无数据</div>
       </div>
       <div class="iot_smart_module">
-        <div>工程参数</div>
+        <div>工程参数
+          <el-button type="primary" size="small" style="float:right;margin-left:20px;" @click="iotprojectparamDialog=true,nowConfigInforId=item.id">配置</el-button>
+        </div>
         <div class="module_cont" v-if="item.projectParam">
           <div class="module_cont_json">
             <el-row :gutter="20">
@@ -43,7 +47,7 @@
       <div class="iot_smart_module">
         <div>用户列表 
           <el-button type="danger" size="small" style="float:right;margin-left:20px;" @click="deleInfor">删除</el-button>
-          <el-button type="primary" size="small" style="float:right;" @click="showAddUsers(item.id,item.xqId),addDialog=true">添加</el-button>
+          <el-button type="primary" size="small" style="float:right;" @click="showAddUsers(item.id,item.xqId,item.main.mainType,item.main.mainId),addDialog=true">添加</el-button>
         </div>
         <div class="module_cont" v-if="item.users">
           <el-table :data="item.users" style="width: 100%" @selection-change="handleSelectionChange">
@@ -75,6 +79,7 @@
                   <el-input size="small" v-model="scItem.name" placeholder="请输入内容" :value="scItem.name"></el-input>
                 </div>
                 <div class="module_cont_screens_bot">
+                  <el-button v-if="item.isHdlMqtt==1" size="mini" @click="getmqtt(scItem,1)">操作mqtt</el-button>
                   <el-button type="primary" size="mini" @click="changesetNameToEntity(scItem)">保存</el-button>
                   <el-button type="danger" size="mini" @click="deletedelDeviceOne(scItem.id,scItem.typeCode)">删除</el-button>
                 </div>
@@ -109,6 +114,7 @@
                             <el-input size="small" v-model="zmmoItemItem.name" placeholder="请输入内容" :value="zmmoItemItem.name"></el-input>
                           </div>
                           <div class="module_cont_screens_bot">
+                            <el-button v-if="item.isHdlMqtt==1" size="mini" @click="getmqtt(zmmoItemItem,2)">操作mqtt</el-button>
                             <el-button type="primary" size="mini" @click="changesetNameToEntity(zmmoItemItem,zmmoItem.typeCode)">保存</el-button>
                             <el-button type="danger" size="mini" @click="deletedelDeviceOne(zmmoItemItem.id,zmmoItem.typeCode)">删除</el-button>
                           </div>
@@ -205,12 +211,27 @@
         </div>
       </div>
     </el-dialog>
+    <!-- hdl mqtt智能设备。 -->
+    <el-dialog title="mqtt智能设备" :visible.sync="mqttDialog">
+      <iotsmarthomemqtt :mqttInfor="mqttInfor" :typeObj="typeObj"></iotsmarthomemqtt>
+    </el-dialog>
+    <!-- 全局参数 -->
+    <el-dialog title="全局参数配置" :visible.sync="iotglobalparamDialog">
+      <iotglobalparam :iotglobalparamtype="iotglobalparamtype" @getGobalInfor="getGobalInfor"></iotglobalparam>
+    </el-dialog>
+    <!-- 工程参数配置 -->
+    <el-dialog title="工程参数配置" :visible.sync="iotprojectparamDialog">
+      <iotprojectparam :iotProjectparamtype="iotProjectparamtype" @getProjectInfor="getProjectInfor"></iotprojectparam>
+    </el-dialog>
   </section>
 </template>
 
 <script>
 import paging from "../paging"
-import {setImgeToEntity,iotdelImg,iotdelAllImg,addEntityImg,toShowImgs,deleteunBindUserForConfig,toSelectUsers,bindUserForConfig,delProjectConfig,pushThisConfig,setNameToEntity,getIotDetailData,delDeviceOne,delModule} from "../../url/api"
+import iotsmarthomemqtt from "./iot_smart_home_mqtt"
+import iotglobalparam from "./iot_global_param"
+import iotprojectparam from "./iot_project_param"
+import {bindGlobalParamForConfig,bindProjectParamForConfig,setImgeToEntity,iotdelImg,iotdelAllImg,addEntityImg,toShowImgs,deleteunBindUserForConfig,toSelectUsers,bindUserForConfig,delProjectConfig,pushThisConfig,setNameToEntity,getIotDetailData,delDeviceOne,delModule} from "../../url/api"
 export default {
   data(){
     return{
@@ -219,15 +240,22 @@ export default {
         token:sessionStorage.getItem('token')
       },
       disabled:false,
+      iotglobalparamDialog:false,
+      iotprojectparamDialog:false,
       screensType:1,
+      iotglobalparamtype:1,//全局参数
+      iotProjectparamtype:1,//工程参数
+      isHdlMqtt:null,
       devicesType:1,
       projectConfigId:'',
       uploadToRealPath:'',
       picsDialog:false,
+      mqttDialog:false,
+      mqttInfor:{},
       xqId:'',
       total:0,
       addDialog:false,
-      dataInfor:JSON.parse(this.$route.query.configInfor) ,
+      dataInfor:JSON.parse(this.$route.query.configInfor),
       configInfor:[],
       formData:[],
       deleBatch:[],
@@ -239,6 +267,8 @@ export default {
       picSeach:{
 
       },
+      nowConfigInforId:'',
+      typeObj:1,//1changjin,2fangjian
       picsArr:[],
       imageUrl:'',
       picInfor:{
@@ -250,6 +280,45 @@ export default {
     }
   },
   methods:{
+    getGobalInfor(val){//全局参数配置数据
+      this.iotglobalparamDialog=false
+      let params = {
+        projectId:this.nowConfigInforId,
+        globalParamId:val.id,
+      }
+      bindGlobalParamForConfig(params).then(res=>{
+        console.log(res)
+        if(res.data.code == 200){
+          this.$message("全局参数配置成功")
+          this.getlist()
+        }else{
+          this.$message("全局参数配置失败")
+        }
+      })
+    },
+    getProjectInfor(val){//智能家庭配置工程参数
+      
+      this.iotprojectparamDialog = false
+      let params = {
+        projectId:this.nowConfigInforId,
+        projectParamId:val.id,
+      }
+      bindProjectParamForConfig(params).then(res=>{
+        console.log(res)
+        if(res.data.code == 200){
+          this.$message("工程参数配置成功")
+          this.getlist()
+        }else{
+          this.$message("工程参数配置失败")
+        }
+      })
+    },
+    getmqtt(val,type){//mqtt弹窗
+      console.log(val,type)
+      this.typeObj = type
+      this.mqttDialog = true
+      this.mqttInfor = val
+    },
     getImgid(id){
       console.log(id)
       this.uploadImg.entityImgId=id
@@ -356,10 +425,12 @@ export default {
         }
       })
     },
-    showAddUsers(id,xqId){
+    showAddUsers(id,xqId,mainType,mainId){
       console.log(id)
       this.projectConfigId = id
       this.xqId = xqId
+      this.seach.mainType = mainType
+      this.seach.mainId = mainId
       toSelectUsers(this.seach).then(res=>{//获取可选用户
         console.log(res)
         if(res.data.code == 200){
@@ -398,7 +469,7 @@ export default {
         typeCode:typeCode,
       }
         this.$confirm('确定要删除吗?', '提示', {
-          confirmButtonText: '确定',
+          confirmButtonText: '确定', 
           cancelButtonText: '取消',
           type: 'warning'
           }).then(() => {
@@ -413,13 +484,12 @@ export default {
           })
           }).catch(() => {});
     },
-    getList(){
+    getlist(){
       let params = this.dataInfor
       getIotDetailData(params).then((res)=>{//获取智能家庭数据.
         console.log(res)
         if(res.data.code == 200){
           this.configInfor = res.data.data
-          
         }else{
           this.$message(res.data.msg);
         }
@@ -430,7 +500,7 @@ export default {
       let params = {
         tempId:obj.id,
         tempImgName:obj.name,
-        tempImgMode:typeCode||obj.typeCode,
+        tempTypeCode:typeCode||obj.typeCode,
       }
       setNameToEntity(params).then(res=>{
         console.log(res)
@@ -533,7 +603,10 @@ export default {
     console.log(JSON.parse(this.$route.query.configInfor) )
   },
   components:{
-    paging
+    paging,
+    iotsmarthomemqtt,
+    iotprojectparam,
+    iotglobalparam,
   }
 }
 </script>
@@ -564,7 +637,7 @@ export default {
 }
 .module_cont_screens_item{
   display: inline-block;
-  width:190px;
+  width:220px;
   margin-right:20px;
   margin-bottom:20px;
 }

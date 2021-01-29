@@ -23,14 +23,19 @@
       </el-form-item>
     </el-form>
     <el-table :data="formData" style="width: 100%" stripe>
-      <el-table-column prop="protocolVersion" label="hdl协议版本号"></el-table-column>
+      <el-table-column label="hdl协议版本号" v-if="iotglobalparamtype==1">
+        <template slot-scope="scope">
+          <el-radio v-model="iotGlobalRadio" :label="scope.row">{{scope.row.protocolVersion}}</el-radio>
+        </template>
+      </el-table-column>
+      <el-table-column prop="protocolVersion" label="hdl协议版本号" v-else></el-table-column>
       <el-table-column prop="xqName" label="小区名称"></el-table-column>
       <el-table-column prop="workPattern" label="工作模式">
         <template slot-scope="scope">
           {{scope.row.workPattern==0?'自动':scope.row.workPattern==1?'远程':'本地'}}
         </template>
       </el-table-column>
-      <el-table-column label="操作" fixed="right" width=250>
+      <el-table-column label="操作" fixed="right" width=250 v-if="iotglobalparamtype!=1">
 				<template slot-scope="scope">
 					<el-button type="warning" size="small" @click="updateShowBox(scope.row)">修 改</el-button>
 					<el-button type="danger" size="small" @click="deleInfor(scope.row.id)">删 除</el-button>
@@ -38,7 +43,9 @@
 			</el-table-column>
     </el-table>
     <paging @changePage = handleCurrentPage :get-total='total'></paging>
-
+    <div v-if="iotglobalparamtype==1">
+			<el-button type="warning" size="small" @click="goiotsmarthome1">确 定</el-button>
+    </div>
     <!-- 添加 -->
     <el-dialog title="新增" :visible.sync="addDialog" :close-on-click-modal="false">
       <div class="cont_box_right">
@@ -94,8 +101,10 @@
 import paging from "../paging"
 import { getHdlGlobalParam,addHdlGlobalParam,updateHdlGlobalParam,delHdlGlobalParam,xqSelectList,orgTree } from '../../url/api';
 export default {
+  props:['iotglobalparamtype'],
   data(){
     return{
+      iotGlobalRadio:'',
       bindRole:{},
       showmenuList:[],
       menuList:[],
@@ -134,6 +143,9 @@ export default {
     }
   },
   methods:{
+    goiotsmarthome1(){
+      this.$emit("getGobalInfor",this.iotGlobalRadio)
+    },
     getlist(){
       getHdlGlobalParam(this.formSearch).then((res)=>{
         console.log(res)

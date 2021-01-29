@@ -6,16 +6,16 @@
           <el-form-item label="">
             <el-input v-model="formSearch.name" placeholder="搜索部门名称"></el-input>
           </el-form-item>
-          <el-form-item label="">
+          <el-form-item label="" v-if="$root.btnControl.find(item=>item=='view')">
              <el-button @click="getInit">查询</el-button>
           </el-form-item>       
-          <el-form-item label="">
+          <el-form-item label="" v-if="$root.btnControl.find(item=>item=='add')">
              <el-button type="primary" @click="showAdd">添加</el-button>
           </el-form-item>
-          <el-form-item label="">
+          <el-form-item label="" v-if="$root.btnControl.find(item=>item=='edit')">
             <el-button type="warning" @click="showupdata">修改</el-button>
           </el-form-item>
-          <el-form-item label="">
+          <el-form-item label="" v-if="$root.btnControl.find(item=>item=='delete')">
             <el-button type="danger" @click="deleInfor">删除</el-button>
           </el-form-item>
         </el-form>
@@ -46,13 +46,13 @@
             <el-input v-model="formPush.parentName" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="名称" prop="name">
-            <el-input v-model="formPush.name"></el-input>
+            <el-input v-model.trim="formPush.name"></el-input>
           </el-form-item>
           <el-form-item label="简称">
-            <el-input v-model="formPush.abbreviation"></el-input>
+            <el-input v-model="formPush.abbreviation" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
           </el-form-item>
           <el-form-item label="描述">
-            <el-input v-model="formPush.description"></el-input>
+            <el-input v-model="formPush.description" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
           </el-form-item>
           <el-form-item label="类型">
               <el-radio-group v-model="formPush.type">
@@ -70,7 +70,7 @@
             <el-input-number :disabled="this.changeHandle == 1" v-model="formPush.sortValue" :min="min" :max="inputNumber"></el-input-number>
           </el-form-item>
           <el-form-item>
-            <el-button v-if="changeHandle == 1" size="medium " @click="addTree('formPush')">新增</el-button>
+            <el-button v-if="changeHandle == 1&&$root.btnControl.find(item=>item=='add')" size="medium " @click="addTree('formPush')">新增</el-button>
             <el-button v-else size="medium " type="warning" @click="upTree('formPush')">修改</el-button>
           </el-form-item>
         </el-form>
@@ -262,7 +262,11 @@ export default {
     checkInfor(data,ev) {//监听勾选
       console.log(ev);
       this.delTree = ev.checkedKeys
-      if(this.delTree){
+      let topFather = ev.halfCheckedKeys
+      if(topFather.length==0){
+        this.delTree.shift()
+      }
+      if(this.delTree ){
         this.formPush.parentId = this.delTree[0]
       }
       

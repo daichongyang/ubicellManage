@@ -242,7 +242,7 @@ export default {
     },
     addList(addList){//添加树状图node节点
       if(this.formPush.type == 1){
-        if(!this.formPush.servicetype){
+        if(!this.formPush.servicetype&&this.formPush.servicetype!=0){
           this.$message("请选择服务类型")
           return
         }
@@ -273,7 +273,7 @@ export default {
     },
     updateList(formName){//修改
       if(this.formUpdate.type == 1){
-        if(!this.formUpdate.servicetype){
+        if(!this.formUpdate.servicetype&&this.formUpdate.servicetype!=0){
           this.$message("请选择服务类型")
           return
         }

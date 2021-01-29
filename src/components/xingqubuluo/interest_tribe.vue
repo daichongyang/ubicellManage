@@ -91,7 +91,7 @@
             <el-input v-model="formPush.itName"></el-input>
           </el-form-item>
           <el-form-item label="内容" size="small" prop="descDetail">
-            <el-input v-model="formPush.descDetail"></el-input>
+            <el-input v-model="formPush.descDetail" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
           </el-form-item>
           <el-form-item label="审核人" size="small" prop="verifier">
             <el-input v-model="formPush.verifier"></el-input>

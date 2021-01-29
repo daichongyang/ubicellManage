@@ -91,7 +91,7 @@
               <el-option label="业主/成员各自分配" :value="2"></el-option>
             </el-select>
           </el-form-item> -->
-          <el-form-item :label="formPush.applyType==1?'有效时段控制类型':'业主有效时段控制类型'" size="small">
+          <el-form-item v-if="formPush.ownerDurationType" :label="formPush.applyType==1?'有效时段控制类型':'业主有效时段控制类型'" size="small">
             <el-select v-model="formPush.ownerDurationType" @change="changeItem">
               <el-option label="每天" :value="1"></el-option>
               <el-option label="工作日" :value="2"></el-option>
@@ -133,7 +133,7 @@
             </el-form-item>
           </section>
           <!----------------------------------------------------->
-          <section v-if="formPush.applyType==2">
+          <section v-if="formPush.memberDurationType">
             <el-form-item label="成员有效时段控制类型" size="small">
               <el-select v-model="formPush.memberDurationType" @change="changeItem2">
                 <el-option label="每天" :value="1"></el-option>

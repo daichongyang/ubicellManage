@@ -23,10 +23,10 @@
         <el-input v-model="formSearch.verifier" placeholder="请输入审核人员"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button size="small" @click="getlist">查 询</el-button>
-        <el-button type="primary" size="small" @click="addDialog=true">添 加</el-button>
+        <el-button size="small" @click="getlist" v-if="$root.btnControl.find(item=>item=='view')">查 询</el-button>
+        <el-button type="primary" size="small" @click="addDialog=true" v-if="$root.btnControl.find(item=>item=='add')">添 加</el-button>
       </el-form-item>
-      <el-form-item>
+      <el-form-item v-if="$root.btnControl.find(item=>item=='delete')">
         <el-button size="small" type="danger" @click="deleInfor(false)">批量删除</el-button>
       </el-form-item>
     </el-form>
@@ -77,7 +77,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="内容" size="small" prop="descDetail">
-            <el-input v-model="formPush.descDetail"></el-input>
+            <el-input v-model="formPush.descDetail" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
           </el-form-item>
           <el-form-item label="图片" size="small" prop="">
             <el-upload

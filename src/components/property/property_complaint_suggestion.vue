@@ -62,10 +62,20 @@
           {{$root.getDateArray(scope.row.replyTime)[9]}}
         </template>
       </el-table-column>
-      <el-table-column label="操作" fixed="right" width=150>
+      <el-table-column prop="" label="状态">
+        <template slot-scope="scope">
+          <div>
+             {{scope.row.status==0?'未回复':scope.row.status==1?'已审核未派单':scope.row.status==2?'已派单':scope.row.status==3?'已完成':scope.row.status==4?'已取消':scope.row.status==5?'投诉':scope.row.status==6?'关单':'关单审核结束'}}
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" fixed="right" width=300>
 				<template slot-scope="scope">
 					<el-button type="warning" size="small" @click="updateShowBox(scope.row),replyType = 1">回 复</el-button>
-					<!-- <el-button type="warning" size="small" @click="updateShowBox(scope.row)">查看详情</el-button> -->
+          <el-button v-if="scope.row.status==0||scope.row.status==1" size="small" @click="addDialog=true,paidangid=scope.row.id,typeId = scope.row.typeId">派 单</el-button>			
+          <el-button type="primary" size="small" @click="getclosedate(scope.row)" v-if="scope.row.status!=6&&scope.row.status!=7&&scope.row.status!=0&&scope.row.status!=1">关 单</el-button>
+          <el-button type="primary" size="small" @click="getcheckdate(scope.row,1)" v-if="scope.row.closestale=1">审核通过</el-button>
+          <el-button type="primary" size="small" @click="getcheckdate(scope.row,0)" v-if="scope.row.closestale=1">审核不通过</el-button>
 				</template>
 			</el-table-column>
     </el-table>
@@ -82,6 +92,14 @@
       <div slot="footer" class="dialog-footer">
         <el-button size="medium " @click="updateDialog = false">取 消</el-button>
         <el-button size="medium " @click="deleInfor()">回 复</el-button>
+      </div> 
+    </el-dialog>
+    <!-- 派 单 -->
+    <el-dialog title="派 单" :visible.sync="addDialog" :close-on-click-modal="false">
+      <propertyMaintenance @pushSelect="pushSelect" :typeId="typeId"></propertyMaintenance>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="medium " @click="addDialog = false">取 消</el-button>
+        <el-button size="medium " @click="addList">派 单</el-button>
       </div>
     </el-dialog>
     <!-- 查看多张图片 -->
@@ -94,8 +112,9 @@
 </template>
 
 <script>
+import propertyMaintenance from "./property_maintenance2"
 import paging from "../paging"
-import { getAdviceData,addPropertyTypeList,updatePropertyTypeList,addReply,xqSelectList,orgTree } from '../../url/api';
+import { getAdviceData,addPropertyTypeList,updatePropertyTypeList,addReply,xqSelectList,orgTree,closedate } from '../../url/api';
 export default {
   data(){
     return{
@@ -139,11 +158,51 @@ export default {
         type:[{ required: true, message: '该项不能为空',trigger: 'blur'}],
         xqId:[{ required: true, message: '该项不能为空',trigger: 'blur'}],
       },
-      imageUrl:'',
+      pselect:[],
+      typeId:'',
       showImage:[]
     }
   },
   methods:{
+    pushSelect(val){//选中派单人员
+      console.log(val)
+      this.pselect = val
+    },
+    getcheckdate(row,status){//审核关单
+      let params = {
+        id:row.id,
+        status:status,
+        type:1
+      }
+      checkdate(params).then(res=>{
+        console.log(res)
+        if(res.data.code == 200){
+          this.getlist()
+          this.$message("审核成功")
+        }else{
+          this.$message("审核失败")
+        }
+      })
+    },
+    getclosedate(row){//报修关单
+      let params ={
+        ids: [row.id],
+        type:1
+      }
+      this.$confirm("确定要关单吗？")
+      .then(_ => {
+        closedate(params).then(res=>{
+          console.log(res)
+          if(res.data.code == 200){
+            this.getlist()
+            this.$message("关单成功")
+          }else{
+            this.$message("关单失败")
+          }
+        })
+      })
+      .catch(_ => {});
+    },
     getlist(){
       getAdviceData(this.formSearch).then((res)=>{
         console.log(res)
@@ -176,28 +235,30 @@ export default {
         }
       })
     },
-    addList(addList){//添加树状图node节点
-      this.$refs[addList].validate((valid) => {
-        if (valid) {
-          addPropertyTypeList(this.formPush).then((res)=>{
-            console.log(res)
-            if(res.data.code == 200){
-              this.getlist()
-              this.$message({
-                message: '添加成功',
-                type: 'success'
-              });
-              
-            }else{
-              this.$message('添加失败:'+res.data.msg)
-            }
-          })
-          this.addDialog = false
-        } else {
-          console.log('error submit!!');
-          return false;
+   addList(){//添加树状图node节点
+      if(this.pselect.length!=1){
+        this.$message("指派的派单人员需要唯一")
+        return
+      }
+      let params = {
+        id:this.paidangid,
+        manId:this.pselect[0].id,
+        type:1,// 0:保修保养1:投诉建议
+      }
+      pmtypeUpdaData(params).then((res)=>{
+        console.log(res)
+        if(res.data.code == 200){
+          this.getlist()
+          this.$message({
+            message: '派单成功',
+            type: 'success'
+          });
+          
+        }else{
+          this.$message('派单失败:'+res.data.msg)
         }
-      });
+      })
+      this.addDialog = false
     },
     updateList(formName){//修改
       this.$refs[formName].validate((valid) => {
@@ -284,7 +345,8 @@ export default {
     this.getInit()
   },
   components:{
-    paging
+    paging,
+    propertyMaintenance
   }
 }
 </script>
